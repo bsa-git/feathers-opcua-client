@@ -18,10 +18,7 @@ module.exports = {
         trailingComma: 'none'
       }
     ],
-    "indent": [
-      "error",
-      2
-    ],
+    indent: ['error', 2]
   },
 
   parserOptions: {
