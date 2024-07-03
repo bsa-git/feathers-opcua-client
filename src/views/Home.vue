@@ -34,6 +34,13 @@
             >
           </div>
         </div>
+
+        <router-link
+          as="button"
+          :to="{ name: 'Dashboard' }"
+          class="button button-secondary block"
+          >Dashboard</router-link
+        >
       </div>
     </div>
   </main>

@@ -5,6 +5,7 @@
 </template>
 
 <script>
+/* eslint-disable no-unused-vars */
 import { onMounted, watch } from '@vue/composition-api'
 
 export default {
@@ -13,6 +14,7 @@ export default {
     const { $store, $router } = context.root
 
     // Redirect to chat page if there's a user, otherwise to login page.
+
     watch(
       () => $store.state.auth.user,
       user => {
@@ -22,6 +24,7 @@ export default {
       { lazy: true }
     )
 
+    // $router.push({ name: 'Dashboard' })
     // Attempt jwt auth when the app mounts.
     onMounted(() => {
       $store.dispatch('auth/authenticate').catch(error => {
