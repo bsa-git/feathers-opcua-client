@@ -6,14 +6,13 @@ import { format } from 'date-fns'
 
 const debug = require('debug')('app:service.messages')
 
-const isLog = false
 const isDebug = false
 
 class Message extends BaseModel {
   constructor(data, options) {
     super(data, options)
     if (isDebug) debug('Message.options:', options)
-    if (isLog) debug('Message.data:', data)
+    if (isDebug) debug('Message.data:', data)
   }
 
   // Required for $FeathersVuex plugin to work after production transpile.
@@ -29,7 +28,7 @@ class Message extends BaseModel {
   static setupInstance(data, { store, models }) {
     const idFieldUser = store.state.users.idField
     if (isDebug) debug('Message.setupInstance.idFieldUser:', idFieldUser)
-    if (isLog) debug('Message.setupInstance.models:', models)
+    if (true && models) debug('Message.setupInstance.models:', models)
     if (data.createdAt) {
       data.createdAt = new Date(data.createdAt)
       data.formattedDate = format(data.createdAt, 'MMM do, hh:mm:ss')

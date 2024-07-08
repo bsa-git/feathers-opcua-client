@@ -28,7 +28,7 @@ export default {
     // Attempt jwt auth when the app mounts.
     onMounted(() => {
       $store.dispatch('auth/authenticate').catch(error => {
-        if (!error.message.includes('Could not find stored JWT')) {
+        if (error.name !== 'NotAuthenticated') {
           console.error(error)
         }
       })
