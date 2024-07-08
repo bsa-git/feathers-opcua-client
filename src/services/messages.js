@@ -1,7 +1,7 @@
 import feathersClient, {
   makeServicePlugin,
   BaseModel
-} from '../../feathers-client'
+} from '../feathers-client'
 import { format } from 'date-fns'
 
 const debug = require('debug')('app:service.messages')
@@ -28,7 +28,7 @@ class Message extends BaseModel {
   static setupInstance(data, { store, models }) {
     const idFieldUser = store.state.users.idField
     if (isDebug) debug('Message.setupInstance.idFieldUser:', idFieldUser)
-    if (true && models) debug('Message.setupInstance.models:', models)
+    if (isDebug && models) debug('Message.setupInstance.models:', models)
     if (data.createdAt) {
       data.createdAt = new Date(data.createdAt)
       data.formattedDate = format(data.createdAt, 'MMM do, hh:mm:ss')

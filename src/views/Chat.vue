@@ -21,8 +21,8 @@
 <script>
 import { useFind } from 'feathers-vuex'
 import { computed } from '@vue/composition-api'
-import UserList from '../components/Users'
-import MessageList from '../components/Messages'
+import UserList from '../components/app/chat/Users'
+import MessageList from '../components/app/chat/Messages'
 
 export default {
   name: 'Chat',

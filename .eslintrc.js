@@ -17,8 +17,7 @@ module.exports = {
         semi: false,
         trailingComma: 'none'
       }
-    ],
-    indent: ['error', 2]
+    ]
   },
 
   parserOptions: {
