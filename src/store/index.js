@@ -27,5 +27,6 @@ export default new Vuex.Store({
   getters,
   mutations,
   actions,
-  plugins: [...servicePlugins, auth]
+  plugins: [...servicePlugins, auth],
+  strict: process.env.NODE_ENV !== 'production'
 })
