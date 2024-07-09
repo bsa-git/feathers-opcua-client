@@ -1,6 +1,6 @@
 const Dotenv = require('dotenv-webpack')
 module.exports = {
-  transpileDependencies: ['feathers-vuex'],
+  transpileDependencies: ['feathers-vuex', 'vuetify'],
   configureWebpack: {
     plugins: [
       new Dotenv({

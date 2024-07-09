@@ -1,47 +1,50 @@
 <template>
-  <div id="app">
-    <router-view />
-  </div>
+  <v-app>
+    <v-app-bar app color="primary" dark>
+      <div class="d-flex align-center">
+        <v-img
+          alt="Vuetify Logo"
+          class="shrink mr-2"
+          contain
+          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
+          transition="scale-transition"
+          width="40"
+        />
+
+        <v-img
+          alt="Vuetify Name"
+          class="shrink mt-1 hidden-sm-and-down"
+          contain
+          min-width="100"
+          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
+          width="100"
+        />
+      </div>
+
+      <v-spacer></v-spacer>
+
+      <v-btn
+        href="https://github.com/vuetifyjs/vuetify/releases/latest"
+        target="_blank"
+        text
+      >
+        <span class="mr-2">Latest Release</span>
+        <v-icon>mdi-open-in-new</v-icon>
+      </v-btn>
+    </v-app-bar>
+
+    <v-main>
+      <router-view />
+    </v-main>
+  </v-app>
 </template>
 
 <script>
-/* eslint-disable no-unused-vars */
-import { onMounted, watch } from '@vue/composition-api'
-
 export default {
   name: 'App',
-  setup(props, context) {
-    const { $store, $router } = context.root
 
-    // Redirect to chat page if there's a user, otherwise to login page.
-
-    watch(
-      () => $store.state.auth.user,
-      user => {
-        const toRouteName = user ? 'Chat' : 'Home'
-        $router.replace({ name: toRouteName })
-      },
-      { lazy: true }
-    )
-
-    // $router.push({ name: 'Dashboard' })
-    // Attempt jwt auth when the app mounts.
-    onMounted(() => {
-      $store.dispatch('auth/authenticate').catch(error => {
-        if (error.name !== 'NotAuthenticated') {
-          console.error(error)
-        }
-      })
-    })
-
-    return {}
-  }
+  data: () => ({
+    //
+  })
 }
 </script>
-
-<style>
-#app {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-</style>
