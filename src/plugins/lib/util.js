@@ -1,5 +1,5 @@
 import cookies from 'browser-cookies'
-// import goTo from 'vuetify/es5/services/goto';
+import goTo from 'vuetify/es5/services/goto'
 
 import loCloneDeep from 'lodash/cloneDeep'
 
@@ -52,14 +52,14 @@ const waitTimeout = function(fn, cb = null, delay = 0) {
  * @param to {string | number | HTMLElement | VueComponent}
  * @param params {Object}
  */
-// const goToScroll = function (to, params = {}) {
-//   let _params = {
-//     duration: 500,
-//     offset: 0,
-//     easing: 'easeInOutCubic',
-//   };
-//   goTo(to, Object.assign(_params, params));
-// };
+const goToScroll = function(to, params = {}) {
+  let _params = {
+    duration: 500,
+    offset: 0,
+    easing: 'easeInOutCubic'
+  }
+  goTo(to, Object.assign(_params, params))
+}
 
 /**
  * Strip slashes
@@ -427,7 +427,7 @@ export default {
   delayTime,
   pause,
   waitTimeout,
-  // goToScroll,
+  goToScroll,
   stripSlashes,
   stripSpecific,
   getCapitalizeStr,

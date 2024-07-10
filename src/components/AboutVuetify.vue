@@ -77,13 +77,24 @@
           </a>
         </v-row>
       </v-col>
+
+      <v-col class="mb-5" cols="12">
+        <v-btn 
+          to="/"   
+          color="primary"
+          elevation="2"
+        >
+          <span class="mr-2">Go to HOME</span>
+          <v-icon>mdi-home</v-icon>
+        </v-btn>
+      </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: 'AboutVuetify',
 
   data: () => ({
     ecosystem: [

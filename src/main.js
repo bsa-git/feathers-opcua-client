@@ -8,7 +8,7 @@ import store from './store'
 
 import './assets/styles/base.css'
 import './assets/styles/chat.css'
-import vuetify from './plugins/vuetify'
+import vuetify from './plugins/vuetify/vuetify'
 
 Vue.config.productionTip = false
 
