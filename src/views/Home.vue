@@ -1,5 +1,44 @@
 <template>
-  <main class="home container">
+  <v-container>
+    <v-row class="text-center">
+      <v-col cols="12">
+        <v-img
+          :src="require('../assets/pic/feathers-logo-wide.png')"
+          class="my-3"
+          contain
+          height="50"
+        />
+        <h1 class="display-2  my-3">
+          Home
+        </h1>
+      </v-col>
+
+      <v-col cols="12">
+        <v-sheet class="pa-12" color="grey lighten-3">
+          <div></div>
+          <v-sheet class="mx-auto py-10" elevation="3" height="50%" width="80%">
+            <v-btn width="50%" color="primary" x-large class="ma-3" to="/login"
+              >Login</v-btn
+            >
+
+            <div></div>
+
+            <v-btn
+              width="50%"
+              color="secondary"
+              x-large
+              class="ma-3"
+              to="/signup"
+              >Signup</v-btn
+            >
+            <div></div>
+          </v-sheet>
+        </v-sheet>
+      </v-col>
+    </v-row>
+  </v-container>
+
+  <!-- <main class="home container">
     <div class="row">
       <div class="col-12 col-8-tablet push-2-tablet text-center">
         <img
@@ -43,7 +82,7 @@
         >
       </div>
     </div>
-  </main>
+  </main> -->
 </template>
 
 <script>
@@ -53,7 +92,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<!-- <style scoped>
 main.home {
   padding-top: 100px;
   padding-bottom: 100px;
@@ -89,4 +128,4 @@ main.home .button.login:focus {
   border: 2px solid #31d8a0;
   color: #31d8a0;
 }
-</style>
+</style> -->

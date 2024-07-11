@@ -3,7 +3,7 @@
     <v-row class="text-center">
       <v-col cols="12">
         <v-img
-          :src="require('../assets/logo.svg')"
+          :src="require('../../../assets/pic/logo.svg')"
           class="my-3"
           contain
           height="200"
@@ -78,16 +78,12 @@
         </v-row>
       </v-col>
 
-      <v-col class="mb-5" cols="12">
-        <v-btn 
-          to="/"   
-          color="primary"
-          elevation="2"
-        >
+      <!-- <v-col class="mb-5" cols="12">
+        <v-btn to="/" color="primary" elevation="2">
           <span class="mr-2">Go to HOME</span>
           <v-icon>mdi-home</v-icon>
         </v-btn>
-      </v-col>
+      </v-col> -->
     </v-row>
   </v-container>
 </template>

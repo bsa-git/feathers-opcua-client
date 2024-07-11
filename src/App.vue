@@ -1,36 +1,17 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark>
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
+    <!-- Tool Bar -->
+    <AppToolbar
+      ref="refAppToolbar"
+      @onNavLeft="navLeft = !navLeft"
+    ></AppToolbar>
 
-        <v-btn 
-          to="/vuetify"   
-          text
-        >
-          <span class="mr-2">About Vuetify</span>
-          <v-icon>mdi-open-in-new</v-icon>
-        </v-btn>
-      </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-    </v-app-bar>
+    <!-- Left Drawer -->
+    <AppLeftDrawer 
+      :drawer="navLeft" 
+      :items="items"
+      @onNavLeft="modelNavLeft"> 
+    </AppLeftDrawer>
 
     <v-main>
       <router-view />
@@ -39,11 +20,60 @@
 </template>
 
 <script>
+/* eslint-disable no-unused-vars */
+import { onMounted, watch } from '@vue/composition-api'
+
+import AppLeftDrawer from './components/app/layout/AppLeftDrawer'
+import AppToolbar from './components/app/layout/AppToolbar.vue'
+
 export default {
   name: 'App',
+  //------------
+  components: {
+    AppLeftDrawer,
+    AppToolbar
+  },
 
-  data: () => ({
-    //
-  })
+  data() {
+    return {
+      navLeft: true,
+      items: [
+        { title: 'Home', icon: 'mdi-home' },
+        { title: 'About', icon: 'mdi-forum' }
+      ]
+    }
+  },
+
+  methods: {
+    modelNavLeft: function(newValue) {
+      this.navLeft = newValue
+    }
+  },
+
+  setup(props, context) {
+    const { $store, $router } = context.root
+
+    // Redirect to chat page if there's a user, otherwise to login page.
+    watch(
+      () => $store.state.auth.user,
+      user => {
+        const toRouteName = user ? 'Chat' : 'Home'
+        $router.replace({ name: toRouteName })
+      },
+      { lazy: true }
+    )
+
+    // $router.push({ name: 'Dashboard' })
+    // Attempt jwt auth when the app mounts.
+    onMounted(() => {
+      $store.dispatch('auth/authenticate').catch(error => {
+        if (error.name !== 'NotAuthenticated') {
+          console.error(error)
+        }
+      })
+    })
+
+    return {}
+  }
 }
 </script>
