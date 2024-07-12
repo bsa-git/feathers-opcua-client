@@ -1,5 +1,8 @@
 <template>
-  <main class="login container">
+  <v-container>
+    <v-row class="text-center"> </v-row>
+  </v-container>
+  <!-- <main class="login container">
     <div class="row">
       <div class="col-12 col-6-tablet push-3-tablet text-center">
         <h1 class="font-100">Welcome Back</h1>
@@ -54,7 +57,7 @@
         </form>
       </div>
     </div>
-  </main>
+  </main> -->
 </template>
 
 <script>

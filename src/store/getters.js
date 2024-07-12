@@ -1,6 +1,6 @@
 import colors from 'vuetify/lib/util/colors'
-import themeColorOptions from '../api/app/theme-color-options.json'
-import util from '../plugins/lib/util'
+import themeColorOptions from '@/api/app/theme-color-options.json'
+import util from '@/plugins/lib/util'
 
 const getters = {
   getConfig: state => {

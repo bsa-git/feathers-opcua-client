@@ -1,4 +1,4 @@
-import util from '../plugins/lib/util'
+import util from '@/plugins/lib/util'
 
 /**
  * Get locales

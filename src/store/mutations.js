@@ -1,5 +1,5 @@
 import cookies from 'browser-cookies'
-import typeOf from '../plugins/lib/type-of'
+import typeOf from '@/plugins/lib/type-of'
 const debug = require('debug')('app:store.mutations')
 
 const isDebug = false

@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer v-model="drawer" absolute temporary>
+  <v-navigation-drawer v-model="compDrawer" absolute temporary>
     <v-list-item>
       <v-list-item-avatar>
         <v-img src="https://randomuser.me/api/portraits/men/78.jpg"></v-img>
@@ -13,7 +13,7 @@
     <v-divider></v-divider>
 
     <v-list dense>
-      <v-list-item v-for="item in items" :key="item.title" link>
+      <v-list-item v-for="item in items" :key="item.title" :to="item.path" link>
         <v-list-item-icon>
           <v-icon>{{ item.icon }}</v-icon>
         </v-list-item-icon>
@@ -27,12 +27,15 @@
 </template>
 
 <script>
-import { defineComponent } from '@vue/composition-api'
-
-export default defineComponent({
+export default {
   props: {
     drawer: Boolean,
-    items: Array
+    items: {
+      type: Array,
+      default: function() {
+        return [{ title: 'Home', icon: 'mdi-home', path: '/' }]
+      }
+    }
   },
 
   computed: {
@@ -49,5 +52,5 @@ export default defineComponent({
   },
 
   setup() {}
-})
+}
 </script>

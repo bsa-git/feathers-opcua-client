@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home'
-import Vuetify from '../views/Vuetify'
-import Login from '../views/Login'
-import Signup from '../views/Signup'
-import Chat from '../views/Chat'
-import Dashboard from '../views/Dashboard.vue'
+import Home from '@/views/Home'
+import Vuetify from '@/views/Vuetify'
+import Login from '@/views/Login'
+import Signup from '@/views/Signup'
+import Chat from '@/views/Chat'
+import Dashboard from '@/views/Dashboard.vue'
 
 Vue.use(VueRouter)
 

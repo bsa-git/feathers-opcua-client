@@ -1,16 +1,10 @@
 <template>
   <v-app>
     <!-- Tool Bar -->
-    <AppToolbar
-      ref="refAppToolbar"
-      @onNavLeft="navLeft = !navLeft"
-    ></AppToolbar>
+    <AppToolbar @onNavLeft="navLeft = !navLeft"></AppToolbar>
 
     <!-- Left Drawer -->
-    <AppLeftDrawer 
-      :drawer="navLeft" 
-      :items="items"
-      @onNavLeft="modelNavLeft"> 
+    <AppLeftDrawer :drawer="navLeft" :items="items" @onNavLeft="modelNavLeft">
     </AppLeftDrawer>
 
     <v-main>
@@ -22,6 +16,7 @@
 <script>
 /* eslint-disable no-unused-vars */
 import { onMounted, watch } from '@vue/composition-api'
+import appMenu from './api/app/app-menu.json'
 
 import AppLeftDrawer from './components/app/layout/AppLeftDrawer'
 import AppToolbar from './components/app/layout/AppToolbar.vue'
@@ -36,11 +31,8 @@ export default {
 
   data() {
     return {
-      navLeft: true,
-      items: [
-        { title: 'Home', icon: 'mdi-home' },
-        { title: 'About', icon: 'mdi-forum' }
-      ]
+      navLeft: false,
+      items: appMenu
     }
   },
 

@@ -1,7 +1,4 @@
-import feathersClient, {
-  makeServicePlugin,
-  BaseModel
-} from '../feathers-client'
+import feathersClient, { makeServicePlugin, BaseModel } from '@/feathers-client'
 import { format } from 'date-fns'
 
 const debug = require('debug')('app:service.messages')
