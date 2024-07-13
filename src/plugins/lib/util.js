@@ -76,7 +76,7 @@ const stripSlashes = function(value) {
  * @param symbol String
  * @return {string|*|void}
  */
-const stripSpecific = function(value, symbol = '') {
+const stripSpecific = function(value = '', symbol = '') {
   const regEx = new RegExp('^[' + symbol + ']+|[' + symbol + ']+$', 'g')
   const trimValue = symbol ? value.replace(regEx, '') : value.trim()
   return trimValue

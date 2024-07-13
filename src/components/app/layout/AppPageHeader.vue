@@ -1,32 +1,29 @@
 <template>
   <div>
     <!-- Img  -->
-    <v-img
-      :src="require('@/assets/pic/feathers-logo-wide.png')"
-      class="my-3"
-      contain
-      height="50"
-    />
+    <PageImg :img-name="imgName" />
     <!-- Page Title -->
-    <AppPageTitle
-      v-if="pageTitle"
-      class="mt-10"
-      :page-title="pageTitle"
-    ></AppPageTitle>
+    <PageTitle v-if="pageTitle" class="mt-10" :page-title="pageTitle" />
   </div>
 </template>
 
 <script>
-import AppPageTitle from '@/components/layout/PageTitle'
+import PageTitle from '@/components/layout/PageTitle'
+import PageImg from '@/components/layout/PageImg'
 
 // /api/app/app-menu   /components/layout/PageTitle
 export default {
   components: {
-    AppPageTitle
+    PageTitle,
+    PageImg
   },
 
   props: {
     pageTitle: {
+      type: String,
+      default: ''
+    },
+    imgName: {
       type: String,
       default: ''
     }

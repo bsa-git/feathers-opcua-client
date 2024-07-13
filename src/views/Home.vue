@@ -3,7 +3,10 @@
     <v-row class="text-center">
       <v-col cols="12">
         <!--=== Page Header ===-->
-        <AppPageHeader :page-title="description"></AppPageHeader>
+        <AppPageHeader
+          :page-title="description"
+          :img-name="imgName"
+        ></AppPageHeader>
       </v-col>
 
       <v-col cols="12">
@@ -45,7 +48,8 @@ export default {
   data() {
     return {
       title: 'Home',
-      description: 'Home'
+      description: 'Home',
+      imgName: 'feathers-logo-wide.png'
     }
   },
   head() {
