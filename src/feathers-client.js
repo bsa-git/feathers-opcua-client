@@ -8,9 +8,8 @@ import feathersVuex from 'feathers-vuex'
 const isDebug = false
 
 // Get target URL
-const targetURL = 'http://localhost:3030' //process.env.TARGET_URL
-console.log('TARGET_URL', process.env.TARGET_URL)
-if (isDebug && targetURL) console.log('TARGET_URL', targetURL)
+const targetURL = process.env.TARGET_URL
+if (true && targetURL) console.log('TARGET_URL', targetURL)
 
 const socket = io(targetURL, { transports: ['websocket'] })
 
