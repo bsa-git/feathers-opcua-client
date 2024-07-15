@@ -5,13 +5,15 @@ import io from 'socket.io-client'
 import { iff, discard } from 'feathers-hooks-common'
 import feathersVuex from 'feathers-vuex'
 
-const isDebug = false
+const isDebug = true
 
 // Get target URL
-const targetURL = process.env.TARGET_URL
-if (true && targetURL) console.log('TARGET_URL', targetURL)
+const envTargetURL = process.env.TARGET_URL
+if (isDebug) console.log('TARGET_URL', envTargetURL)
 
+const targetURL = envTargetURL ? envTargetURL : 'http://localhost:3030'
 const socket = io(targetURL, { transports: ['websocket'] })
+if (isDebug && socket) console.log('Socket connect to:', targetURL)
 
 const feathersClient = feathers()
   .configure(socketio(socket))

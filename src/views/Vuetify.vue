@@ -3,7 +3,12 @@
     <v-row class="text-center">
       <!--=== Page Header ===-->
       <v-col cols="12">
-        <AppPageHeader :page-title="description"></AppPageHeader>
+        <AppPageHeader 
+        :page-title="description"
+        :img-name="imgName"
+        :is-div="true"
+        >
+      </AppPageHeader>
       </v-col>
 
       <v-col class="mb-4">
@@ -96,6 +101,7 @@ export default {
     return {
       title: 'Vuetify',
       description: 'Welcome to Vuetify',
+      imgName: 'logo.svg',
       ecosystem: [
         {
           text: 'vuetify-loader',

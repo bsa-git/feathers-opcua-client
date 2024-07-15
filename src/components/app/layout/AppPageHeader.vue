@@ -1,21 +1,34 @@
 <template>
   <div>
     <!-- Img  -->
-    <PageImg :img-name="imgName" />
+    <template v-if="imgName">
+      <v-img
+        :src="require(`@/assets/pic/${imgName}`)"
+        class="my-3"
+        contain
+        height="50"
+      />
+    </template>
+
     <!-- Page Title -->
-    <PageTitle v-if="pageTitle" class="mt-10" :page-title="pageTitle" />
+    <template v-if="pageTitle">
+      <div
+        :class="
+          `exotic--${themeName} display-1 mt-3 mb-6 text-center page-title`
+        "
+      >
+        {{ pageTitle }}
+      </div>
+    </template>
+    <v-divider v-if="isDiv" />
   </div>
 </template>
 
 <script>
-import PageTitle from '@/components/layout/PageTitle'
-import PageImg from '@/components/layout/PageImg'
-
-// /api/app/app-menu   /components/layout/PageTitle
 export default {
   components: {
-    PageTitle,
-    PageImg
+    // PageTitle,
+    // PageImg
   },
 
   props: {
@@ -26,7 +39,21 @@ export default {
     imgName: {
       type: String,
       default: ''
+    },
+    isDiv: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    themeName: function() {
+      return this.$vuetify.theme.dark ? 'dark' : 'light'
     }
   }
 }
 </script>
+
+<style lang="sass" scoped>
+.page-title
+  transform: scaleY(1.2)
+</style>
