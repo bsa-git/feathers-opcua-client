@@ -1,6 +1,27 @@
 <template>
   <v-container>
-    <v-row class="text-center"> </v-row>
+    <v-row class="text-center">
+      <v-col cols="12">
+        <!--=== Page Header ===-->
+        <AppPageHeader
+          :page-title="description"
+          :img-name="imgName"
+        ></AppPageHeader>
+      </v-col>
+
+      <v-col cols="12">
+        <v-sheet rounded="xl" class="pa-12" color="grey lighten-3">
+          <v-sheet
+            rounded="xl"
+            class="mx-auto py-10"
+            elevation="3"
+            height="50%"
+            width="80%"
+          >
+          </v-sheet>
+        </v-sheet>
+      </v-col>
+    </v-row>
   </v-container>
   <!-- <main class="login container">
     <div class="row">
@@ -62,9 +83,29 @@
 
 <script>
 import { ref } from '@vue/composition-api'
+import AppPageHeader from '@/components/app/layout/AppPageHeader.vue'
 
 export default {
   name: 'Login',
+  //------------
+  components: {
+    AppPageHeader
+  },
+  data() {
+    return {
+      title: 'Login',
+      description: 'Login',
+      imgName: 'feathers-logo-wide.png'
+    }
+  },
+  head() {
+    return {
+      title: this.title,
+      meta: [
+        { hid: 'description', name: 'description', content: this.description }
+      ]
+    }
+  },
   setup(props, context) {
     const { $store } = context.root
 

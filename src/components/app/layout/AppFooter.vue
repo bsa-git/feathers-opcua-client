@@ -1,5 +1,5 @@
 <template>
-  <v-footer>
+  <v-footer color="">
     <span :class="`caption exotic--${themeName} hidden-sm-and-down`">{{
       copyright.toUpperCase()
     }}</span>
@@ -8,9 +8,7 @@
       <v-btn :href="site" color="primary" target="_blank" text>{{
         developer
       }}</v-btn>
-      <span :class="`caption exotic--${themeName} mr-1`">{{
-        $t('app_footer.designed_with_by')
-      }}</span>
+      <span :class="`caption exotic--${themeName} mr-1`">{{ site }}</span>
       <v-icon color="red" small>mdi-cards-heart</v-icon>
     </div>
   </v-footer>
@@ -21,7 +19,7 @@ export default {
   props: {
     copyright: {
       type: String,
-      default: '© 2018 Sergey Beskorovainy'
+      default: '© 2024 Sergey Beskorovainy'
     },
     developer: {
       type: String,

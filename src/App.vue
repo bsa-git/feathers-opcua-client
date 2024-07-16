@@ -1,32 +1,42 @@
 <template>
   <v-app>
-    <!-- Tool Bar -->
-    <AppToolbar @onNavLeft="navLeft = !navLeft"></AppToolbar>
+    <!-- App Tool Bar -->
+    <AppToolbar @onNavLeft="navLeft = !navLeft" />
 
-    <!-- Left Drawer -->
-    <AppLeftDrawer :drawer="navLeft" :items="items" @onNavLeft="modelNavLeft">
-    </AppLeftDrawer>
+    <!-- App Left Drawer -->
+    <AppLeftDrawer :drawer="navLeft" :items="items" @onNavLeft="modelNavLeft" />
 
+    <!-- App Main -->
     <v-main>
       <router-view />
     </v-main>
+
+    <!-- App Footer -->
+    <AppFooter
+      :copyright="config.copyright"
+      :developer="config.logoTitle"
+      :site="config.website"
+    />
   </v-app>
 </template>
 
 <script>
 /* eslint-disable no-unused-vars */
 import { onMounted, watch } from '@vue/composition-api'
+import { mapGetters } from 'vuex'
 import appMenu from './api/app/app-menu.json'
 
 import AppLeftDrawer from './components/app/layout/AppLeftDrawer'
 import AppToolbar from './components/app/layout/AppToolbar.vue'
+import AppFooter from './components/app/layout/AppFooter.vue'
 
 export default {
   name: 'App',
   //------------
   components: {
     AppLeftDrawer,
-    AppToolbar
+    AppToolbar,
+    AppFooter
   },
 
   data() {
@@ -34,6 +44,12 @@ export default {
       navLeft: false,
       items: appMenu
     }
+  },
+
+  computed: {
+    ...mapGetters({
+      config: 'getConfig'
+    })
   },
 
   methods: {

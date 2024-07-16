@@ -3,12 +3,12 @@
     <v-row class="text-center">
       <!--=== Page Header ===-->
       <v-col cols="12">
-        <AppPageHeader 
-        :page-title="description"
-        :img-name="imgName"
-        :is-div="true"
+        <AppPageHeader
+          :page-title="description"
+          :img-name="imgName"
+          :is-div="true"
         >
-      </AppPageHeader>
+        </AppPageHeader>
       </v-col>
 
       <v-col class="mb-4">

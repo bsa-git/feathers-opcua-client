@@ -10,15 +10,17 @@
       </v-col>
 
       <v-col cols="12">
-        <v-sheet class="pa-12" color="grey lighten-3">
-          <div></div>
-          <v-sheet class="mx-auto py-10" elevation="3" height="50%" width="80%">
-            <v-btn width="50%" color="primary" x-large class="ma-3" to="/login"
-              >Login</v-btn
-            >
-
-            <div></div>
-
+        <v-sheet rounded="xl" class="pa-12" color="grey lighten-3">
+          <v-sheet
+            rounded="xl"
+            class="mx-auto py-10"
+            elevation="3"
+            height="50%"
+            width="80%"
+          >
+            <v-btn width="50%" color="primary" x-large class="ma-3" to="/login">
+              Login
+            </v-btn>
             <v-btn
               width="50%"
               color="secondary"
