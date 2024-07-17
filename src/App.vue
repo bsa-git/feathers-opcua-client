@@ -63,7 +63,7 @@ export default {
   setup(props, context) {
     const { $store, $router } = context.root
 
-    // console.log('App.context:', context)
+    console.log('App.context:', context)
     // Set app
     context.app = feathersClient
 

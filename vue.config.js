@@ -1,8 +1,8 @@
 const Dotenv = require('dotenv-webpack')
 let locale = process.env.VUE_APP_I18N_LOCALE
-locale = locale? locale : 'en'
+locale = locale ? locale : 'en'
 let fallbackLocale = process.env.VUE_APP_I18N_FALLBACK_LOCALE
-fallbackLocale = fallbackLocale? fallbackLocale : 'en'
+fallbackLocale = fallbackLocale ? fallbackLocale : 'en'
 module.exports = {
   transpileDependencies: ['feathers-vuex', 'vuetify'],
   configureWebpack: {
