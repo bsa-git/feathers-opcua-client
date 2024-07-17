@@ -9,8 +9,6 @@
         ></AppPageHeader>
       </v-col>
 
-      <div>{{ $t('login.title') }}</div>
-
       <v-col cols="12">
         <v-sheet rounded="xl" class="pa-12" color="grey lighten-3">
           <v-sheet
@@ -95,8 +93,8 @@ export default {
   },
   data() {
     return {
-      title: 'Login', //this.$t('login.title'),
-      description: 'Login', //this.$t('login.description'),
+      title: this.$t('login.title'),
+      description: this.$t('login.description'),
       imgName: 'feathers-logo-wide.png'
     }
   },

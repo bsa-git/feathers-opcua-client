@@ -4,7 +4,7 @@
     <template v-if="imgName">
       <v-img
         :src="require(`@/assets/pic/${imgName}`)"
-        class="my-3"
+        class="mu-3 mb-10"
         contain
         height="50"
       />

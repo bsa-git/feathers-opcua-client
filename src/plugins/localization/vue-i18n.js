@@ -26,11 +26,10 @@ const vueI18n = new VueI18n({
   messages: {
     en,
     ru
-  } 
-})  
+  }
+})
 
 export default vueI18n
-
 
 /*
 export default context => {

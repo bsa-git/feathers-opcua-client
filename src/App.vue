@@ -26,7 +26,6 @@ import { onMounted, watch } from '@vue/composition-api'
 import { mapGetters } from 'vuex'
 import appMenu from './api/app/app-menu.json'
 import feathersClient from '@/feathers-client'
-// import vueI18n from '@/plugins/localization/vue-i18n';
 // import veeValidate from '@/plugins/vuetify/vee-validate';
 
 import AppLeftDrawer from './components/app/layout/AppLeftDrawer'
@@ -68,8 +67,7 @@ export default {
     // Set app
     context.app = feathersClient
 
-    // Init vueI18n and veeValidate
-    // vueI18n(context)
+    // Init veeValidate
     // veeValidate(context)
 
     // Redirect to chat page if there's a user, otherwise to login page.

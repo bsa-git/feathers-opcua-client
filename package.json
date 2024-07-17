@@ -3,9 +3,10 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "yarn lint && vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint --fix",
+    "dev": "yarn lint && vue-cli-service serve",
+    "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\"",
     "previewing": "serve -s dist",
     "update-packages": "npm outdated --depth=0"
   },
@@ -22,6 +23,7 @@
     "socket.io-client": "2.5.0",
     "vee-validate": "2.2.15",
     "vue": "2.6.12",
+    "vue-i18n": "^8.26.3",
     "vue-router": "3.6.5",
     "vuetify": "^2.6.0",
     "vuex": "^3.1.2"
@@ -43,6 +45,7 @@
     "sass": "~1.32.0",
     "sass-loader": "^10.0.0",
     "serve": "13.0.4",
+    "vue-cli-plugin-i18n": "~2.3.2",
     "vue-cli-plugin-vuetify": "~2.5.8",
     "vue-template-compiler": "2.6.12",
     "vuetify-loader": "^1.7.0"

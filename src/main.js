@@ -9,7 +9,7 @@ import store from './store'
 import './assets/styles/base.css'
 import './assets/styles/chat.css'
 import vuetify from './plugins/vuetify/vuetify'
-import vueI18n from './plugins/localization/vue-i18n'
+import i18n from './i18n'
 
 Vue.config.productionTip = false
 
@@ -17,6 +17,6 @@ new Vue({
   router,
   store,
   vuetify,
-  vueI18n,
+  i18n,
   render: h => h(App)
 }).$mount('#app')
