@@ -28,8 +28,15 @@ const config = {
   validity: false
 }
 
-export default ({ app }) => {
-  config.i18n = app.i18n
-  config.locale = app.i18n.locale
+// export default ({ app }) => {
+//   config.i18n = app.i18n
+//   config.locale = app.i18n.locale
+//   Vue.use(VeeValidate, config)
+// }
+
+const veeValidate = i18n => {
+  config.i18n = i18n
+  config.locale = i18n.locale
   Vue.use(VeeValidate, config)
 }
+export default veeValidate

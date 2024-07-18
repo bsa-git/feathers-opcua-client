@@ -1,15 +1,5 @@
 <template>
-  <form @submit.prevent="onSubmit">
-    <!-- поля формы -->
-    <v-text-field label="Email" v-model="emailValue" :error-messages="emailErrorMessage"></v-text-field>
-
-    <v-text-field label="Password" type="password" v-model="passwordValue"
-      :error-messages="passwordErrorMessage"></v-text-field>
-
-    <v-btn type="submit">Submit</v-btn>
-  </form>
-
-  <!-- <main class="login container">
+  <main class="login container">
     <div class="row">
       <div class="col-12 col-6-tablet push-3-tablet text-center">
         <h1 class="font-100">Create an Account</h1>
@@ -66,7 +56,7 @@
         </form>
       </div>
     </div>
-  </main> -->
+  </main>
 </template>
 
 <script>
@@ -74,12 +64,7 @@ import { ref } from '@vue/composition-api'
 
 export default {
   name: 'Signup',
-  //---------------
   setup(props, context) {
-    
-    
-    
-    /*
     const { User } = context.root.$FeathersVuex.api
     const { $store } = context.root
 
@@ -115,7 +100,6 @@ export default {
               : 'An error prevented signup.'
           error.value = err
         })
-          
     }
 
     return {
@@ -125,7 +109,6 @@ export default {
       dismissError,
       onSubmit
     }
-      */
   }
 }
 </script>

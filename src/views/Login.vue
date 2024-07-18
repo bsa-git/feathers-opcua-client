@@ -8,94 +8,121 @@
           :img-name="imgName"
         ></AppPageHeader>
       </v-col>
-
       <v-col cols="12">
         <v-sheet rounded="xl" class="pa-12" color="grey lighten-3">
-          <v-sheet
+          <!-- <v-sheet
             rounded="xl"
             class="mx-auto py-10"
             elevation="3"
             height="50%"
             width="80%"
-          >
-          </v-sheet>
+          > -->
+          <v-card :dark="theme.dark">
+            <!-- Form title -->
+            <v-card-title>
+              <v-icon class="mr-3">mdi-login</v-icon>
+              <span class="headline">{{ $t('user_menu.login') }}</span>
+              <v-spacer></v-spacer>
+              <router-link :to="config.homePath" class="close-icon">
+                <v-icon>mdi-close</v-icon>
+              </router-link>
+            </v-card-title>
+            <!-- Form content -->
+            <v-form @submit.prevent="onSubmit">
+              <v-card-text>
+                <div class="text-center">
+                  <v-avatar v-if="user && model.avatar" size="120"
+                    ><img :src="model.avatar"
+                  /></v-avatar>
+                  <v-icon v-else size="120">fas fa-user-slash</v-icon>
+                </div>
+                <v-text-field
+                  v-model="model.email"
+                  v-validate="'required|email'"
+                  append-icon="mdi-email"
+                  :error-messages="errors.collect('email')"
+                  data-vv-name="email"
+                  :label="$t('login.email')"
+                  :hint="$t('authManagement.hintLoginEmail')"
+                  persistent-hint
+                ></v-text-field>
+                <v-text-field
+                  v-model="model.password"
+                  v-validate="'required|min:3'"
+                  append-icon="mdi-lock"
+                  :error-messages="errors.collect('password')"
+                  data-vv-name="password"
+                  :label="$t('login.password')"
+                  type="password"
+                ></v-text-field>
+                <div v-if="!user">
+                  <v-icon>mdi-security</v-icon>
+                  <a href="#">{{ $t('authManagement.forgotYourPassword') }}</a>
+                </div>
+              </v-card-text>
+              <!-- Form actions -->
+              <v-card-actions>
+                <v-btn href="/auth/google" icon :disabled="!!user">
+                  <v-icon color="red">fab fa-google fa-lg</v-icon>
+                </v-btn>
+                <v-btn href="/auth/github" icon :disabled="!!user">
+                  <v-icon color="light-blue">fab fa-github fa-lg</v-icon>
+                </v-btn>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="primary"
+                  type="submit"
+                  :loading="loadingSubmit"
+                  :disabled="!!user"
+                >
+                  {{ $t('login.title') }}
+                </v-btn>
+                <v-btn :loading="loadingLogout">
+                  {{ !!user ? $t('login.logout') : $t('login.clear') }}
+                </v-btn>
+              </v-card-actions>
+            </v-form>
+          </v-card>
+          <!-- </v-sheet> -->
         </v-sheet>
       </v-col>
     </v-row>
   </v-container>
-  <!-- <main class="login container">
-    <div class="row">
-      <div class="col-12 col-6-tablet push-3-tablet text-center">
-        <h1 class="font-100">Welcome Back</h1>
-      </div>
-    </div>
-    <div class="row">
-      <div
-        class="col-12 col-6-tablet push-3-tablet col-4-desktop push-4-desktop"
-      >
-        <div v-if="error" class="error">
-          {{ error.message }}
-          <a class="close" href="javascript://" @click.prevent="dismissError"
-            >dismiss</a
-          >
-        </div>
-
-        <form
-          class="form"
-          method="post"
-          @submit.prevent="onSubmit(email, password)"
-        >
-          <fieldset>
-            <input
-              v-model="email"
-              class="block"
-              type="email"
-              name="email"
-              placeholder="email"
-            />
-          </fieldset>
-
-          <fieldset>
-            <input
-              v-model="password"
-              class="block"
-              type="password"
-              name="password"
-              placeholder="password"
-            />
-          </fieldset>
-
-          <button type="submit" class="button button-primary block login">
-            Login
-          </button>
-
-          <router-link
-            as="button"
-            :to="{ name: 'Home' }"
-            class="button button-secondary block"
-            >Back</router-link
-          >
-        </form>
-      </div>
-    </div>
-  </main> -->
 </template>
 
 <script>
-import { ref } from '@vue/composition-api'
+// import { ref } from '@vue/composition-api'
+// import { useField, useForm } from 'vee-validate'
+import { mapState, mapGetters } from 'vuex'
 import AppPageHeader from '@/components/app/layout/AppPageHeader.vue'
 
 export default {
   name: 'Login',
   //------------
+  $_veeValidate: {
+    validator: 'new'
+  },
   components: {
     AppPageHeader
   },
   data() {
     return {
+      imgName: 'feathers-logo-wide.png',
       title: this.$t('login.title'),
       description: this.$t('login.description'),
-      imgName: 'feathers-logo-wide.png'
+      saveLogMessage: null,
+      loadingSubmit: false,
+      loadingLogout: false,
+      confirmDialog: false,
+      inputCodeDialog: false,
+      inputEmailDialog: false,
+      verifyCode: '',
+      error: undefined,
+      model: {
+        email: '',
+        password: '',
+        avatar: ''
+      }
     }
   },
   head() {
@@ -106,40 +133,16 @@ export default {
       ]
     }
   },
-  setup(props, context) {
-    const { $store } = context.root
+  computed: {
+    ...mapGetters({
+      config: 'getConfig',
+      theme: 'getTheme'
+    }),
+    ...mapState('auth', ['user'])
+  },
+  methods: {}
+  // setup(props, context) {
 
-    const email = ref('')
-    const password = ref('')
-
-    const error = ref(null)
-    function dismissError() {
-      error.value = null
-    }
-
-    function onSubmit(email, password) {
-      $store
-        .dispatch('auth/authenticate', { strategy: 'local', email, password })
-        // Just use the returned error instead of mapping it from the store.
-        .catch(err => {
-          // Convert the error to a plain object and add a message.
-          let type = err.className
-          err = Object.assign({}, err)
-          err.message =
-            type === 'not-authenticated'
-              ? 'Incorrect email or password.'
-              : 'An error prevented login.'
-          this.error = err
-        })
-    }
-
-    return {
-      email,
-      password,
-      error,
-      dismissError,
-      onSubmit
-    }
-  }
+  // }
 }
 </script>

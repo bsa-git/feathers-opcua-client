@@ -10,7 +10,9 @@ import './assets/styles/base.css'
 import './assets/styles/chat.css'
 import vuetify from './plugins/vuetify/vuetify'
 import i18n from './i18n'
+import veeValidate from './plugins/vuetify/vee-validate'
 
+veeValidate(i18n)
 Vue.config.productionTip = false
 
 new Vue({
