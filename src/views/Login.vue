@@ -8,7 +8,7 @@
           :img-name="imgName"
         ></AppPageHeader>
       </v-col>
-      <v-col cols="12">
+      <v-col cols="8" class="">
         <v-sheet rounded="xl" class="pa-12" color="grey lighten-3">
           <!-- <v-sheet
             rounded="xl"

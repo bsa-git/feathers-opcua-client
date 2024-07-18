@@ -1,10 +1,15 @@
 <template>
   <v-app>
     <!-- App Tool Bar -->
-    <AppToolbar @onNavLeft="navLeft = !navLeft" />
+    <AppToolbar v-if="!isStandAlone" @onNavLeft="navLeft = !navLeft" />
 
     <!-- App Left Drawer -->
-    <AppLeftDrawer :drawer="navLeft" :items="items" @onNavLeft="modelNavLeft" />
+    <AppLeftDrawer
+      v-if="!isStandAlone"
+      :drawer="navLeft"
+      :items="items"
+      @onNavLeft="modelNavLeft"
+    />
 
     <!-- App Main -->
     <v-main>
@@ -13,6 +18,7 @@
 
     <!-- App Footer -->
     <AppFooter
+      v-if="!isStandAlone"
       :copyright="config.copyright"
       :developer="config.logoTitle"
       :site="config.website"
@@ -22,15 +28,17 @@
 
 <script>
 /* eslint-disable no-unused-vars */
-import { onMounted, watch } from '@vue/composition-api'
+import { ref, onMounted, watch } from '@vue/composition-api'
 import { mapGetters } from 'vuex'
 import appMenu from './api/app/app-menu.json'
 import feathersClient from '@/feathers-client'
-// import veeValidate from '@/plugins/vuetify/vee-validate';
 
 import AppLeftDrawer from './components/app/layout/AppLeftDrawer'
 import AppToolbar from './components/app/layout/AppToolbar.vue'
 import AppFooter from './components/app/layout/AppFooter.vue'
+// import { tr } from 'date-fns/locale'
+
+const isDebug = false
 
 export default {
   name: 'App',
@@ -61,14 +69,20 @@ export default {
   },
 
   setup(props, context) {
+    const standAlons = ['Login', 'Signup']
+
     const { $store, $router } = context.root
 
-    console.log('App.context:', context)
-    // Set app
-    context.app = feathersClient
+    if (isDebug && context) console.log('App.setup.context:', context)
+    if (isDebug && props) console.log('App.setup.props:', props)
+    if (isDebug && $router)
+      console.log('App.setup.$router:', $router.currentRoute.name)
 
-    // Init veeValidate
-    // veeValidate(context)
+    let isStandAlone = ref('')
+    isStandAlone = true //standAlons.includes($router.currentRoute.name)
+
+    // Set app
+    // context.app = feathersClient
 
     // Redirect to chat page if there's a user, otherwise to login page.
     watch(
@@ -90,7 +104,7 @@ export default {
       })
     })
 
-    return {}
+    return { isStandAlone }
   }
 }
 </script>
