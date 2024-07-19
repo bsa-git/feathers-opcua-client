@@ -80,6 +80,9 @@
                 <v-btn :loading="loadingLogout">
                   {{ !!user ? $t('login.logout') : $t('login.clear') }}
                 </v-btn>
+                <v-btn @click.stop="updateStandAlone">
+                  <span class="mr-2">StandAlone: {{ isStandAlone }}</span>
+                </v-btn>
               </v-card-actions>
             </v-form>
           </v-card>
@@ -91,8 +94,8 @@
 </template>
 
 <script>
-// import { ref } from '@vue/composition-api'
-// import { useField, useForm } from 'vee-validate'
+/* eslint-disable no-unused-vars */
+import { ref, provide } from '@vue/composition-api'
 import { mapState, mapGetters } from 'vuex'
 import AppPageHeader from '@/components/app/layout/AppPageHeader.vue'
 
@@ -140,9 +143,21 @@ export default {
     }),
     ...mapState('auth', ['user'])
   },
-  methods: {}
-  // setup(props, context) {
+  setup() {
+    let isStandAlone = ref(true)
+    provide('isStandAlone', isStandAlone)
+    // isStandAlone = true
 
-  // }
+    console.log('Login.isStandAlone:', isStandAlone)
+
+    return {
+      isStandAlone
+    }
+  },
+  methods: {
+    updateStandAlone() {
+      this.isStandAlone = !this.isStandAlone
+    }
+  }
 }
 </script>

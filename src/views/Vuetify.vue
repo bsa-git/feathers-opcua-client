@@ -154,6 +154,8 @@ export default {
         }
       ]
     }
+  },
+  setup(){
   }
 }
 </script>

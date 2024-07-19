@@ -10,6 +10,8 @@
       />
     </template>
 
+    <div> isStandAlone: {{ isStandAlone }} </div>
+
     <!-- Page Title -->
     <template v-if="pageTitle">
       <div
@@ -25,6 +27,8 @@
 </template>
 
 <script>
+import { inject } from '@vue/composition-api'
+
 export default {
   components: {
     // PageTitle,
@@ -48,6 +52,14 @@ export default {
   computed: {
     themeName: function() {
       return this.$vuetify.theme.dark ? 'dark' : 'light'
+    }
+  },
+  setup(){
+    const isStandAlone = inject('isStandAlone', false)
+    console.log('AppPageHeader.isStandAlone:', isStandAlone)
+
+    return {
+      isStandAlone
     }
   }
 }

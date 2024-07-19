@@ -5,7 +5,6 @@
 
     <!-- App Left Drawer -->
     <AppLeftDrawer
-      v-if="!isStandAlone"
       :drawer="navLeft"
       :items="items"
       @onNavLeft="modelNavLeft"
@@ -18,7 +17,6 @@
 
     <!-- App Footer -->
     <AppFooter
-      v-if="!isStandAlone"
       :copyright="config.copyright"
       :developer="config.logoTitle"
       :site="config.website"
@@ -28,7 +26,7 @@
 
 <script>
 /* eslint-disable no-unused-vars */
-import { ref, onMounted, watch } from '@vue/composition-api'
+import { inject, onMounted, watch } from '@vue/composition-api'
 import { mapGetters } from 'vuex'
 import appMenu from './api/app/app-menu.json'
 import feathersClient from '@/feathers-client'
@@ -75,11 +73,13 @@ export default {
 
     if (isDebug && context) console.log('App.setup.context:', context)
     if (isDebug && props) console.log('App.setup.props:', props)
-    if (isDebug && $router)
-      console.log('App.setup.$router:', $router.currentRoute.name)
+    if (isDebug && $router) console.log('App.setup.$router:', $router)
 
-    let isStandAlone = ref('')
-    isStandAlone = true //standAlons.includes($router.currentRoute.name)
+    // let isStandAlone = ref('')
+    // isStandAlone = true //standAlons.includes($router.currentRoute.name)
+    // const isStandAlone = inject('isStandAlone', false)
+
+    // console.log('App.isStandAlone:', isStandAlone)
 
     // Set app
     // context.app = feathersClient
@@ -104,7 +104,7 @@ export default {
       })
     })
 
-    return { isStandAlone }
+    return {  }
   }
 }
 </script>

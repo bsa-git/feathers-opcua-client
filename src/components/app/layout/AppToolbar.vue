@@ -33,6 +33,8 @@ export default {
     onNavLeft() {
       this.$emit('onNavLeft')
     }
+  },
+  setup(){
   }
 }
 </script>
