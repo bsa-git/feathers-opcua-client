@@ -155,7 +155,6 @@ export default {
       ]
     }
   },
-  setup(){
-  }
+  setup() {}
 }
 </script>

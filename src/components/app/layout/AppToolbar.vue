@@ -34,7 +34,6 @@ export default {
       this.$emit('onNavLeft')
     }
   },
-  setup(){
-  }
+  setup() {}
 }
 </script>

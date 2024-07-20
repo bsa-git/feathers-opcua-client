@@ -157,6 +157,7 @@ export default {
   methods: {
     updateStandAlone() {
       this.isStandAlone = !this.isStandAlone
+      this.$emit('onStandAlone', this.isStandAlone)
     }
   }
 }

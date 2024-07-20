@@ -10,7 +10,7 @@
       />
     </template>
 
-    <div> isStandAlone: {{ isStandAlone }} </div>
+    <div>isStandAlone: {{ isStandAlone }}</div>
 
     <!-- Page Title -->
     <template v-if="pageTitle">
@@ -54,7 +54,7 @@ export default {
       return this.$vuetify.theme.dark ? 'dark' : 'light'
     }
   },
-  setup(){
+  setup() {
     const isStandAlone = inject('isStandAlone', false)
     console.log('AppPageHeader.isStandAlone:', isStandAlone)
 

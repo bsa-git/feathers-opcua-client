@@ -4,29 +4,21 @@
     <AppToolbar v-if="!isStandAlone" @onNavLeft="navLeft = !navLeft" />
 
     <!-- App Left Drawer -->
-    <AppLeftDrawer
-      :drawer="navLeft"
-      :items="items"
-      @onNavLeft="modelNavLeft"
-    />
+    <AppLeftDrawer :drawer="navLeft" :items="items" @onNavLeft="modelNavLeft" />
 
     <!-- App Main -->
     <v-main>
-      <router-view />
+      <router-view @onStandAlone="modelStandAlone"  />
     </v-main>
 
     <!-- App Footer -->
-    <AppFooter
-      :copyright="config.copyright"
-      :developer="config.logoTitle"
-      :site="config.website"
-    />
+    <AppFooter :copyright="config.copyright" :developer="config.logoTitle" :site="config.website" />
   </v-app>
 </template>
 
 <script>
 /* eslint-disable no-unused-vars */
-import { inject, onMounted, watch } from '@vue/composition-api'
+import { ref, onMounted, watch } from '@vue/composition-api'
 import { mapGetters } from 'vuex'
 import appMenu from './api/app/app-menu.json'
 import feathersClient from '@/feathers-client'
@@ -61,13 +53,16 @@ export default {
   },
 
   methods: {
-    modelNavLeft: function(newValue) {
+    modelNavLeft: function (newValue) {
       this.navLeft = newValue
+    },
+    modelStandAlone: function (newValue) {
+      this.isStandAlone = newValue
+      console.log('isStandAlone:', this.isStandAlone)
     }
   },
 
   setup(props, context) {
-    const standAlons = ['Login', 'Signup']
 
     const { $store, $router } = context.root
 
@@ -77,7 +72,7 @@ export default {
 
     // let isStandAlone = ref('')
     // isStandAlone = true //standAlons.includes($router.currentRoute.name)
-    // const isStandAlone = inject('isStandAlone', false)
+    const isStandAlone = ref(false)
 
     // console.log('App.isStandAlone:', isStandAlone)
 
@@ -104,7 +99,7 @@ export default {
       })
     })
 
-    return {  }
+    return { isStandAlone }
   }
 }
 </script>
