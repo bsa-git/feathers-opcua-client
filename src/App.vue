@@ -8,11 +8,15 @@
 
     <!-- App Main -->
     <v-main>
-      <router-view @onStandAlone="modelStandAlone"  />
+      <router-view @onStandAlone="modelStandAlone" />
     </v-main>
 
     <!-- App Footer -->
-    <AppFooter :copyright="config.copyright" :developer="config.logoTitle" :site="config.website" />
+    <AppFooter
+      :copyright="config.copyright"
+      :developer="config.logoTitle"
+      :site="config.website"
+    />
   </v-app>
 </template>
 
@@ -53,17 +57,16 @@ export default {
   },
 
   methods: {
-    modelNavLeft: function (newValue) {
+    modelNavLeft: function(newValue) {
       this.navLeft = newValue
     },
-    modelStandAlone: function (newValue) {
+    modelStandAlone: function(newValue) {
       this.isStandAlone = newValue
       console.log('isStandAlone:', this.isStandAlone)
     }
   },
 
   setup(props, context) {
-
     const { $store, $router } = context.root
 
     if (isDebug && context) console.log('App.setup.context:', context)

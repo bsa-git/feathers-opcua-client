@@ -95,7 +95,7 @@
 
 <script>
 /* eslint-disable no-unused-vars */
-import { ref, provide } from '@vue/composition-api'
+import { ref, provide, onUnmounted } from '@vue/composition-api'
 import { mapState, mapGetters } from 'vuex'
 import AppPageHeader from '@/components/app/layout/AppPageHeader.vue'
 
@@ -143,12 +143,17 @@ export default {
     }),
     ...mapState('auth', ['user'])
   },
-  setup() {
+  setup(props, context) {
     let isStandAlone = ref(true)
     provide('isStandAlone', isStandAlone)
     // isStandAlone = true
+    context.emit('onStandAlone', isStandAlone)
 
     console.log('Login.isStandAlone:', isStandAlone)
+
+    onUnmounted(() => {
+      context.emit('onStandAlone', false)
+    })
 
     return {
       isStandAlone
