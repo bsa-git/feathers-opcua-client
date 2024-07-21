@@ -10,8 +10,6 @@
       />
     </template>
 
-    <div>isStandAlone: {{ isStandAlone }}</div>
-
     <!-- Page Title -->
     <template v-if="pageTitle">
       <div
@@ -27,7 +25,6 @@
 </template>
 
 <script>
-import { inject } from '@vue/composition-api'
 
 export default {
   components: {
@@ -55,12 +52,6 @@ export default {
     }
   },
   setup() {
-    const isStandAlone = inject('isStandAlone', false)
-    console.log('AppPageHeader.isStandAlone:', isStandAlone)
-
-    return {
-      isStandAlone
-    }
   }
 }
 </script>

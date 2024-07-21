@@ -38,21 +38,15 @@
 </template>
 
 <script>
+/* eslint-disable no-unused-vars */
+import { ref } from '@vue/composition-api'
 import AppPageHeader from '@/components/app/layout/AppPageHeader.vue'
 
 export default {
   name: 'Home',
   //----------
-
   components: {
     AppPageHeader
-  },
-  data() {
-    return {
-      title: 'Home',
-      description: 'Home',
-      imgName: 'feathers-logo-wide.png'
-    }
   },
   head() {
     return {
@@ -60,6 +54,20 @@ export default {
       meta: [
         { hid: 'description', name: 'description', content: this.description }
       ]
+    }
+  },
+  setup(props, context){
+
+    const { $i18n } = context.root
+
+    const title = ref($i18n.t('app_menu.home'))
+    const description = ref($i18n.t('app_menu.home'))
+    const imgName = ref('feathers-logo-wide.png')
+
+    return{
+      title, 
+      description,
+      imgName
     }
   }
 }

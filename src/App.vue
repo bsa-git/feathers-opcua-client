@@ -4,7 +4,12 @@
     <AppToolbar v-if="!isStandAlone" @onNavLeft="navLeft = !navLeft" />
 
     <!-- App Left Drawer -->
-    <AppLeftDrawer :drawer="navLeft" :items="items" @onNavLeft="modelNavLeft" />
+    <AppLeftDrawer
+      v-if="!isStandAlone"
+      :drawer="navLeft"
+      :items="items"
+      @onNavLeft="modelNavLeft"
+    />
 
     <!-- App Main -->
     <v-main>
@@ -13,6 +18,7 @@
 
     <!-- App Footer -->
     <AppFooter
+      v-if="!isStandAlone"
       :copyright="config.copyright"
       :developer="config.logoTitle"
       :site="config.website"
@@ -62,7 +68,6 @@ export default {
     },
     modelStandAlone: function(newValue) {
       this.isStandAlone = newValue
-      console.log('isStandAlone:', this.isStandAlone)
     }
   },
 
@@ -73,14 +78,10 @@ export default {
     if (isDebug && props) console.log('App.setup.props:', props)
     if (isDebug && $router) console.log('App.setup.$router:', $router)
 
-    // let isStandAlone = ref('')
-    // isStandAlone = true //standAlons.includes($router.currentRoute.name)
     const isStandAlone = ref(false)
 
-    // console.log('App.isStandAlone:', isStandAlone)
-
     // Set app
-    // context.app = feathersClient
+    context.app = feathersClient
 
     // Redirect to chat page if there's a user, otherwise to login page.
     watch(
