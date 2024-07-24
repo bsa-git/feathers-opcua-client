@@ -56,16 +56,15 @@ export default {
       ]
     }
   },
-  setup(props, context){
-
+  setup(props, context) {
     const { $i18n } = context.root
 
     const title = ref($i18n.t('app_menu.home'))
     const description = ref($i18n.t('app_menu.home'))
     const imgName = ref('feathers-logo-wide.png')
 
-    return{
-      title, 
+    return {
+      title,
       description,
       imgName
     }

@@ -25,7 +25,6 @@
 </template>
 
 <script>
-
 export default {
   components: {
     // PageTitle,
@@ -51,8 +50,7 @@ export default {
       return this.$vuetify.theme.dark ? 'dark' : 'light'
     }
   },
-  setup() {
-  }
+  setup() {}
 }
 </script>
 

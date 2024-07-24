@@ -1,8 +1,9 @@
 <template>
-  <v-container>
-    <v-row class="text-center">
-      <v-col cols="8" class="">
-        <v-sheet rounded="xl" class="pa-12" color="grey lighten-3">
+  <v-container fluid fill-height>
+    <div id="user-pages" :style="`background-color: ${primaryColor}`"></div>
+    <div class="main-content">
+      <v-row justify="center">
+        <v-col cols="12" sm="8" md="6" lg="4">
           <v-card :dark="theme.dark">
             <!-- Form title -->
             <v-card-title>
@@ -26,39 +27,29 @@
                 <v-text-field v-model="model.password" v-validate="'required|min:3'" append-icon="mdi-lock"
                   :error-messages="errors.collect('password')" data-vv-name="password" :label="$t('login.password')"
                   type="password"></v-text-field>
-                <div v-if="!user">
-                  <v-icon>mdi-security</v-icon>
-                  <a href="#">{{ $t('authManagement.forgotYourPassword') }}</a>
-                </div>
               </v-card-text>
               <!-- Form actions -->
               <v-card-actions>
-                <v-btn href="/auth/google" icon :disabled="!!user">
-                  <v-icon color="red">fab fa-google fa-lg</v-icon>
-                </v-btn>
-                <v-btn href="/auth/github" icon :disabled="!!user">
-                  <v-icon color="light-blue">fab fa-github fa-lg</v-icon>
-                </v-btn>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" type="submit" :loading="loadingSubmit" :disabled="!!user">
+                <v-btn color="primary" type="submit">
                   {{ $t('login.title') }}
                 </v-btn>
-                <v-btn :loading="loadingLogout">
-                  {{ !!user ? $t('login.logout') : $t('login.clear') }}
-                </v-btn>
+                <v-btn @click="onClear" color="primary"> {{ $t('login.clear') }} </v-btn>
               </v-card-actions>
             </v-form>
           </v-card>
-        </v-sheet>
-      </v-col>
-    </v-row>
+        </v-col>
+      </v-row>
+    </div>
   </v-container>
 </template>
 
 <script>
 /* eslint-disable no-unused-vars */
-import { ref, onUnmounted } from '@vue/composition-api'
+import { ref, reactive, onUnmounted } from '@vue/composition-api'
 import { mapState, mapGetters } from 'vuex'
+
+const isDebug = false
 
 export default {
   name: 'Login',
@@ -71,19 +62,8 @@ export default {
       imgName: 'feathers-logo-wide.png',
       title: this.$t('login.title'),
       description: this.$t('login.description'),
-      saveLogMessage: null,
       loadingSubmit: false,
       loadingLogout: false,
-      confirmDialog: false,
-      inputCodeDialog: false,
-      inputEmailDialog: false,
-      verifyCode: '',
-      error: undefined,
-      model: {
-        email: '',
-        password: '',
-        avatar: ''
-      }
     }
   },
   head() {
@@ -97,22 +77,72 @@ export default {
   computed: {
     ...mapGetters({
       config: 'getConfig',
-      theme: 'getTheme'
+      theme: 'getTheme',
+      primaryColor: 'getPrimaryBaseColor'
     }),
     ...mapState('auth', ['user'])
   },
   setup(props, context) {
+
+    const { $store, $validator, $vuetify, $i18n } = context.root
+    console.log('Login.context:', context)
+
+    // Emit onStandAlone -> true
     context.emit('onStandAlone', true)
 
+    // Lifecycle Hooks
     onUnmounted(() => {
+      // Emit onStandAlone -> false
       context.emit('onStandAlone', false)
     })
 
-    return {
 
+    // Reactive values
+    const error = ref(undefined)
+    const model = reactive({
+      email: '',
+      password: '',
+      avatar: ''
+    })
+
+    // Methods
+    const onSubmit = async () => {
+      if (isDebug) debug('<<--- Start onSubmit --->>');
+      dismissError();
+      await $validator.validateAll();
+      if ($validator.errors.any()) {
+        if (isDebug && model.email) debug('onSubmit.Validator.errors:', model.email, model.password);
+        // this.showError({ text: this.$t('form.validationError'), timeout: 10000 });
+      } else {
+        this.loadingSubmit = true;
+        const loginResponse = await this.login(this.model.email, this.model.password);
+        if (loginResponse && loginResponse.accessToken) {
+          if (!model.avatar) {
+            model.avatar = this.user.avatar;
+          }
+          // this.showSuccess(`${this.$t('login.success')}!`);
+          // setTimeout(() => {
+          //   this.$router.push(this.$i18n.path(this.config.homePath));
+          // }, 1000);
+        }
+      }
+    }
+    const onClear = () => {
+      model.password = ''
+      model.email = ''
+      $validator.reset()
+      dismissError()
+    }
+    const dismissError = () => {
+      error.value = undefined
+    }
+
+    return {
+      error,
+      model,
+      onClear
     }
   },
-  methods: {
-  }
+  methods: {}
 }
 </script>
