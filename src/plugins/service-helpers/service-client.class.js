@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-// const loConcat = require('lodash/concat');
 import fakeData from '@/seeds/fake-data.json';
 import util from '@/plugins/lib/util';
 import moment from 'moment';
