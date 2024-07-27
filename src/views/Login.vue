@@ -46,8 +46,8 @@
 
 <script>
 /* eslint-disable no-unused-vars */
-import { ref, reactive, onUnmounted } from '@vue/composition-api'
-import { mapState, mapGetters } from 'vuex'
+import { ref, reactive, computed, onUnmounted } from '@vue/composition-api'
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 
 const isDebug = false
 
@@ -57,15 +57,14 @@ export default {
   $_veeValidate: {
     validator: 'new'
   },
-  data() {
-    return {
-      imgName: 'feathers-logo-wide.png',
-      title: this.$t('login.title'),
-      description: this.$t('login.description'),
-      loadingSubmit: false,
-      loadingLogout: false,
-    }
-  },
+  // data() {
+  //   return {
+  //     title: this.$t('login.title'),
+  //     description: this.$t('login.description'),
+  //     loadingSubmit: false,
+  //     loadingLogout: false,
+  //   }
+  // },
   head() {
     return {
       title: this.title,
@@ -74,14 +73,14 @@ export default {
       ]
     }
   },
-  computed: {
-    ...mapGetters({
-      config: 'getConfig',
-      theme: 'getTheme',
-      primaryColor: 'getPrimaryBaseColor'
-    }),
-    ...mapState('auth', ['user'])
-  },
+  // computed: {
+  //   ...mapGetters({
+  //     config: 'getConfig',
+  //     theme: 'getTheme',
+  //     primaryColor: 'getPrimaryBaseColor'
+  //   }),
+  //   ...mapState('auth', ['user'])
+  // },
   setup(props, context) {
 
     const { $store, $validator, $vuetify, $i18n } = context.root
@@ -96,8 +95,12 @@ export default {
       context.emit('onStandAlone', false)
     })
 
-
+    //-----------------------------------------------------
     // Reactive values
+    const title = ref($i18n.t('login.title'))
+    const description = ref($i18n.t('login.description'))
+    const loadingSubmit = ref(false)
+    const loadingLogout = ref(false)
     const error = ref(undefined)
     const model = reactive({
       email: '',
@@ -105,6 +108,26 @@ export default {
       avatar: ''
     })
 
+    // Computed state
+    const auth = computed(() => $store.state['auth'])
+    const user = computed(() => $store.state['user'])
+
+    // Computed getters
+    const config = computed(() => $store.getters.getConfig)
+    const theme = computed(() => $store.getters.getTheme)
+    const primaryColor = computed(() => $store.getters.getPrimaryBaseColor)
+
+    // Mutations
+    const clearError = () => $store.commit('auth.clearAuthenticateError')
+    const showSuccess = () => $store.commit('SHOW_SUCCESS')
+    const showError = () => $store.commit('SHOW_ERROR')
+    const showWarning = () => $store.commit('SHOW_WARNING')
+
+    // Actions
+    const authenticate = () => $store.dispatch('authenticate')
+    const logout = () => $store.dispatch('logout')
+
+    //----------------------------------------------------------
     // Methods
     const onSubmit = async () => {
       if (isDebug) debug('<<--- Start onSubmit --->>');
@@ -112,21 +135,43 @@ export default {
       await $validator.validateAll();
       if ($validator.errors.any()) {
         if (isDebug && model.email) debug('onSubmit.Validator.errors:', model.email, model.password);
-        // this.showError({ text: this.$t('form.validationError'), timeout: 10000 });
+        showError({ text: $i18n.t('form.validationError'), timeout: 10000 });
       } else {
-        this.loadingSubmit = true;
-        const loginResponse = await this.login(this.model.email, this.model.password);
+        loadingSubmit = true;
+        const loginResponse = await login(model.email, model.password);
         if (loginResponse && loginResponse.accessToken) {
           if (!model.avatar) {
             model.avatar = this.user.avatar;
           }
-          // this.showSuccess(`${this.$t('login.success')}!`);
+          showSuccess(`${$i18n.t('login.success')}!`);
           // setTimeout(() => {
           //   this.$router.push(this.$i18n.path(this.config.homePath));
           // }, 1000);
         }
       }
     }
+    const login = async (email, password) => {
+      try {
+        if (isDebug && email) debug('<<--- Login --->> Start authenticate:', email, password);
+        const loginResponse = await authenticate({ strategy: 'local', email, password });
+        if (true && loginResponse) debug('authenticate.loginResponse:', loginResponse);
+        return loginResponse;
+      } catch (error) {
+        if (true && error) debug('authenticate.error:', error.message);
+        this.loadingSubmit = false;
+        this.error = error;
+        if (error.message === 'User\'s email is not yet verified.') {
+          showError({ text: $i18n.t('authManagement.msgForErrorEmailNotYetVerified'), timeout: 10000 });
+          // Open resendVerifySignup confirm dialog
+          this.confirmDialog = true;
+        } else if (error.message === '\'user\' record in the database is missing a \'password\'') {
+          showError({ text: $i18n.t('login.errAuthenticatedMissingPassword'), timeout: 10000 });
+        } else {
+          showError({ text: error.message, timeout: 10000 });
+        }
+        // this.saveLogMessage('ERROR-CLIENT', { error });
+      }
+    },
     const onClear = () => {
       model.password = ''
       model.email = ''
@@ -138,11 +183,35 @@ export default {
     }
 
     return {
+      // React values
+      title,
+      description,
+      loadingSubmit,
+      loadingLogout,
       error,
       model,
-      onClear
+      // Computed state
+      auth,
+      user,
+      // Computed getters
+      config,
+      theme,
+      primaryColor,
+      // Methods
+      onSubmit,
+      onClear,
     }
   },
-  methods: {}
+  // methods: {
+  //   ...mapMutations('auth', {
+  //     clearError: 'clearAuthenticateError'
+  //   }),
+  //   ...mapMutations({
+  //     // showSuccess: 'SHOW_SUCCESS',
+  //     // showError: 'SHOW_ERROR',
+  //     // showWarning: 'SHOW_WARNING'
+  //   }),
+  //   ...mapActions(['authenticate', 'logout'])
+  // }
 }
 </script>
