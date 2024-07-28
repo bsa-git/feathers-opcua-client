@@ -119,12 +119,12 @@ export default {
 
     // Mutations
     const clearError = () => $store.commit('auth.clearAuthenticateError')
-    const showSuccess = () => $store.commit('SHOW_SUCCESS')
-    const showError = () => $store.commit('SHOW_ERROR')
-    const showWarning = () => $store.commit('SHOW_WARNING')
+    const showSuccess = (value) => $store.commit('SHOW_SUCCESS', value)
+    const showError = (value) => $store.commit('SHOW_ERROR', value)
+    const showWarning = (value) => $store.commit('SHOW_WARNING', value)
 
     // Actions
-    const authenticate = () => $store.dispatch('authenticate')
+    const authenticate = (payload) => $store.dispatch('authenticate', payload)
     const logout = () => $store.dispatch('logout')
 
     //----------------------------------------------------------
@@ -171,7 +171,7 @@ export default {
         }
         // this.saveLogMessage('ERROR-CLIENT', { error });
       }
-    },
+    }
     const onClear = () => {
       model.password = ''
       model.email = ''
