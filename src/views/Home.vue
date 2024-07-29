@@ -3,10 +3,7 @@
     <v-row class="text-center">
       <v-col cols="12">
         <!--=== Page Header ===-->
-        <AppPageHeader
-          :page-title="description"
-          :img-name="imgName"
-        ></AppPageHeader>
+        <PageHeader :page-title="description" :img-name="imgName"></PageHeader>
       </v-col>
 
       <v-col cols="12">
@@ -40,13 +37,13 @@
 <script>
 /* eslint-disable no-unused-vars */
 import { ref } from '@vue/composition-api'
-import AppPageHeader from '@/components/app/layout/AppPageHeader.vue'
+import PageHeader from '@/components/layout/PageHeader.vue'
 
 export default {
   name: 'Home',
   //----------
   components: {
-    AppPageHeader
+    PageHeader
   },
   head() {
     return {

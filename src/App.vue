@@ -1,10 +1,10 @@
 <template>
   <v-app>
     <!-- App Tool Bar -->
-    <AppToolbar v-if="!isStandAlone" @onNavLeft="navLeft = !navLeft" />
+    <Toolbar v-if="!isStandAlone" @onNavLeft="navLeft = !navLeft" />
 
     <!-- App Left Drawer -->
-    <AppLeftDrawer
+    <LeftDrawer
       v-if="!isStandAlone"
       :drawer="navLeft"
       :items="items"
@@ -17,7 +17,7 @@
     </v-main>
 
     <!-- App Footer -->
-    <AppFooter
+    <Footer
       v-if="!isStandAlone"
       :copyright="config.copyright"
       :developer="config.logoTitle"
@@ -33,9 +33,9 @@ import { mapGetters } from 'vuex'
 import appMenu from './api/app/app-menu.json'
 import feathersClient from '@/feathers-client'
 
-import AppLeftDrawer from './components/app/layout/AppLeftDrawer'
-import AppToolbar from './components/app/layout/AppToolbar.vue'
-import AppFooter from './components/app/layout/AppFooter.vue'
+import LeftDrawer from './components/layout/LeftDrawer'
+import Toolbar from './components/layout/Toolbar.vue'
+import Footer from './components/layout/Footer.vue'
 // import { tr } from 'date-fns/locale'
 
 const isDebug = false
@@ -44,9 +44,9 @@ export default {
   name: 'App',
   //------------
   components: {
-    AppLeftDrawer,
-    AppToolbar,
-    AppFooter
+    LeftDrawer,
+    Toolbar,
+    Footer
   },
 
   data() {
@@ -84,6 +84,7 @@ export default {
     context.app = feathersClient
 
     // Redirect to chat page if there's a user, otherwise to login page.
+    /*
     watch(
       () => $store.state.auth.user,
       user => {
@@ -92,6 +93,7 @@ export default {
       },
       { lazy: true }
     )
+      */
 
     // $router.push({ name: 'Dashboard' })
     // Attempt jwt auth when the app mounts.

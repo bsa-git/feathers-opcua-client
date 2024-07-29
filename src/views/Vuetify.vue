@@ -3,12 +3,12 @@
     <v-row class="text-center">
       <!--=== Page Header ===-->
       <v-col cols="12">
-        <AppPageHeader
+        <PageHeader
           :page-title="description"
           :img-name="imgName"
           :is-div="true"
         >
-        </AppPageHeader>
+        </PageHeader>
       </v-col>
 
       <v-col class="mb-4">
@@ -79,13 +79,13 @@
 </template>
 
 <script>
-import AppPageHeader from '@/components/app/layout/AppPageHeader.vue'
+import PageHeader from '@/components/layout/PageHeader.vue'
 
 export default {
   name: 'Vuetify',
   //--------------
   components: {
-    AppPageHeader
+    PageHeader
   },
 
   head() {
