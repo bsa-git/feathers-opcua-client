@@ -67,7 +67,8 @@ const goToScroll = function(to, params = {}) {
  * @return {string|*|void}
  */
 const stripSlashes = function(value) {
-  return value.replace(/^(\/*)|(\/*)$/g, '')
+  const _value = value? value.replace(/^(\/*)|(\/*)$/g, '') : value
+  return _value
 }
 
 /**

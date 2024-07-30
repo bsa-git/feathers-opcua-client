@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 
 const loMerge = require('lodash/merge')
+import util from '@/plugins/lib/util'
 
 let en = require('@/plugins/localization/locales/en.json')
 let ru = require('@/plugins/localization/locales/ru.json')
@@ -20,6 +21,14 @@ locale = locale ? locale : 'en'
 let fallbackLocale = process.env.VUE_APP_I18N_FALLBACK_LOCALE
 fallbackLocale = fallbackLocale ? fallbackLocale : 'en'
 
+const path = link => {
+  const _link = util.stripSlashes(link)
+  if (this.locale === this.fallbackLocale) {
+    return `/${_link}`
+  }
+  return `/${this.locale}/${_link}`
+}
+
 const vueI18n = new VueI18n({
   locale: locale,
   fallbackLocale: fallbackLocale,
@@ -28,6 +37,8 @@ const vueI18n = new VueI18n({
     ru
   }
 })
+
+vueI18n['path'] = path
 
 export default vueI18n
 

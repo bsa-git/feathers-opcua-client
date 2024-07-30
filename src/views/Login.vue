@@ -46,11 +46,16 @@
               <!-- Form actions -->
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" type="submit">
+                <v-btn
+                  color="primary"
+                  type="submit"
+                  :loading="loadingSubmit"
+                  :disabled="!!user"
+                >
                   {{ $t('login.title') }}
                 </v-btn>
-                <v-btn color="primary" @click="onClear">
-                  {{ $t('login.clear') }}
+                <v-btn :loading="loadingLogout" @click="btnClick">
+                  {{ !!user ? $t('login.logout') : $t('login.clear') }}
                 </v-btn>
               </v-card-actions>
             </v-form>
@@ -59,13 +64,13 @@
       </v-row>
     </div>
     <!-- Snackbar -->
-    <SnackBar
+    <!-- <SnackBar
       :show="snackBar.show"
       :text="snackBar.text"
       :color="snackBar.color"
       :timeout="snackBar.timeout"
       @onShow="modelSnackBar"
-    />
+    /> -->
   </v-container>
 </template>
 
@@ -74,7 +79,7 @@
 import { ref, reactive, computed, onUnmounted } from '@vue/composition-api'
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 
-import SnackBar from '@/components/layout/Snackbar'
+// import SnackBar from '@/components/layout/SnackBar'
 
 const debug = require('debug')('app:user.login')
 
@@ -87,7 +92,7 @@ export default {
     validator: 'new'
   },
   components: {
-    SnackBar
+    // SnackBar
   },
   // data() {
   //   return {
@@ -114,8 +119,8 @@ export default {
   //   ...mapState('auth', ['user'])
   // },
   setup(props, context) {
-    const { $store, $validator, $vuetify, $i18n } = context.root
-    console.log('Login.context:', context)
+    const { $store, $validator, $vuetify, $i18n, $router } = context.root
+    if (isDebug && context) console.log('Login.context:', $i18n)
 
     // Emit onStandAlone -> true
     context.emit('onStandAlone', true)
@@ -130,8 +135,8 @@ export default {
     // Reactive values
     const title = ref($i18n.t('login.title'))
     const description = ref($i18n.t('login.description'))
-    // const loadingSubmit = ref(false)
-    // const loadingLogout = ref(false)
+    let loadingSubmit = ref(false)
+    let loadingLogout = ref(false)
     // const error = ref(undefined)
     const model = reactive({
       email: '',
@@ -147,15 +152,19 @@ export default {
     const config = computed(() => $store.getters.getConfig)
     const theme = computed(() => $store.getters.getTheme)
     const primaryColor = computed(() => $store.getters.getPrimaryBaseColor)
-    const snackBar = computed(() => $store.getters.getSnackBar)
-    // snackBar: 'getSnackBar'
+
+    // if (true && context) console.log('Login.computed.auth:', auth)
+    // if (true && context) console.log('Login.computed.user:', user)
+    // if (true && context) console.log('Login.computed.config:', config)
+    // if (true && context) console.log('Login.computed.theme:', theme)
+    // if (true && context) console.log('Login.computed.primaryColor:', primaryColor)
 
     // Mutations
     // const clearError = () => $store.commit('auth.clearAuthenticateError')
     const showSuccess = value => $store.commit('SHOW_SUCCESS', value)
     const showError = value => $store.commit('SHOW_ERROR', value)
-    const showWarning = value => $store.commit('SHOW_WARNING', value)
-    const setSnackBar = value => $store.commit('SET_SNACK_BAR', value)
+    // const showWarning = value => $store.commit('SHOW_WARNING', value)
+    // const setSnackBar = value => $store.commit('SET_SNACK_BAR', value)
 
     // Actions
     const authenticate = payload => $store.dispatch('authenticate', payload)
@@ -163,9 +172,9 @@ export default {
 
     //----------------------------------------------------------
     // Methods
-    const modelSnackBar = newValue => {
-      setSnackBar(newValue)
-    }
+    // const modelSnackBar = newValue => {
+    //   setSnackBar(newValue)
+    // }
     const onSubmit = async () => {
       if (isDebug) debug('<<--- Start onSubmit --->>')
       // dismissError()
@@ -175,11 +184,11 @@ export default {
           debug('onSubmit.Validator.errors:', model.email, model.password)
         showError({ text: $i18n.t('form.validationError'), timeout: 10000 })
       } else {
-        // loadingSubmit = true;
+        loadingSubmit = true
         const loginResponse = await login(model.email, model.password)
         if (loginResponse && loginResponse.accessToken) {
           if (!model.avatar) {
-            model.avatar = user.value.avatar
+            model.avatar = user.avatar
           }
           showSuccess(`${$i18n.t('login.success')}!`)
           // setTimeout(() => {
@@ -202,7 +211,7 @@ export default {
         return loginResponse
       } catch (error) {
         if (true && error) debug('authenticate.error:', error.message)
-        // this.loadingSubmit = false;
+        loadingSubmit = false
         // this.error = error;
         if (error.message === "User's email is not yet verified.") {
           showError({
@@ -225,6 +234,20 @@ export default {
         // this.saveLogMessage('ERROR-CLIENT', { error });
       }
     }
+    const btnClick = () => {
+      if (user) {
+        loadingLogout = true
+        showSuccess(`${$i18n.t('login.successLogout')}!`)
+        setTimeout(() => {
+          logout()
+          const homePath = config.value.homePath
+          $router.push($i18n.path(homePath))
+          // $router.push(config.homePath)
+        }, 1000)
+      } else {
+        onClear()
+      }
+    }
     const onClear = () => {
       model.password = ''
       model.email = ''
@@ -239,12 +262,12 @@ export default {
       // React values
       title,
       description,
-      // loadingSubmit,
-      // loadingLogout,
+      loadingSubmit,
+      loadingLogout,
       // error,
       model,
       // Computed state
-      snackBar,
+      // snackBar,
       // auth,
       user,
       // Computed getters
@@ -252,9 +275,9 @@ export default {
       theme,
       primaryColor,
       // Methods
-      modelSnackBar,
+      // modelSnackBar,
       onSubmit,
-      onClear
+      btnClick
     }
   }
   // methods: {

@@ -16,6 +16,15 @@
       <router-view @onStandAlone="modelStandAlone" />
     </v-main>
 
+    <!-- Snackbar -->
+    <SnackBar
+      :show="snackBar.show"
+      :text="snackBar.text"
+      :color="snackBar.color"
+      :timeout="snackBar.timeout"
+      @onShow="modelSnackBar"
+    />
+
     <!-- App Footer -->
     <Footer
       v-if="!isStandAlone"
@@ -28,7 +37,7 @@
 
 <script>
 /* eslint-disable no-unused-vars */
-import { ref, onMounted, watch } from '@vue/composition-api'
+import { ref, computed, onMounted, watch } from '@vue/composition-api'
 import { mapGetters } from 'vuex'
 import appMenu from './api/app/app-menu.json'
 import feathersClient from '@/feathers-client'
@@ -36,6 +45,7 @@ import feathersClient from '@/feathers-client'
 import LeftDrawer from './components/layout/LeftDrawer'
 import Toolbar from './components/layout/Toolbar.vue'
 import Footer from './components/layout/Footer.vue'
+import SnackBar from './components/layout/SnackBar.vue'
 // import { tr } from 'date-fns/locale'
 
 const isDebug = false
@@ -46,7 +56,8 @@ export default {
   components: {
     LeftDrawer,
     Toolbar,
-    Footer
+    Footer,
+    SnackBar
   },
 
   data() {
@@ -78,7 +89,12 @@ export default {
     if (isDebug && props) console.log('App.setup.props:', props)
     if (isDebug && $router) console.log('App.setup.$router:', $router)
 
+    // Reactive values
     const isStandAlone = ref(false)
+    // Computed getters
+    const snackBar = computed(() => $store.getters.getSnackBar)
+    // Mutations
+    const setSnackBar = value => $store.commit('SET_SNACK_BAR', value)
 
     // Set app
     context.app = feathersClient
@@ -105,7 +121,16 @@ export default {
       })
     })
 
-    return { isStandAlone }
+    // Methods
+    const modelSnackBar = newValue => {
+      setSnackBar(newValue)
+    }
+
+    return {
+      isStandAlone,
+      snackBar,
+      modelSnackBar
+    }
   }
 }
 </script>
