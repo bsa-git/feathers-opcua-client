@@ -3,11 +3,7 @@
     <v-row class="text-center">
       <!--=== Page Header ===-->
       <v-col cols="12">
-        <PageHeader
-          :page-title="description"
-          :img-name="imgName"
-          :is-div="true"
-        >
+        <PageHeader :page-title="description" :img-name="imgName" :is-div="true">
         </PageHeader>
       </v-col>
 
@@ -15,9 +11,7 @@
         <p class="subheading font-weight-regular">
           For help and collaboration with other Vuetify developers,
           <br />please join our online
-          <a href="https://community.vuetifyjs.com" target="_blank"
-            >Discord Community</a
-          >
+          <a href="https://community.vuetifyjs.com" target="_blank">Discord Community</a>
         </p>
       </v-col>
 
@@ -27,13 +21,7 @@
         </h2>
 
         <v-row justify="center">
-          <a
-            v-for="(next, i) in whatsNext"
-            :key="i"
-            :href="next.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
+          <a v-for="(next, i) in whatsNext" :key="i" :href="next.href" class="subheading mx-3" target="_blank">
             {{ next.text }}
           </a>
         </v-row>
@@ -45,13 +33,7 @@
         </h2>
 
         <v-row justify="center">
-          <a
-            v-for="(link, i) in importantLinks"
-            :key="i"
-            :href="link.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
+          <a v-for="(link, i) in importantLinks" :key="i" :href="link.href" class="subheading mx-3" target="_blank">
             {{ link.text }}
           </a>
         </v-row>
@@ -63,13 +45,7 @@
         </h2>
 
         <v-row justify="center">
-          <a
-            v-for="(eco, i) in ecosystem"
-            :key="i"
-            :href="eco.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
+          <a v-for="(eco, i) in ecosystem" :key="i" :href="eco.href" class="subheading mx-3" target="_blank">
             {{ eco.text }}
           </a>
         </v-row>
@@ -79,6 +55,8 @@
 </template>
 
 <script>
+/* eslint-disable no-unused-vars */
+import { ref, reactive } from '@vue/composition-api'
 import PageHeader from '@/components/layout/PageHeader.vue'
 
 export default {
@@ -97,12 +75,16 @@ export default {
     }
   },
 
-  data() {
-    return {
-      title: 'Vuetify',
-      description: 'Welcome to Vuetify',
-      imgName: 'logo.svg',
-      ecosystem: [
+    setup(props, context) {
+    const { $i18n } = context.root
+
+    //-------------------------------------------------------
+    // Reactive values
+    const title = ref($i18n.t('app_menu.home'))
+    const description = ref($i18n.t('app_menu.home'))
+    const imgName = ref('feathers-logo-wide.png')
+    const ecosystem = reactive(
+      [
         {
           text: 'vuetify-loader',
           href: 'https://github.com/vuetifyjs/vuetify-loader'
@@ -115,8 +97,10 @@ export default {
           text: 'awesome-vuetify',
           href: 'https://github.com/vuetifyjs/awesome-vuetify'
         }
-      ],
-      importantLinks: [
+      ]
+    )
+    const importantLinks = reactive(
+      [
         {
           text: 'Documentation',
           href: 'https://vuetifyjs.com'
@@ -137,8 +121,10 @@ export default {
           text: 'Articles',
           href: 'https://medium.com/vuetify'
         }
-      ],
-      whatsNext: [
+      ]
+    )
+    const whatsNext = reactive(
+      [
         {
           text: 'Explore components',
           href: 'https://vuetifyjs.com/components/api-explorer'
@@ -153,8 +139,16 @@ export default {
             'https://vuetifyjs.com/getting-started/frequently-asked-questions'
         }
       ]
+    )
+
+    return {
+      title,
+      description,
+      imgName,
+      ecosystem,
+      importantLinks,
+      whatsNext
     }
-  },
-  setup() {}
+  }
 }
 </script>

@@ -99,30 +99,13 @@ export default {
   setup(props, context) {
     const { $store, $validator, $vuetify, $i18n, $router } = context.root
     if (isDebug && context) console.log('Login.context:', $i18n)
-
-    // Emit onStandAlone -> true
-    context.emit('onStandAlone', true)
-
-    // Lifecycle Hooks
-    onBeforeMount(() => {
-      if (user.value) {
-        // Login form should be open for non-logged users
-        logout()
-      }
-      initModel()
-    })
-    onUnmounted(() => {
-      // Emit onStandAlone -> false
-      context.emit('onStandAlone', false)
-    })
-
+    
     //-----------------------------------------------------
     // Reactive values
     const title = ref($i18n.t('login.title'))
     const description = ref($i18n.t('login.description'))
     let loadingSubmit = ref(false)
     let loadingLogout = ref(false)
-    // const error = ref(undefined)
     const model = reactive({
       email: '',
       password: '',
@@ -149,6 +132,23 @@ export default {
     // Actions
     const authenticate = payload => $store.dispatch('authenticate', payload)
     const logout = () => $store.dispatch('logout')
+
+    //----------------------------------------------------------
+    // Emit onStandAlone -> true
+    context.emit('onStandAlone', true)
+
+    // Lifecycle Hooks
+    onBeforeMount(() => {
+      if (user.value) {
+        // Login form should be open for non-logged users
+        logout()
+      }
+      initModel()
+    })
+    onUnmounted(() => {
+      // Emit onStandAlone -> false
+      context.emit('onStandAlone', false)
+    })
 
     //----------------------------------------------------------
     // Methods
@@ -183,8 +183,8 @@ export default {
           }
           showSuccess(`${$i18n.t('login.success')}!`)
           setTimeout(() => {
-            $router.push($i18n.path(config.value.homePath));
-          }, 1000);
+            $router.push($i18n.path(config.value.homePath))
+          }, 1000)
         }
       }
     }
@@ -204,7 +204,7 @@ export default {
       } catch (error) {
         if (true && error) console.log('authenticate.error:', error.message)
         loadingSubmit.value = false
-        model.error = error;
+        model.error = error
         if (error.message === "User's email is not yet verified.") {
           showError({
             text: $i18n.t('authManagement.msgForErrorEmailNotYetVerified'),
@@ -253,7 +253,6 @@ export default {
       description,
       loadingSubmit,
       loadingLogout,
-      // error,
       model,
       // Computed state
       // snackBar,
@@ -264,7 +263,6 @@ export default {
       theme,
       primaryColor,
       // Methods
-      // modelSnackBar,
       onSubmit,
       btnClick
     }

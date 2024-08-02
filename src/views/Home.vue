@@ -56,6 +56,8 @@ export default {
   setup(props, context) {
     const { $i18n } = context.root
 
+    //-------------------------------------------------------
+    // Reactive values
     const title = ref($i18n.t('app_menu.home'))
     const description = ref($i18n.t('app_menu.home'))
     const imgName = ref('feathers-logo-wide.png')
