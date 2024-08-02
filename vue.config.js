@@ -6,7 +6,7 @@ fallbackLocale = fallbackLocale ? fallbackLocale : 'en'
 module.exports = {
   transpileDependencies: ['feathers-vuex', 'vuetify'],
   configureWebpack: {
-    devtool: 'eval-source-map', // eval-source-map source-map
+    devtool: 'source-map', // eval-source-map source-map
     plugins: [
       new Dotenv({
         path: './.env', // Path to .env file (this is the default)

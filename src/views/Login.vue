@@ -63,25 +63,20 @@
         </v-col>
       </v-row>
     </div>
-    <!-- Snackbar -->
-    <!-- <SnackBar
-      :show="snackBar.show"
-      :text="snackBar.text"
-      :color="snackBar.color"
-      :timeout="snackBar.timeout"
-      @onShow="modelSnackBar"
-    /> -->
   </v-container>
 </template>
 
 <script>
 /* eslint-disable no-unused-vars */
-import { ref, reactive, computed, onUnmounted } from '@vue/composition-api'
-import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
-
-// import SnackBar from '@/components/layout/SnackBar'
-
-const debug = require('debug')('app:user.login')
+import {
+  ref,
+  reactive,
+  computed,
+  onBeforeMount,
+  onUnmounted
+} from '@vue/composition-api'
+import Http from '@/plugins/lib/http.client.class'
+import fakeData from '@/seeds/fake-data.json'
 
 const isDebug = false
 
@@ -91,17 +86,7 @@ export default {
   $_veeValidate: {
     validator: 'new'
   },
-  components: {
-    // SnackBar
-  },
-  // data() {
-  //   return {
-  //     title: this.$t('login.title'),
-  //     description: this.$t('login.description'),
-  //     loadingSubmit: false,
-  //     loadingLogout: false,
-  //   }
-  // },
+  components: {},
   head() {
     return {
       title: this.title,
@@ -110,14 +95,7 @@ export default {
       ]
     }
   },
-  // computed: {
-  //   ...mapGetters({
-  //     config: 'getConfig',
-  //     theme: 'getTheme',
-  //     primaryColor: 'getPrimaryBaseColor'
-  //   }),
-  //   ...mapState('auth', ['user'])
-  // },
+
   setup(props, context) {
     const { $store, $validator, $vuetify, $i18n, $router } = context.root
     if (isDebug && context) console.log('Login.context:', $i18n)
@@ -126,6 +104,13 @@ export default {
     context.emit('onStandAlone', true)
 
     // Lifecycle Hooks
+    onBeforeMount(() => {
+      if (user.value) {
+        // Login form should be open for non-logged users
+        logout()
+      }
+      initModel()
+    })
     onUnmounted(() => {
       // Emit onStandAlone -> false
       context.emit('onStandAlone', false)
@@ -141,23 +126,18 @@ export default {
     const model = reactive({
       email: '',
       password: '',
-      avatar: ''
+      avatar: '',
+      error: undefined
     })
 
     // Computed state
-    const auth = computed(() => $store.state['auth'])
+    // const auth = computed(() => $store.state['auth'])
     const user = computed(() => $store.state['auth']['user'])
 
     // Computed getters
     const config = computed(() => $store.getters.getConfig)
     const theme = computed(() => $store.getters.getTheme)
     const primaryColor = computed(() => $store.getters.getPrimaryBaseColor)
-
-    // if (true && context) console.log('Login.computed.auth:', auth)
-    // if (true && context) console.log('Login.computed.user:', user)
-    // if (true && context) console.log('Login.computed.config:', config)
-    // if (true && context) console.log('Login.computed.theme:', theme)
-    // if (true && context) console.log('Login.computed.primaryColor:', primaryColor)
 
     // Mutations
     // const clearError = () => $store.commit('auth.clearAuthenticateError')
@@ -172,54 +152,64 @@ export default {
 
     //----------------------------------------------------------
     // Methods
-    // const modelSnackBar = newValue => {
-    //   setSnackBar(newValue)
-    // }
+    const initModel = () => {
+      const isDev = config.value.nodeEnv === 'development'
+      const http = new Http()
+      let userEmail = http.getParams('email')
+      userEmail = userEmail ? Http.urlDecode(userEmail) : ''
+      const fakeUser = fakeData.users[0]
+      const fakeEmail = isDev ? fakeUser.email : ''
+      const fakePassword = isDev
+        ? fakeUser.email.slice(0, fakeUser.email.indexOf('@'))
+        : ''
+      model.email = userEmail ? userEmail : fakeEmail
+      model.password = userEmail ? '' : fakePassword
+    }
+
     const onSubmit = async () => {
-      if (isDebug) debug('<<--- Start onSubmit --->>')
-      // dismissError()
+      if (isDebug) console.log('<<--- Start onSubmit --->>')
+      dismissError()
       await $validator.validateAll()
       if ($validator.errors.any()) {
         if (isDebug && model.email)
-          debug('onSubmit.Validator.errors:', model.email, model.password)
+          console.log('onSubmit.Validator.errors:', model.email, model.password)
         showError({ text: $i18n.t('form.validationError'), timeout: 10000 })
       } else {
-        loadingSubmit = true
+        loadingSubmit.value = true
         const loginResponse = await login(model.email, model.password)
         if (loginResponse && loginResponse.accessToken) {
           if (!model.avatar) {
-            model.avatar = user.avatar
+            model.avatar = user.value.avatar
           }
           showSuccess(`${$i18n.t('login.success')}!`)
-          // setTimeout(() => {
-          //   this.$router.push(this.$i18n.path(this.config.homePath));
-          // }, 1000);
+          setTimeout(() => {
+            $router.push($i18n.path(config.value.homePath));
+          }, 1000);
         }
       }
     }
+
     const login = async (email, password) => {
       try {
         if (isDebug && email)
-          debug('<<--- Login --->> Start authenticate:', email, password)
+          console.log('<<--- Login --->> Start authenticate:', email, password)
         const loginResponse = await authenticate({
           strategy: 'local',
           email,
           password
         })
-        if (true && loginResponse)
-          debug('authenticate.loginResponse:', loginResponse)
+        if (isDebug && loginResponse)
+          console.log('authenticate.loginResponse:', loginResponse)
         return loginResponse
       } catch (error) {
-        if (true && error) debug('authenticate.error:', error.message)
-        loadingSubmit = false
-        // this.error = error;
+        if (true && error) console.log('authenticate.error:', error.message)
+        loadingSubmit.value = false
+        model.error = error;
         if (error.message === "User's email is not yet verified.") {
           showError({
             text: $i18n.t('authManagement.msgForErrorEmailNotYetVerified'),
             timeout: 10000
           })
-          // Open resendVerifySignup confirm dialog
-          this.confirmDialog = true
         } else if (
           error.message ===
           "'user' record in the database is missing a 'password'"
@@ -234,15 +224,14 @@ export default {
         // this.saveLogMessage('ERROR-CLIENT', { error });
       }
     }
-    const btnClick = () => {
-      if (user) {
-        loadingLogout = true
+    const btnClick = async () => {
+      if (user.value) {
+        loadingLogout.value = true
         showSuccess(`${$i18n.t('login.successLogout')}!`)
-        setTimeout(() => {
-          logout()
+        setTimeout(async () => {
+          await logout()
           const homePath = config.value.homePath
           $router.push($i18n.path(homePath))
-          // $router.push(config.homePath)
         }, 1000)
       } else {
         onClear()
@@ -252,11 +241,11 @@ export default {
       model.password = ''
       model.email = ''
       $validator.reset()
-      // dismissError()
+      dismissError()
     }
-    // const dismissError = () => {
-    //   error.value = undefined
-    // }
+    const dismissError = () => {
+      model.error = undefined
+    }
 
     return {
       // React values
@@ -280,16 +269,5 @@ export default {
       btnClick
     }
   }
-  // methods: {
-  //   ...mapMutations('auth', {
-  //     clearError: 'clearAuthenticateError'
-  //   }),
-  //   ...mapMutations({
-  //     // showSuccess: 'SHOW_SUCCESS',
-  //     // showError: 'SHOW_ERROR',
-  //     // showWarning: 'SHOW_WARNING'
-  //   }),
-  //   ...mapActions(['authenticate', 'logout'])
-  // }
 }
 </script>
