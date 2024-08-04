@@ -53,5 +53,9 @@
     "vue-template-compiler": "2.6.12",
     "vuetify-loader": "^1.7.0",
     "yup": "^1.4.0"
+  },
+  "volta": {
+    "node": "12.22.12",
+    "yarn": "1.22.22"
   }
 }
