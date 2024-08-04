@@ -99,7 +99,7 @@ export default {
   setup(props, context) {
     const { $store, $validator, $vuetify, $i18n, $router } = context.root
     if (isDebug && context) console.log('Login.context:', $i18n)
-    
+
     //-----------------------------------------------------
     // Reactive values
     const title = ref($i18n.t('login.title'))

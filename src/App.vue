@@ -4,7 +4,12 @@
     <Toolbar v-if="!isStandAlone" @onNavLeft="navLeft = !navLeft" />
 
     <!-- App Left Drawer -->
-    <LeftDrawer v-if="!isStandAlone" :drawer="navLeft" :items="menuItems" @onNavLeft="modelNavLeft" />
+    <LeftDrawer
+      v-if="!isStandAlone"
+      :drawer="navLeft"
+      :items="menuItems"
+      @onNavLeft="modelNavLeft"
+    />
 
     <!-- App Main -->
     <v-main>
@@ -12,11 +17,21 @@
     </v-main>
 
     <!-- Snackbar -->
-    <SnackBar :show="snackBar.show" :text="snackBar.text" :color="snackBar.color" :timeout="snackBar.timeout"
-      @onShow="modelSnackBar" />
+    <SnackBar
+      :show="snackBar.show"
+      :text="snackBar.text"
+      :color="snackBar.color"
+      :timeout="snackBar.timeout"
+      @onShow="modelSnackBar"
+    />
 
     <!-- App Footer -->
-    <Footer v-if="!isStandAlone" :copyright="config.copyright" :developer="config.logoTitle" :site="config.website" />
+    <Footer
+      v-if="!isStandAlone"
+      :copyright="config.copyright"
+      :developer="config.logoTitle"
+      :site="config.website"
+    />
   </v-app>
 </template>
 
@@ -66,7 +81,6 @@ export default {
     // Mutations
     const setSnackBar = value => $store.commit('SET_SNACK_BAR', value)
 
-
     // Redirect to chat page if there's a user, otherwise to login page.
     /*
     watch(
@@ -81,7 +95,8 @@ export default {
 
     //----------------------------------------------------
     // Lifecycle Hooks
-    onMounted(() => {// Attempt jwt auth when the app mounts.
+    onMounted(() => {
+      // Attempt jwt auth when the app mounts.
       $store.dispatch('auth/authenticate').catch(error => {
         if (error.name !== 'NotAuthenticated') {
           console.error(error)
