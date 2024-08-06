@@ -145,12 +145,19 @@ const state = () => ({
     */
     //--- PERSONAL-DATA ---//
     isAvatar: util.isTrue(process.env.PERSONAL_IS_AVATAR),
-    logoImage: (process.env.PERSONAL_ICON || '').trim(),
-    logoTitle: (process.env.PERSONAL_LOGO_TITLE || '').trim(),
-    copyright: (process.env.PERSONAL_COPYRIGHT || '').trim(),
-    website: (process.env.PERSONAL_WEBSITE || '').trim(),
-    email: (process.env.PERSONAL_EMAIL || '').trim(),
-    githubProject: (process.env.PERSONAL_GITHUB_PROJECT || '').trim()
+    logoImage: (process.env.PERSONAL_ICON || 'mdi-coffee').trim(),
+    logoTitle: (process.env.PERSONAL_LOGO_TITLE || 'BSA Lab.').trim(),
+    copyright: (
+      process.env.PERSONAL_COPYRIGHT || '© 2024 Sergey Beskorovainy'
+    ).trim(),
+    website: (
+      process.env.PERSONAL_WEBSITE || 'http://bsa-git.github.io'
+    ).trim(),
+    email: (process.env.PERSONAL_EMAIL || 'bs261257@gmail.com').trim(),
+    githubProject: (
+      process.env.PERSONAL_GITHUB_PROJECT ||
+      'https://github.com/bsa-git/feathers-opcua-client'
+    ).trim()
   },
   //--- SNACKBAR ---//
   snackbar: {

@@ -179,6 +179,7 @@ export default {
         const loginResponse = await login(model.email, model.password)
         if (loginResponse && loginResponse.accessToken) {
           if (!model.avatar) {
+            if(true && user.value.avatar) console.log('Login.onSubmit.avatar:', user.value.avatar)
             model.avatar = user.value.avatar
           }
           showSuccess(`${$i18n.t('login.success')}!`)

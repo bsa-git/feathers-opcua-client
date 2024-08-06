@@ -27,6 +27,11 @@
 </template>
 
 <script>
+/* eslint-disable no-unused-vars */
+import { computed } from '@vue/composition-api'
+
+const isDebug = false
+
 export default {
   props: {
     drawer: Boolean,
@@ -38,19 +43,18 @@ export default {
     }
   },
 
-  computed: {
-    compDrawer: {
-      // Getter:
-      get: function() {
-        return this.drawer
-      },
-      // Setter:
-      set: function(newValue) {
-        this.$emit('onNavLeft', newValue)
+  setup(props, context) {
+    // Computed values
+    const compDrawer = computed({
+      get: () => props.drawer,
+      set: newValue => {
+        context.emit('onNavLeft', newValue)
       }
-    }
-  },
+    })
 
-  setup() {}
+    return {
+      compDrawer
+    }
+  }
 }
 </script>
