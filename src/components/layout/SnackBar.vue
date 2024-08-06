@@ -18,6 +18,9 @@
 </template>
 
 <script>
+/* eslint-disable no-unused-vars */
+import { computed } from '@vue/composition-api'
+
 export default {
   props: {
     show: {
@@ -41,16 +44,18 @@ export default {
       default: false
     }
   },
-  computed: {
-    compShow: {
-      // Getter:
-      get: function() {
-        return this.show
-      },
-      // Setter:
-      set: function(newValue) {
-        this.$emit('onShow', newValue)
+
+  setup(props, context) {
+    // Computed values
+    const compShow = computed({
+      get: () => props.show,
+      set: newValue => {
+        context.emit('onShow', newValue)
       }
+    })
+
+    return {
+      compShow
     }
   }
 }

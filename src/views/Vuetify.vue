@@ -104,8 +104,8 @@ export default {
 
     //-------------------------------------------------------
     // Reactive values
-    const title = ref($i18n.t('app_menu.home'))
-    const description = ref($i18n.t('app_menu.home'))
+    const title = ref('Vuetify')
+    const description = ref('Vuetify')
     const imgName = ref('feathers-logo-wide.png')
     const ecosystem = reactive([
       {

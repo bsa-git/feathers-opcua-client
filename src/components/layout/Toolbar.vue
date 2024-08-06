@@ -29,11 +29,17 @@
 
 <script>
 export default {
-  methods: {
-    onNavLeft() {
-      this.$emit('onNavLeft')
+  
+  setup(props, context) {
+
+    // Methods
+    const onNavLeft = () => {
+      context.emit('onNavLeft')
     }
-  },
-  setup() {}
+
+    return {
+      onNavLeft
+    }
+  }
 }
 </script>

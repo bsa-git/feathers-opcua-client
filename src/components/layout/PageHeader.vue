@@ -25,6 +25,9 @@
 </template>
 
 <script>
+/* eslint-disable no-unused-vars */
+import { computed } from '@vue/composition-api'
+
 export default {
   components: {
     // PageTitle,
@@ -45,12 +48,17 @@ export default {
       default: false
     }
   },
-  computed: {
-    themeName: function() {
-      return this.$vuetify.theme.dark ? 'dark' : 'light'
+
+  setup(props, context) {
+    const { $vuetify } = context.root
+
+    // Computed values
+    const themeName = computed(() => ($vuetify.theme.dark ? 'dark' : 'light'))
+
+    return {
+      themeName
     }
-  },
-  setup() {}
+  }
 }
 </script>
 
