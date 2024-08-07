@@ -2,9 +2,10 @@
 import util from '@/plugins/lib/util'
 import Service from '@/plugins/service-helpers/service-client.class'
 const debug = require('debug')('app:store.actions')
-const isDebug = false
+const isDebug = true
 
 const actions = {
+  
   async checkAuth({ dispatch }) {
     if (isDebug) debug('<<checkAuth>>Start checkAuth')
     let result = false
@@ -58,7 +59,7 @@ const actions = {
   },
 
   async authenticate(store, credentials = null) {
-    if (isDebug) debug('<<authenticate>> Start authenticate')
+    if (isDebug && store) debug('<<authenticate>> Start authenticate')
     const service = new Service(store)
 
     // authenticate

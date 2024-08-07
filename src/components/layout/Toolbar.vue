@@ -29,9 +29,7 @@
 
 <script>
 export default {
-  
   setup(props, context) {
-
     // Methods
     const onNavLeft = () => {
       context.emit('onNavLeft')

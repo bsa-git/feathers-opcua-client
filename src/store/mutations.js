@@ -107,16 +107,7 @@ const motations = {
     state.chat.contactSelected = selectedContact
   },
 
-  //--- SNACKBAR ---//
-  /**
-   * Set snack bar
-   * @param state {Object}
-   * @param snackbar {Object}
-   */
-  SET_SNACK_BAR(state, snackbar) {
-    state.snackbar = Object.assign(state.snackbar, snackbar)
-  },
-
+  
   //--- SYSTEM ---//
   /**
    * Set system
@@ -151,6 +142,16 @@ const motations = {
    */
   SET_LOADING_DELAY(state, delay) {
     state.system.loadingDelay = delay
+  },
+
+  //--- SNACKBAR ---//
+  /**
+   * Set snack bar
+   * @param state {Object}
+   * @param snackbar {Object}
+   */
+  SET_SNACK_BAR(state, snackbar) {
+    state.snackbar = Object.assign(state.snackbar, snackbar)
   },
 
   /**

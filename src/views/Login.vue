@@ -127,7 +127,7 @@ export default {
     const showSuccess = value => $store.commit('SHOW_SUCCESS', value)
     const showError = value => $store.commit('SHOW_ERROR', value)
     // const showWarning = value => $store.commit('SHOW_WARNING', value)
-    // const setSnackBar = value => $store.commit('SET_SNACK_BAR', value)
+    const setSnackBar = value => $store.commit('SET_SNACK_BAR', value)
 
     // Actions
     const authenticate = payload => $store.dispatch('authenticate', payload)
@@ -141,7 +141,7 @@ export default {
     onBeforeMount(() => {
       if (user.value) {
         // Login form should be open for non-logged users
-        logout()
+        // logout()
       }
       initModel()
     })
@@ -173,7 +173,11 @@ export default {
       if ($validator.errors.any()) {
         if (isDebug && model.email)
           console.log('onSubmit.Validator.errors:', model.email, model.password)
-        showError({ text: $i18n.t('form.validationError'), timeout: 10000 })
+        const timeout = 10000
+        showError({ text: $i18n.t('form.validationError'), timeout })
+        setTimeout(() => {
+            setSnackBar({show: false})
+          }, timeout)
       } else {
         loadingSubmit.value = true
         const loginResponse = await login(model.email, model.password)
@@ -185,6 +189,8 @@ export default {
           }
           showSuccess(`${$i18n.t('login.success')}!`)
           setTimeout(() => {
+            setSnackBar({show: false})
+            loadingSubmit.value = false
             $router.push($i18n.path(config.value.homePath))
           }, 1000)
         }
@@ -207,10 +213,11 @@ export default {
         if (true && error) console.log('authenticate.error:', error.message)
         loadingSubmit.value = false
         model.error = error
+        const timeout = 10000
         if (error.message === "User's email is not yet verified.") {
           showError({
             text: $i18n.t('authManagement.msgForErrorEmailNotYetVerified'),
-            timeout: 10000
+            timeout
           })
         } else if (
           error.message ===
@@ -218,11 +225,14 @@ export default {
         ) {
           showError({
             text: $i18n.t('login.errAuthenticatedMissingPassword'),
-            timeout: 10000
+            timeout
           })
         } else {
-          showError({ text: error.message, timeout: 10000 })
+          showError({ text: error.message, timeout })
         }
+        setTimeout(() => {
+            setSnackBar({show: false})
+        }, timeout)
         // this.saveLogMessage('ERROR-CLIENT', { error });
       }
     }
@@ -232,6 +242,8 @@ export default {
         showSuccess(`${$i18n.t('login.successLogout')}!`)
         setTimeout(async () => {
           await logout()
+          setSnackBar({show: false})
+          loadingLogout.value = false
           const homePath = config.value.homePath
           $router.push($i18n.path(homePath))
         }, 1000)
