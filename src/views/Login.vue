@@ -18,40 +18,20 @@
             <v-form @submit.prevent="onSubmit">
               <v-card-text>
                 <div class="text-center">
-                  <v-avatar v-if="user && model.avatar" size="120"
-                    ><img :src="model.avatar"
-                  /></v-avatar>
+                  <v-avatar v-if="user && model.avatar" size="120"><img :src="model.avatar" /></v-avatar>
                   <v-icon v-else size="120">fas fa-user-slash</v-icon>
                 </div>
-                <v-text-field
-                  v-model="model.email"
-                  v-validate="'required|email'"
-                  append-icon="mdi-email"
-                  :error-messages="errors.collect('email')"
-                  data-vv-name="email"
-                  :label="$t('login.email')"
-                  :hint="$t('authManagement.hintLoginEmail')"
-                  persistent-hint
-                ></v-text-field>
-                <v-text-field
-                  v-model="model.password"
-                  v-validate="'required|min:3'"
-                  append-icon="mdi-lock"
-                  :error-messages="errors.collect('password')"
-                  data-vv-name="password"
-                  :label="$t('login.password')"
-                  type="password"
-                ></v-text-field>
+                <v-text-field v-model="model.email" v-validate="'required|email'" append-icon="mdi-email"
+                  :error-messages="errors.collect('email')" data-vv-name="email" :label="$t('login.email')"
+                  :hint="$t('authManagement.hintLoginEmail')" persistent-hint></v-text-field>
+                <v-text-field v-model="model.password" v-validate="'required|min:3'" append-icon="mdi-lock"
+                  :error-messages="errors.collect('password')" data-vv-name="password" :label="$t('login.password')"
+                  type="password"></v-text-field>
               </v-card-text>
               <!-- Form actions -->
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn
-                  color="primary"
-                  type="submit"
-                  :loading="loadingSubmit"
-                  :disabled="!!user"
-                >
+                <v-btn color="primary" type="submit" :loading="loadingSubmit" :disabled="!!user">
                   {{ $t('login.title') }}
                 </v-btn>
                 <v-btn :loading="loadingLogout" @click="btnClick">
@@ -78,6 +58,7 @@ import {
 import Http from '@/plugins/lib/http.client.class'
 import fakeData from '@/seeds/fake-data.json'
 
+const debug = require('debug')('app:Login.vue')
 const isDebug = false
 
 export default {
@@ -98,7 +79,7 @@ export default {
 
   setup(props, context) {
     const { $store, $validator, $vuetify, $i18n, $router } = context.root
-    if (isDebug && context) console.log('Login.context:', $i18n)
+    if (isDebug && context) debug('setup.context.$i18n:', $i18n)
 
     //-----------------------------------------------------
     // Reactive values
@@ -114,7 +95,6 @@ export default {
     })
 
     // Computed state
-    // const auth = computed(() => $store.state['auth'])
     const user = computed(() => $store.state['auth']['user'])
 
     // Computed getters
@@ -123,11 +103,8 @@ export default {
     const primaryColor = computed(() => $store.getters.getPrimaryBaseColor)
 
     // Mutations
-    // const clearError = () => $store.commit('auth.clearAuthenticateError')
     const showSuccess = value => $store.commit('SHOW_SUCCESS', value)
     const showError = value => $store.commit('SHOW_ERROR', value)
-    // const showWarning = value => $store.commit('SHOW_WARNING', value)
-    const setSnackBar = value => $store.commit('SET_SNACK_BAR', value)
 
     // Actions
     const authenticate = payload => $store.dispatch('authenticate', payload)
@@ -139,10 +116,6 @@ export default {
 
     // Lifecycle Hooks
     onBeforeMount(() => {
-      if (user.value) {
-        // Login form should be open for non-logged users
-        // logout()
-      }
       initModel()
     })
     onUnmounted(() => {
@@ -154,42 +127,37 @@ export default {
     // Methods
     const initModel = () => {
       const isDev = config.value.nodeEnv === 'development'
-      const http = new Http()
-      let userEmail = http.getParams('email')
-      userEmail = userEmail ? Http.urlDecode(userEmail) : ''
-      const fakeUser = fakeData.users[0]
-      const fakeEmail = isDev ? fakeUser.email : ''
-      const fakePassword = isDev
-        ? fakeUser.email.slice(0, fakeUser.email.indexOf('@'))
-        : ''
-      model.email = userEmail ? userEmail : fakeEmail
-      model.password = userEmail ? '' : fakePassword
+      if (isDev) {
+        if(user.value){
+          model.email = user.value.email
+          model.password = ''
+        }else{
+          const fakeUser = fakeData.users[0]
+          model.email = fakeUser.email
+          model.password = fakeUser.email.slice(0, fakeUser.email.indexOf('@'))
+        }
+      }
     }
 
     const onSubmit = async () => {
-      if (isDebug) console.log('<<--- Start onSubmit --->>')
+      if (isDebug) debug('<<--- Start onSubmit --->>')
       dismissError()
       await $validator.validateAll()
       if ($validator.errors.any()) {
         if (isDebug && model.email)
-          console.log('onSubmit.Validator.errors:', model.email, model.password)
-        const timeout = 10000
-        showError({ text: $i18n.t('form.validationError'), timeout })
-        setTimeout(() => {
-            setSnackBar({show: false})
-          }, timeout)
+          debug('onSubmit.Validator.errors:', model.email, model.password)
+        showError({ text: $i18n.t('form.validationError'), timeout: 10000 })
       } else {
         loadingSubmit.value = true
         const loginResponse = await login(model.email, model.password)
         if (loginResponse && loginResponse.accessToken) {
+          showSuccess(`${$i18n.t('login.success')}!`)
           if (!model.avatar) {
             if (isDebug && user.value.avatar)
-              console.log('Login.onSubmit.avatar:', user.value.avatar)
+              debug('Login.onSubmit.avatar:', user.value.avatar)
             model.avatar = user.value.avatar
           }
-          showSuccess(`${$i18n.t('login.success')}!`)
           setTimeout(() => {
-            setSnackBar({show: false})
             loadingSubmit.value = false
             $router.push($i18n.path(config.value.homePath))
           }, 1000)
@@ -199,18 +167,16 @@ export default {
 
     const login = async (email, password) => {
       try {
-        if (isDebug && email)
-          console.log('<<--- Login --->> Start authenticate:', email, password)
+        if (isDebug && email) debug('<<--- Login --->> Start authenticate:', email, password)
         const loginResponse = await authenticate({
           strategy: 'local',
           email,
           password
         })
-        if (isDebug && loginResponse)
-          console.log('authenticate.loginResponse:', loginResponse)
+        if (isDebug && loginResponse) debug('authenticate.loginResponse:', loginResponse)
         return loginResponse
       } catch (error) {
-        if (true && error) console.log('authenticate.error:', error.message)
+        if (isDebug && error) debug('authenticate.error:', error.message)
         loadingSubmit.value = false
         model.error = error
         const timeout = 10000
@@ -230,19 +196,15 @@ export default {
         } else {
           showError({ text: error.message, timeout })
         }
-        setTimeout(() => {
-            setSnackBar({show: false})
-        }, timeout)
         // this.saveLogMessage('ERROR-CLIENT', { error });
       }
     }
     const btnClick = async () => {
       if (user.value) {
         loadingLogout.value = true
+        await logout()
         showSuccess(`${$i18n.t('login.successLogout')}!`)
         setTimeout(async () => {
-          await logout()
-          setSnackBar({show: false})
           loadingLogout.value = false
           const homePath = config.value.homePath
           $router.push($i18n.path(homePath))

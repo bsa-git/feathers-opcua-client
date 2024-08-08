@@ -46,6 +46,7 @@ import Toolbar from './components/layout/Toolbar.vue'
 import Footer from './components/layout/Footer.vue'
 import SnackBar from './components/layout/SnackBar.vue'
 
+const debug = require('debug')('app:App.vue')
 const isDebug = false
 
 export default {
@@ -107,7 +108,7 @@ export default {
     //-----------------------------------------------------
     // Methods
     const modelSnackBar = newValue => {
-      setSnackBar(newValue)
+      setSnackBar({ show: newValue })
     }
 
     const modelNavLeft = newValue => {

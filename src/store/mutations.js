@@ -107,7 +107,6 @@ const motations = {
     state.chat.contactSelected = selectedContact
   },
 
-  
   //--- SYSTEM ---//
   /**
    * Set system
