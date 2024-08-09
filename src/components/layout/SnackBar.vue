@@ -57,9 +57,10 @@ export default {
     watch(
       () => props.show,
       show => {
-        if(show) setTimeout(() => {
-          compShow.value = false
-        }, props.timeout)
+        if (show)
+          setTimeout(() => {
+            compShow.value = false
+          }, props.timeout)
       },
       { lazy: true }
     )

@@ -18,20 +18,40 @@
             <v-form @submit.prevent="onSubmit">
               <v-card-text>
                 <div class="text-center">
-                  <v-avatar v-if="user && model.avatar" size="120"><img :src="model.avatar" /></v-avatar>
+                  <v-avatar v-if="user && model.avatar" size="120"
+                    ><img :src="model.avatar"
+                  /></v-avatar>
                   <v-icon v-else size="120">fas fa-user-slash</v-icon>
                 </div>
-                <v-text-field v-model="model.email" v-validate="'required|email'" append-icon="mdi-email"
-                  :error-messages="errors.collect('email')" data-vv-name="email" :label="$t('login.email')"
-                  :hint="$t('authManagement.hintLoginEmail')" persistent-hint></v-text-field>
-                <v-text-field v-model="model.password" v-validate="'required|min:3'" append-icon="mdi-lock"
-                  :error-messages="errors.collect('password')" data-vv-name="password" :label="$t('login.password')"
-                  type="password"></v-text-field>
+                <v-text-field
+                  v-model="model.email"
+                  v-validate="'required|email'"
+                  append-icon="mdi-email"
+                  :error-messages="errors.collect('email')"
+                  data-vv-name="email"
+                  :label="$t('login.email')"
+                  :hint="$t('authManagement.hintLoginEmail')"
+                  persistent-hint
+                ></v-text-field>
+                <v-text-field
+                  v-model="model.password"
+                  v-validate="'required|min:3'"
+                  append-icon="mdi-lock"
+                  :error-messages="errors.collect('password')"
+                  data-vv-name="password"
+                  :label="$t('login.password')"
+                  type="password"
+                ></v-text-field>
               </v-card-text>
               <!-- Form actions -->
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" type="submit" :loading="loadingSubmit" :disabled="!!user">
+                <v-btn
+                  color="primary"
+                  type="submit"
+                  :loading="loadingSubmit"
+                  :disabled="!!user"
+                >
                   {{ $t('login.title') }}
                 </v-btn>
                 <v-btn :loading="loadingLogout" @click="btnClick">
@@ -128,10 +148,10 @@ export default {
     const initModel = () => {
       const isDev = config.value.nodeEnv === 'development'
       if (isDev) {
-        if(user.value){
+        if (user.value) {
           model.email = user.value.email
           model.password = ''
-        }else{
+        } else {
           const fakeUser = fakeData.users[0]
           model.email = fakeUser.email
           model.password = fakeUser.email.slice(0, fakeUser.email.indexOf('@'))
@@ -167,13 +187,15 @@ export default {
 
     const login = async (email, password) => {
       try {
-        if (isDebug && email) debug('<<--- Login --->> Start authenticate:', email, password)
+        if (isDebug && email)
+          debug('<<--- Login --->> Start authenticate:', email, password)
         const loginResponse = await authenticate({
           strategy: 'local',
           email,
           password
         })
-        if (isDebug && loginResponse) debug('authenticate.loginResponse:', loginResponse)
+        if (isDebug && loginResponse)
+          debug('authenticate.loginResponse:', loginResponse)
         return loginResponse
       } catch (error) {
         if (isDebug && error) debug('authenticate.error:', error.message)
