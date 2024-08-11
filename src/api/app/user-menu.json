@@ -14,7 +14,8 @@
     "click": "ru"
   },
   {
-    "divider": true
+    "divider": true,
+    "name": "divider"
   },
   {
     "header": "User",

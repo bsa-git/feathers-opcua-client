@@ -68,7 +68,7 @@
         </v-btn>
       </template>
       <!-- Menu list -->
-      <app-user-menu-list :user-menu="userMenu"></app-user-menu-list>
+      <UserMenuList :user-menu="userMenu" />
     </v-menu>
   </v-app-bar>
 </template>
@@ -76,15 +76,25 @@
 <script>
 /* eslint-disable no-unused-vars */
 import { ref, reactive, computed, onMounted, watch } from '@vue/composition-api'
+import UserMenuList from '@/components/layout/UserMenuList';
+import user_menu from '@/api/app/user-menu.json'
 
-import userMenu from '@/api/app/user-menu.json'
+const debug = require('debug')('app:comp.AppUserMenuList')
+const isDebug = false
 
 export default {
+  components: {
+    UserMenuList
+  },
   setup(props, context) {
     const { $store, $router } = context.root
 
     // Reactive values
     let isToggleFullScreen = ref(false)
+    // const userMenu = ref(user_menu)
+    const userMenu = reactive(user_menu)
+    // const userMenu = computed(() => user_menu)
+    if(isDebug && userMenu) debug('Toobar.userMenu:', userMenu)
 
     // Computed state
     const user = computed(() => $store.state['auth']['user'])
@@ -130,6 +140,7 @@ export default {
     return {
       // Reactive values
       isToggleFullScreen,
+      userMenu,
       // Computed state
       user,
       // Computed getters
