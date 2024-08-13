@@ -1,7 +1,5 @@
 <template>
-  <div>12345</div>
-  <!-- <v-list :color="theme.dark ? 'secondary' : ''" :dark="theme.dark"> -->
-  <!-- <v-list >  
+  <v-list :color="theme.dark ? 'secondary' : ''" :dark="theme.dark">
     <template v-for="(item, index) in filterUserMenu">
       <v-subheader v-if="item.header" :key="index">{{
         $t(`user_menu.${item.name}`)
@@ -29,83 +27,33 @@
         </v-list-item-content>
       </v-list-item>
     </template>
-</v-list> -->
+  </v-list>
 </template>
 
 <script>
 /* eslint-disable no-unused-vars */
 import { ref, reactive, computed, onMounted, watch } from '@vue/composition-api'
-import { useRoute } from 'vue-router'
+// import { useRoute } from 'vue-router'
 
 // import { mapGetters, mapMutations, mapActions } from 'vuex'
-const debug = require('debug')('app:comp.AppUserMenuList')
-const isDebug = true
+const debug = require('debug')('app:comp.UserMenuList')
+const isDebug = false
 
 export default {
   props: {
     userMenu: {
       type: Array,
-      default: function () {
+      default: function() {
         return []
       }
     }
   },
-  // computed: {
-  // filterUserMenu() {
-  //   return this.userMenu.filter(item => {
-  //     switch (item.name) {
-  //       case 'profile':
-  //       case 'logout':
-  //         return this.isAuth
-  //       // break
-  //       case 'signup':
-  //       case 'login':
-  //         return !this.isAuth
-  //       // break
-  //       default:
-  //         return true
-  //     }
-  //   })
-  // },
-  // ...mapGetters({
-  //   config: 'getConfig',
-  //   theme: 'getTheme',
-  //   isAuth: 'isAuth'
-  // })
-  // },
-  // methods: {
-  // async itemClick(type) {
-  //   switch (type) {
-  //     case 'en':
-  //     case 'ru': {
-  //       const path1 = '/' + type + this.$route.fullPath
-  //       const path2 =
-  //         '/' + type + this.$route.fullPath.replace(/^\/[^/]+/, '')
-  //       const path =
-  //         this.$i18n.fallbackLocale === this.config.locale ? path1 : path2
-  //       this.$router.push(path)
-  //       break
-  //     }
-  //     case 'logout': {
-  //       await this.logout()
-  //       this.showSuccess(`${this.$t('login.successLogout')}!`)
-  //       this.$router.push(this.$i18n.path(this.config.homePath))
-  //       break
-  //     }
-  //     default:
-  //   }
-  // },
-  // ...mapMutations({
-  //   showSuccess: 'SHOW_SUCCESS'
-  // }),
-  // ...mapActions(['logout'])
-  // },
   setup(props, context) {
-    const { $store, $router, $i18n } = context.root
-    const route = useRoute()
+    const { $store, $router, $route, $i18n } = context.root
 
-    // if(isDebug && props.userMenu) debug('UserMenuList.filterUserMenu:', props.userMenu)
-    if (isDebug) debug('UserMenuList.filterUserMenu:', props.userMenu)
+    if (isDebug && context.root) debug('UserMenuList.context:', context.root)
+    if (isDebug && props.userMenu)
+      debug('UserMenuList.filterUserMenu:', props.userMenu)
 
     // Computed getters
     const config = computed(() => $store.getters.getConfig)
@@ -118,15 +66,16 @@ export default {
         switch (item.name) {
           case 'profile':
           case 'logout':
-            return isAuth
+            return isAuth.value
           case 'signup':
           case 'login':
-            return !isAuth
+            return !isAuth.value
           default:
             return true
         }
       })
-      if (isDebug) debug('UserMenuList.filterUserMenu:', filterArr)
+      if (isDebug && filterArr.length)
+        debug('UserMenuList.filterUserMenu:', filterArr)
       return filterArr
     })
 
@@ -143,9 +92,10 @@ export default {
       switch (type) {
         case 'en':
         case 'ru': {
-          const path1 = '/' + type + route.path
-          const path2 = '/' + type + route.path.replace(/^\/[^/]+/, '')
+          const path1 = '/' + type + $route.fullPath
+          const path2 = '/' + type + $route.fullPath.replace(/^\/[^/]+/, '')
           const path = $i18n.fallbackLocale === config.locale ? path1 : path2
+          if (true && path) debug('itemClick.path:', path1, path2, path)
           $router.push(path)
           break
         }

@@ -67,7 +67,7 @@ export default {
     if (isDebug && $router) console.log('App.setup.$router:', $router)
 
     // Set app
-    context.app = feathersClient
+    // context.app = feathersClient
 
     //-------------------------------------------------------
     // Reactive values

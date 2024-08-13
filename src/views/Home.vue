@@ -15,16 +15,22 @@
             height="50%"
             width="80%"
           >
-            <v-btn width="50%" color="primary" x-large class="ma-3" to="/login">
-              Login
+            <v-btn
+              width="50%"
+              color="primary"
+              x-large
+              class="ma-3"
+              to="/user/login"
+            >
+              {{ $t('login.title') }}
             </v-btn>
             <v-btn
               width="50%"
               color="secondary"
               x-large
               class="ma-3"
-              to="/signup"
-              >Signup</v-btn
+              to="/user/signup"
+              >{{ $t('signup.title') }}</v-btn
             >
             <div></div>
           </v-sheet>
