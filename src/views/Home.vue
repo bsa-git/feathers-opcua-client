@@ -3,7 +3,10 @@
     <v-row class="text-center">
       <v-col cols="12">
         <!--=== Page Header ===-->
-        <PageHeader :page-title="description" :img-name="imgName"></PageHeader>
+        <PageHeader
+          :page-title="$t('app_menu.home')"
+          :img-name="imgName"
+        ></PageHeader>
       </v-col>
 
       <v-col cols="12">
@@ -53,7 +56,7 @@ export default {
   },
   head() {
     return {
-      title: this.title,
+      title: 'Home',//this.title,
       meta: [
         { hid: 'description', name: 'description', content: this.description }
       ]

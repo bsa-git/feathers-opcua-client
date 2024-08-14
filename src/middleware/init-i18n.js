@@ -2,7 +2,8 @@ export default function(to, i18n, store) {
   let path = ''
   //--------------------------------
   const defaultLocale = i18n.fallbackLocale
-  const lang = to.params.lang || defaultLocale
+  const locale = store.state.config.locale
+  const lang = to.params.lang || locale || defaultLocale
   if (store.state.config.locales.indexOf(lang) < 0) {
     throw new Error('Such a locale does not exist in the application')
   }

@@ -32,10 +32,8 @@
 
 <script>
 /* eslint-disable no-unused-vars */
-import { ref, reactive, computed, onMounted, watch } from '@vue/composition-api'
-// import { useRoute } from 'vue-router'
+import { computed } from '@vue/composition-api'
 
-// import { mapGetters, mapMutations, mapActions } from 'vuex'
 const debug = require('debug')('app:comp.UserMenuList')
 const isDebug = false
 
@@ -84,7 +82,6 @@ export default {
     // const showError = value => $store.commit('SHOW_ERROR', value)
 
     // Actions
-    // const authenticate = payload => $store.dispatch('authenticate', payload)
     const logout = () => $store.dispatch('logout')
 
     // Methods
@@ -92,17 +89,29 @@ export default {
       switch (type) {
         case 'en':
         case 'ru': {
-          const path1 = '/' + type + $route.fullPath
-          const path2 = '/' + type + $route.fullPath.replace(/^\/[^/]+/, '')
-          const path = $i18n.fallbackLocale === config.locale ? path1 : path2
-          if (true && path) debug('itemClick.path:', path1, path2, path)
+          let path = ''
+          const defaultLocale = $i18n.fallbackLocale
+          const lang = $route.params.lang || defaultLocale
+          if (!$route.params.lang) {
+            path = `/${lang}${$route.path}`
+          } else {
+            path = $route.fullPath
+          }
+          if (lang !== type) {
+            path = $route.fullPath.replace(`/${lang}/`, `/${type}/`)
+          }
+          if (isDebug && path) debug('itemClick.path:', path)
           $router.push(path)
           break
         }
         case 'logout': {
+          let path = ''
           await logout()
           showSuccess(`${$i18n.t('login.successLogout')}!`)
-          $router.push($i18n.path(config.homePath))
+          path = $i18n.path(config.value.homePath)
+          if(path !== $route.fullPath){
+            $router.push(path)
+          }
           break
         }
         default:
@@ -110,14 +119,11 @@ export default {
     }
 
     return {
-      // Reactive values
-
       // Computed methods
       filterUserMenu,
       // Computed getters
       config,
       theme,
-      // isAuth,
       // Methods
       itemClick
     }

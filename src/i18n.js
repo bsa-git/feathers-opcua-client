@@ -25,10 +25,6 @@ function loadLocaleMessages() {
 const path = function(link) {
   const _link = util.stripSlashes(link)
   const locale = this.locale
-  const fallbackLocale = this.fallbackLocale
-  if (locale === fallbackLocale) {
-    return `/${_link}`
-  }
   return `/${locale}/${_link}`
 }
 

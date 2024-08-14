@@ -9,6 +9,7 @@ import store from '@/store'
 import '@/assets/styles/app.sass'
 import '@/assets/styles/variables.sass'
 import vuetify from '@/plugins/vuetify/vuetify'
+// import unhead from '@/plugins/vue/unhead'
 import i18n from '@/i18n'
 import veeValidate from '@/plugins/vuetify/vee-validate'
 
@@ -20,5 +21,6 @@ new Vue({
   store,
   vuetify,
   i18n,
+  // unhead,
   render: h => h(App)
 }).$mount('#app')
