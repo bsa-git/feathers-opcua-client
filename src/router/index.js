@@ -40,15 +40,11 @@ router.beforeEach((to, from, next) => {
   // Init i18n
   const path = initI18n(to, i18n, store)
 
-  if (isDebug && to.path) debug('router.beforeEach.path:', from.path, ',', to.path)
+  if (isDebug && to.path)
+    debug('router.beforeEach.path:', from.path, ',', to.path)
 
-  if(to.path === from.path) {
-    // Avoided redundant navigation
-    next(false)
-  } else {
-    // Redirecting to a path with a language prefix
-    path ? next(path) : next()
-  } 
+  // Redirecting to a path with a language prefix
+  path ? next(path) : next()
 })
 
 export default router

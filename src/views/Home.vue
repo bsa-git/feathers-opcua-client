@@ -48,6 +48,9 @@
 import { ref } from '@vue/composition-api'
 import PageHeader from '@/components/layout/PageHeader.vue'
 
+const debug = require('debug')('app:Home')
+const isDebug = false
+
 export default {
   name: 'Home',
   //----------
@@ -56,9 +59,13 @@ export default {
   },
   head() {
     return {
-      title: 'Home',//this.title,
+      title: this.$t('app_menu.home'),
       meta: [
-        { hid: 'description', name: 'description', content: this.description }
+        {
+          vmid: 'description',
+          name: 'description',
+          content: this.$t('app_menu.home')
+        }
       ]
     }
   },
@@ -67,13 +74,9 @@ export default {
 
     //-------------------------------------------------------
     // Reactive values
-    const title = ref($i18n.t('app_menu.home'))
-    const description = ref($i18n.t('app_menu.home'))
     const imgName = ref('feathers-logo-wide.png')
 
     return {
-      title,
-      description,
       imgName
     }
   }

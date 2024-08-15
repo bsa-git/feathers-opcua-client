@@ -41,12 +41,12 @@ import { ref, reactive, computed, onMounted, watch } from '@vue/composition-api'
 import appMenu from '@/api/app/app-menu.json'
 import feathersClient from '@/feathers-client'
 
-import LeftDrawer from './components/layout/LeftDrawer'
-import Toolbar from './components/layout/Toolbar.vue'
-import Footer from './components/layout/Footer.vue'
-import SnackBar from './components/layout/SnackBar.vue'
+import LeftDrawer from '@/components/layout/LeftDrawer'
+import Toolbar from '@/components/layout/Toolbar.vue'
+import Footer from '@/components/layout/Footer.vue'
+import SnackBar from '@/components/layout/SnackBar.vue'
 
-const debug = require('debug')('app:App.vue')
+const debug = require('debug')('app:App')
 const isDebug = false
 
 export default {
@@ -62,9 +62,9 @@ export default {
   setup(props, context) {
     const { $store, $router } = context.root
 
-    if (isDebug && context) console.log('App.setup.context:', context)
-    if (isDebug && props) console.log('App.setup.props:', props)
-    if (isDebug && $router) console.log('App.setup.$router:', $router)
+    if (isDebug && context) debug('setup.context:', context)
+    if (isDebug && props) debug('setup.props:', props)
+    if (isDebug && $router) debug('setup.$router:', $router)
 
     // Set app
     // context.app = feathersClient

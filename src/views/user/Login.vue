@@ -75,10 +75,10 @@ import {
   onBeforeMount,
   onUnmounted
 } from '@vue/composition-api'
-import Http from '@/plugins/lib/http.client.class'
+
 import fakeData from '@/seeds/fake-data.json'
 
-const debug = require('debug')('app:Login.vue')
+const debug = require('debug')('app:Login')
 const isDebug = false
 
 export default {
@@ -90,9 +90,13 @@ export default {
   components: {},
   head() {
     return {
-      title: this.title,
+      title: this.$t('login.title'),
       meta: [
-        { hid: 'description', name: 'description', content: this.description }
+        {
+          vmid: 'description',
+          name: 'description',
+          content: this.$t('login.title')
+        }
       ]
     }
   },
@@ -103,8 +107,6 @@ export default {
 
     //-----------------------------------------------------
     // Reactive values
-    const title = ref($i18n.t('login.title'))
-    const description = ref($i18n.t('login.description'))
     let loadingSubmit = ref(false)
     let loadingLogout = ref(false)
     const model = reactive({
@@ -247,14 +249,10 @@ export default {
 
     return {
       // React values
-      title,
-      description,
       loadingSubmit,
       loadingLogout,
       model,
       // Computed state
-      // snackBar,
-      // auth,
       user,
       // Computed getters
       config,

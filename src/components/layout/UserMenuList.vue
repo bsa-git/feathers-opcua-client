@@ -109,7 +109,7 @@ export default {
           await logout()
           showSuccess(`${$i18n.t('login.successLogout')}!`)
           path = $i18n.path(config.value.homePath)
-          if(path !== $route.fullPath){
+          if (path !== $route.fullPath) {
             $router.push(path)
           }
           break
