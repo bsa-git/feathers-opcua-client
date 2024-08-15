@@ -88,7 +88,7 @@ export default {
     validator: 'new'
   },
   components: {},
-  head() {
+  metaInfo() {
     return {
       title: this.$t('login.title'),
       meta: [

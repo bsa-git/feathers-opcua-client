@@ -16,7 +16,7 @@ import veeValidate from '@/plugins/vue/vee-validate'
 veeValidate(i18n)
 Vue.config.productionTip = false
 Vue.use(VueMeta, {
-  keyName: 'head',
+  keyName: 'metaInfo',
   attribute: 'data-vue-meta',
   ssrAttribute: 'data-vue-meta-server-rendered',
   tagIDKeyName: 'vmid',

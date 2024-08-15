@@ -57,7 +57,7 @@ export default {
   components: {
     PageHeader
   },
-  head() {
+  metaInfo() {
     return {
       title: this.$t('app_menu.home'),
       meta: [
