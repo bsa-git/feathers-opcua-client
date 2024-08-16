@@ -4,7 +4,12 @@
     <Toolbar v-if="!isStandAlone" @onNavLeft="navLeft = !navLeft" />
 
     <!-- App Left Drawer -->
-    <LeftDrawer v-if="!isStandAlone" :drawer="navLeft" :items="menuItems" @onNavLeft="modelNavLeft" />
+    <LeftDrawer
+      v-if="!isStandAlone"
+      :drawer="navLeft"
+      :items="menuItems"
+      @onNavLeft="modelNavLeft"
+    />
 
     <!-- App Main -->
     <v-main>
@@ -12,11 +17,21 @@
     </v-main>
 
     <!-- Snackbar -->
-    <SnackBar :show="snackBar.show" :text="snackBar.text" :color="snackBar.color" :timeout="snackBar.timeout"
-      @onShow="modelSnackBar" />
+    <SnackBar
+      :show="snackBar.show"
+      :text="snackBar.text"
+      :color="snackBar.color"
+      :timeout="snackBar.timeout"
+      @onShow="modelSnackBar"
+    />
 
     <!-- App Footer -->
-    <Footer v-if="!isStandAlone" :copyright="config.copyright" :developer="config.logoTitle" :site="config.website" />
+    <Footer
+      v-if="!isStandAlone"
+      :copyright="config.copyright"
+      :developer="config.logoTitle"
+      :site="config.website"
+    />
   </v-app>
 </template>
 
@@ -25,6 +40,7 @@
 import { ref, reactive, computed, onMounted, watch } from '@vue/composition-api'
 import appMenu from '@/api/app/app-menu.json'
 import feathersClient from '@/feathers-client'
+const pkg = require('@/../package')
 
 import LeftDrawer from '@/components/layout/LeftDrawer'
 import Toolbar from '@/components/layout/Toolbar.vue'
@@ -46,19 +62,16 @@ export default {
 
   metaInfo() {
     return {
-      title: 'feathers-opcua-client',
+      title: pkg.name,
       meta: [
-        { charset: 'utf-8' },
-        { 'http-equiv': 'X-UA-Compatible', content: 'IE=edge' },
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { vmid: 'description', name: 'description', content: 'Project feathers-opcua-client' }
+        {
+          vmid: 'description',
+          name: 'description',
+          content: pkg.description
+        }
       ],
-      link: [
-        { rel: 'icon', type: 'image/x-icon', href: '@/assets/favicon.ico' },
-        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto: 100,300,400,500,700,900' },
-        { rel: 'stylesheet', href: 'https://use.fontawesome.com/releases/v5.0.13/css/all.css' },
-      ],
-      script: [],
+      link: [],
+      script: []
     }
   },
 
