@@ -24,7 +24,7 @@ export default {
   props: {
     copyright: {
       type: String,
-      default: '© 2024 Sergey Beskorovainy'
+      default: '© 2024 Sergii Beskorovainyi'
     },
     developer: {
       type: String,

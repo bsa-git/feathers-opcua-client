@@ -148,7 +148,7 @@ const state = () => ({
     logoImage: (process.env.PERSONAL_ICON || 'mdi-coffee').trim(),
     logoTitle: (process.env.PERSONAL_LOGO_TITLE || 'BSA Lab.').trim(),
     copyright: (
-      process.env.PERSONAL_COPYRIGHT || '© 2024 Sergey Beskorovainy'
+      process.env.PERSONAL_COPYRIGHT || '© 2024 Sergii Beskorovainyi'
     ).trim(),
     website: (
       process.env.PERSONAL_WEBSITE || 'http://bsa-git.github.io'

@@ -220,7 +220,6 @@ export default {
         } else {
           showError({ text: error.message, timeout })
         }
-        // this.saveLogMessage('ERROR-CLIENT', { error });
       }
     }
     const btnClick = async () => {

@@ -28,7 +28,7 @@
     <!-- App Footer -->
     <Footer
       v-if="!isStandAlone"
-      :copyright="config.copyright"
+      :copyright="$t('app_footer.copyright')"
       :developer="config.logoTitle"
       :site="config.website"
     />

@@ -186,7 +186,7 @@
   },
   "app_toolbar": {
     "admin_panel": "Aдмин Панель",
-    "hire_me": "Email",
+    "hire_me": "Почта",
     "github": "GitHub",
     "full_size": "Полный Размер",
     "normal_size": "Нормальный Размер",
@@ -196,6 +196,7 @@
     "not_authorized": "Не Авторизирован"
   },
   "app_footer": {
+    "copyright": "© 2024 Сергей Бескоровайный",
     "designed_with_by": "РАЗРАБОТАН С "
   },
   "dashboard": {
