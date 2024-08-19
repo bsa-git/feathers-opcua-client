@@ -1,6 +1,6 @@
 <template>
   <v-container fluid fill-height>
-    <div id="user-pages" :style="`background-color: ${primaryColor}`"></div>
+    <div id="half-page" :style="`background-color: ${primaryColor}`"></div>
     <div class="main-content">
       <v-row justify="center">
         <v-col cols="12" sm="8" md="6" lg="4">
@@ -151,6 +151,7 @@ export default {
       const isDev = config.value.nodeEnv === 'development'
       if (isDev) {
         if (user.value) {
+          model.avatar = user.value.avatar
           model.email = user.value.email
           model.password = ''
         } else {

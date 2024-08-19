@@ -1,6 +1,6 @@
 <template>
   <v-container fluid fill-height>
-    <div id="user-pages" :style="`background-color: ${primaryColor}`"></div>
+    <div id="half-page" :style="`background-color: ${primaryColor}`"></div>
     <div class="main-content">
       <v-row justify="center">
         <v-col cols="12" sm="8" md="6" lg="4">
@@ -119,7 +119,6 @@ const debug = require('debug')('app:page.user-signup')
 const isDebug = false
 
 export default {
-  layout: 'user',
   $_veeValidate: {
     validator: 'new'
   },
@@ -169,7 +168,6 @@ export default {
     // Mutations
     const showSuccess = value => $store.commit('SHOW_SUCCESS', value)
     const showError = value => $store.commit('SHOW_ERROR', value)
-    // const showWarning = value => $store.commit('SHOW_WARNING', value)
 
     // Actions
     const authenticate = payload => $store.dispatch('authenticate', payload)
