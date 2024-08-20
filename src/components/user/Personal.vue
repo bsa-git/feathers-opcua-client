@@ -2,27 +2,18 @@
   <v-container fluid>
     <v-form @submit.prevent="onSubmit">
       <!--<v-container grid-list-md>-->
-        <v-row>
-          <v-col cols="12">
-            <v-text-field
-              :counter="20"
-              v-validate="{ regex: $util.getRegex('phone')}"
-              :error-messages="errors.collect('personalPhone')"
-              data-vv-name="personalPhone"
-              v-model="model.personalPhone"
-              :label="$t('profile.personalPhone')"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12">
-            <v-text-field
-              v-validate="'url'"
-              :error-messages="errors.collect('personalWebSite')"
-              data-vv-name="personalWebSite"
-              v-model="model.personalWebSite"
-              :label="$t('profile.personalWebSite')"
-            ></v-text-field>
-          </v-col>
-        </v-row>
+      <v-row>
+        <v-col cols="12">
+          <v-text-field :counter="20" v-validate="{ regex: $util.getRegex('phone') }"
+            :error-messages="errors.collect('personalPhone')" data-vv-name="personalPhone" v-model="model.personalPhone"
+            :label="$t('profile.personalPhone')"></v-text-field>
+        </v-col>
+        <v-col cols="12">
+          <v-text-field v-validate="'url'" :error-messages="errors.collect('personalWebSite')"
+            data-vv-name="personalWebSite" v-model="model.personalWebSite"
+            :label="$t('profile.personalWebSite')"></v-text-field>
+        </v-col>
+      </v-row>
       <!--</v-container>-->
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -38,104 +29,124 @@
 </template>
 
 <script>
+/* eslint-disable no-unused-vars */
+import {
+  ref,
+  reactive,
+  computed,
+  onBeforeMount,
+} from '@vue/composition-api'
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 
-  import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-  import createLogMessage from '~/plugins/service-helpers/create-log-message';
+const debug = require('debug')('app:user-profile-personal');
+const isDebug = false;
 
-  const debug = require('debug')('app:comp.user-profile-address');
-  const isLog = false;
+export default {
+  layout: 'user',
+  $_veeValidate: {
+    validator: 'new'
+  },
+  setup(props, context) {
+    const { $store, $validator, $vuetify, $i18n, $router } = context.root
+    const { User } = context.root.$FeathersVuex.api
 
-  export default {
-    layout: 'user',
-    $_veeValidate: {
-      validator: 'new'
-    },
-    components: {},
-    data() {
-      return {
-        saveLogMessage: null,
-        loadingSubmit: false,
-        error: undefined,
-        model: {
-          personalPhone: '',
-          personalWebSite: '',
-        },
+    if (isDebug && context) debug('setup.context.$i18n:', $i18n)
+    if (isDebug && context) debug('setup.context.User:', User)
+
+    //-----------------------------------------------------
+    // Reactive values
+    let loadingSubmit = ref(false)
+    const model = reactive({
+      ersonalPhone: '',
+      personalWebSite: '',
+      error: undefined
+    })
+
+    // Computed state
+    const user = computed(() => $store.state['auth']['user'])
+
+    // Computed getters
+    const config = computed(() => $store.getters.getConfig)
+
+    // Mutations
+    const showSuccess = value => $store.commit('SHOW_SUCCESS', value)
+    const showError = value => $store.commit('SHOW_ERROR', value)
+
+    //-------------------------------------------------------------
+    // Lifecycle Hooks
+    onBeforeMount(() => {
+      initModel()
+    })
+
+    //----------------------------------------------------------
+    // Methods
+    const initModel = () => {
+      if (user.value) {
+        model.personalPhone = user.value.profile.personalPhone;
+        model.personalWebSite = user.value.profile.personalWebSite;
       }
-    },
-    created: function () {
-      if (this.user) {
-        this.model.personalPhone = this.user.profile.personalPhone;
-        this.model.personalWebSite = this.user.profile.personalWebSite;
+    }
+    const onSubmit = async () => {
+      dismissError();
+      await $validator.validateAll();
+      if ($validator.errors.any()) {
+        showError('Validation Error!');
+      } else {
+        loadingSubmit.value = true;
+        if (isDebug) debug('onSubmit.formData:', model);
+        const profileResponse = await save(model);
+        if (profileResponse) {
+          if (isDebug) debug('onSubmit.profileResponse:', profileResponse);
+          showSuccess(`${$i18n.t('profile.successSaveUser')}!`);
+          setTimeout(() => {
+            loadingSubmit.value = false;
+          }, 1000);
+        }
       }
-      this.saveLogMessage = createLogMessage(this.$store);
-    },
-    computed: {
-      ...mapGetters({
-        config: 'getConfig',
-      }),
-      ...mapState('auth', [
-        'user'
-      ]),
-    },
-    methods: {
-      async onSubmit() {
-        this.dismissError();
-        await this.$validator.validateAll();
-        if (this.$validator.errors.any()) {
-          this.showError('Validation Error!');
-        } else {
-          this.loadingSubmit = true;
-          if (isLog) debug('onSubmit.formData:', this.model);
-          const profileResponse = await this.save(this.model);
-          if (profileResponse) {
-            if (isLog) debug('onSubmit.profileResponse:', profileResponse);
-            this.showSuccess(`${this.$t('profile.successSaveUser')}!`);
-            setTimeout(() => {
-              this.loadingSubmit = false;
-            }, 1000);
-          }
-        }
-      },
-      onClear() {
-        this.model.personalPhone = '';
-        this.model.personalWebSite = '';
-        this.$validator.reset();
-        this.dismissError();
-      },
-      dismissError() {
-        this.error = undefined;
-      },
-
-      async save(data) {
-        const idFieldUserProfile = this.$store.state['user-profiles'].idField;
-        const {UserProfile} = this.$FeathersVuex;
-        try {
-          let profileData = {
-            [idFieldUserProfile]: this.user.profile.id,
-            personalPhone: data.personalPhone,
-            personalWebSite: data.personalWebSite,
-          };
-          const userProfile = new UserProfile(profileData);
-          return await userProfile.save();
-        } catch (error) {
-          if (isLog) debug('userProfile.save.error:', error);
-          this.loadingSubmit = false;
-          this.error = error;
-          this.showError(error.message);
-          // Recover user profile data
-          await UserProfile.get(this.user.profile.id);
-          this.saveLogMessage('ERROR-CLIENT', {error});
-        }
-      },
-//      getRegex(type){
-//        return { regex: /$util.getRegex('phone')/ }
-//      },
-      ...mapMutations({
-        showSuccess: 'SHOW_SUCCESS',
-        showError: 'SHOW_ERROR',
-      }),
+    }
+    const onClear = () => {
+      model.personalPhone = '';
+      model.personalWebSite = '';
+      $validator.reset();
+      dismissError();
+    }
+    const dismissError = () => {
+      model.error = undefined;
     }
 
-  };
-</script>
+    const save = async (data) => {
+      const idFieldUserProfile = $store.state['user-profiles'].idField;
+      const { UserProfile } = context.root.$FeathersVuex.api
+      try {
+        let profileData = {
+          [idFieldUserProfile]: user.value.profile.id,
+          personalPhone: data.personalPhone,
+          personalWebSite: data.personalWebSite,
+        };
+        const userProfile = new UserProfile(profileData);
+        return await userProfile.save();
+      } catch (error) {
+        if (isDebug) debug('userProfile.save.error:', error);
+        loadingSubmit.value = false;
+        model.error = error;
+        showError(error.message);
+        // Recover user profile data
+        await UserProfile.get(user.value.profile.id);
+      }
+    }
 
+    return {
+      // React values
+      loadingSubmit,
+      model,
+      // Computed state
+      user,
+      // Computed getters
+      config,
+      // Methods
+      onSubmit,
+      onClear
+    }
+  },
+};
+</script>

@@ -52,7 +52,6 @@ import {
   computed,
   onBeforeMount,
 } from '@vue/composition-api'
-import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 
 const debug = require('debug')('app:comp.user-profile-address');
 const isDebug = false;
@@ -64,7 +63,6 @@ export default {
   },
   setup(props, context) {
     const { $store, $validator, $vuetify, $i18n, $router } = context.root
-    const { User } = context.root.$FeathersVuex.api
 
     if (isDebug && context) debug('setup.context.$i18n:', $i18n)
     if (isDebug && context) debug('setup.context.User:', User)

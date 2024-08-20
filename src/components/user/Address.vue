@@ -83,7 +83,6 @@ export default {
   },
   setup(props, context) {
     const { $store, $validator, $vuetify, $i18n, $router } = context.root
-    const { User } = context.root.$FeathersVuex.api
 
     if (isDebug && context) debug('setup.context.$i18n:', $i18n)
     if (isDebug && context) debug('setup.context.User:', User)
