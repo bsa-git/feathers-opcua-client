@@ -1,4 +1,7 @@
-import feathersClient, { makeServicePlugin, BaseModel } from '@/plugins/auth/feathers-client'
+import feathersClient, {
+  makeServicePlugin,
+  BaseModel
+} from '@/plugins/auth/feathers-client'
 
 class User extends BaseModel {
   constructor(data, options) {
@@ -12,8 +15,8 @@ class User extends BaseModel {
       email: '',
       password: '',
       get fullName() {
-        return `${this.firstName} ${this.lastName}`;
-      },
+        return `${this.firstName} ${this.lastName}`
+      }
     }
   }
 }
