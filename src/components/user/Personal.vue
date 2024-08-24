@@ -4,14 +4,23 @@
       <!--<v-container grid-list-md>-->
       <v-row>
         <v-col cols="12">
-          <v-text-field :counter="20" v-validate="{ regex: $util.getRegex('phone') }"
-            :error-messages="errors.collect('personalPhone')" data-vv-name="personalPhone" v-model="model.personalPhone"
-            :label="$t('profile.personalPhone')"></v-text-field>
+          <v-text-field
+            v-model="model.personalPhone"
+            v-validate="{ regex: $util.getRegex('phone') }"
+            :counter="20"
+            :error-messages="errors.collect('personalPhone')"
+            data-vv-name="personalPhone"
+            :label="$t('profile.personalPhone')"
+          ></v-text-field>
         </v-col>
         <v-col cols="12">
-          <v-text-field v-validate="'url'" :error-messages="errors.collect('personalWebSite')"
-            data-vv-name="personalWebSite" v-model="model.personalWebSite"
-            :label="$t('profile.personalWebSite')"></v-text-field>
+          <v-text-field
+            v-model="model.personalWebSite"
+            v-validate="'url'"
+            :error-messages="errors.collect('personalWebSite')"
+            data-vv-name="personalWebSite"
+            :label="$t('profile.personalWebSite')"
+          ></v-text-field>
         </v-col>
       </v-row>
       <!--</v-container>-->
@@ -20,7 +29,7 @@
         <v-btn color="primary" type="submit" :loading="loadingSubmit">
           {{ $t('profile.save') }}
         </v-btn>
-        <v-btn @click="onClear" class="ml-3">
+        <v-btn class="ml-3" @click="onClear">
           {{ $t('login.clear') }}
         </v-btn>
       </v-card-actions>
@@ -30,16 +39,11 @@
 
 <script>
 /* eslint-disable no-unused-vars */
-import {
-  ref,
-  reactive,
-  computed,
-  onBeforeMount,
-} from '@vue/composition-api'
+import { ref, reactive, computed, onBeforeMount } from '@vue/composition-api'
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 
-const debug = require('debug')('app:user-profile-personal');
-const isDebug = false;
+const debug = require('debug')('app:user-profile-personal')
+const isDebug = false
 
 export default {
   layout: 'user',
@@ -82,56 +86,56 @@ export default {
     // Methods
     const initModel = () => {
       if (user.value) {
-        model.personalPhone = user.value.profile.personalPhone;
-        model.personalWebSite = user.value.profile.personalWebSite;
+        model.personalPhone = user.value.profile.personalPhone
+        model.personalWebSite = user.value.profile.personalWebSite
       }
     }
     const onSubmit = async () => {
-      dismissError();
-      await $validator.validateAll();
+      dismissError()
+      await $validator.validateAll()
       if ($validator.errors.any()) {
-        showError('Validation Error!');
+        showError('Validation Error!')
       } else {
-        loadingSubmit.value = true;
-        if (isDebug) debug('onSubmit.formData:', model);
-        const profileResponse = await save(model);
+        loadingSubmit.value = true
+        if (isDebug) debug('onSubmit.formData:', model)
+        const profileResponse = await save(model)
         if (profileResponse) {
-          if (isDebug) debug('onSubmit.profileResponse:', profileResponse);
-          showSuccess(`${$i18n.t('profile.successSaveUser')}!`);
+          if (isDebug) debug('onSubmit.profileResponse:', profileResponse)
+          showSuccess(`${$i18n.t('profile.successSaveUser')}!`)
           setTimeout(() => {
-            loadingSubmit.value = false;
-          }, 1000);
+            loadingSubmit.value = false
+          }, 1000)
         }
       }
     }
     const onClear = () => {
-      model.personalPhone = '';
-      model.personalWebSite = '';
-      $validator.reset();
-      dismissError();
+      model.personalPhone = ''
+      model.personalWebSite = ''
+      $validator.reset()
+      dismissError()
     }
     const dismissError = () => {
-      model.error = undefined;
+      model.error = undefined
     }
 
-    const save = async (data) => {
-      const idFieldUserProfile = $store.state['user-profiles'].idField;
+    const save = async data => {
+      const idFieldUserProfile = $store.state['user-profiles'].idField
       const { UserProfile } = context.root.$FeathersVuex.api
       try {
         let profileData = {
           [idFieldUserProfile]: user.value.profile.id,
           personalPhone: data.personalPhone,
-          personalWebSite: data.personalWebSite,
-        };
-        const userProfile = new UserProfile(profileData);
-        return await userProfile.save();
+          personalWebSite: data.personalWebSite
+        }
+        const userProfile = new UserProfile(profileData)
+        return await userProfile.save()
       } catch (error) {
-        if (isDebug) debug('userProfile.save.error:', error);
-        loadingSubmit.value = false;
-        model.error = error;
-        showError(error.message);
+        if (isDebug) debug('userProfile.save.error:', error)
+        loadingSubmit.value = false
+        model.error = error
+        showError(error.message)
         // Recover user profile data
-        await UserProfile.get(user.value.profile.id);
+        await UserProfile.get(user.value.profile.id)
       }
     }
 
@@ -147,6 +151,6 @@ export default {
       onSubmit,
       onClear
     }
-  },
-};
+  }
+}
 </script>

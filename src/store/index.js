@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { FeathersVuex } from '@/feathers-client'
+import { FeathersVuex } from '@/plugins/auth/feathers-client'
 import auth from './store.auth'
 import state from './state'
 import getters from './getters'

@@ -10,7 +10,7 @@ import store from '@/store'
 import '@/assets/styles/app.sass'
 import '@/assets/styles/variables.sass'
 import vuetify from '@/plugins/vue/vuetify'
-import i18n from '@/i18n'
+import i18n from '@/plugins/vue/i18n'
 import veeValidate from '@/plugins/vue/vee-validate'
 
 veeValidate(i18n)

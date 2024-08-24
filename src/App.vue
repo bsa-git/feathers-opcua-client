@@ -39,7 +39,7 @@
 /* eslint-disable no-unused-vars */
 import { ref, reactive, computed, onMounted, watch } from '@vue/composition-api'
 import appMenu from '@/api/app/app-menu.json'
-import feathersClient from '@/feathers-client'
+// import feathersClient from '@/plugins/auth/feathers-client'
 const pkg = require('@/../package')
 
 import LeftDrawer from '@/components/layout/LeftDrawer'
