@@ -118,15 +118,6 @@ export default {
     AddressForm,
     JobForm
   },
-  data() {
-    return {
-      step: 0,
-      steps: 4,
-      model: {
-        avatar: ''
-      }
-    }
-  },
   metaInfo() {
     return {
       title: this.$t('profile.title'),

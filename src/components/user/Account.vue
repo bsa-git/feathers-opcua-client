@@ -136,10 +136,10 @@
 
 <script>
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
-import Auth from '~/plugins/auth/auth-client.class'
-import ConfirmDialog from '~/components/dialogs/ConfirmDialog'
-import InputCodeDialog from '~/components/dialogs/InputDialog'
-import createLogMessage from '~/plugins/service-helpers/create-log-message'
+import Auth from '@/plugins/auth/auth-client.class'
+import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
+import InputCodeDialog from '@/components/dialogs/InputDialog'
+// import createLogMessage from '~/plugins/service-helpers/create-log-message'
 
 const debug = require('debug')('app:page.user-profile')
 
@@ -159,7 +159,7 @@ export default {
     return {
       title: this.$t('profile.title'),
       description: this.$t('profile.description'),
-      saveLogMessage: null,
+      // saveLogMessage: null,
       confirmDialog: false,
       inputCodeDialog: false,
       loadingSubmit: false,
@@ -193,7 +193,7 @@ export default {
       this.model.lastName = this.user.lastName
       this.model.email = this.user.email
     }
-    this.saveLogMessage = createLogMessage(this.$store)
+    // this.saveLogMessage = createLogMessage(this.$store)
     if (isDebug) debug('created.isExternalAccount:', this.isExternalAccount)
   },
   methods: {
@@ -285,7 +285,7 @@ export default {
         this.showError(error.message)
         // Recover user data
         await User.get(this.user[idFieldUser])
-        this.saveLogMessage('ERROR-CLIENT', { error })
+        // this.saveLogMessage('ERROR-CLIENT', { error })
       }
     },
     async remove() {
@@ -308,7 +308,7 @@ export default {
         this.loadingRemove = false
         this.error = error
         this.showError(error.message)
-        this.saveLogMessage('ERROR-CLIENT', { error })
+        // this.saveLogMessage('ERROR-CLIENT', { error })
       }
     },
     isChangeUser() {
@@ -381,7 +381,7 @@ export default {
         } else {
           this.showError({ text: error.message, timeout: 10000 })
         }
-        this.saveLogMessage('ERROR-CLIENT', { error })
+        // this.saveLogMessage('ERROR-CLIENT', { error })
       }
     },
     setVerifyCode(val) {

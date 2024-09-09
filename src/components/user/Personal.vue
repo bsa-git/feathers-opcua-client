@@ -40,7 +40,6 @@
 <script>
 /* eslint-disable no-unused-vars */
 import { ref, reactive, computed, onBeforeMount } from '@vue/composition-api'
-import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 
 const debug = require('debug')('app:user-profile-personal')
 const isDebug = false
