@@ -84,7 +84,6 @@ const debug = require('debug')('app:comp.user-profile-address')
 const isDebug = false
 
 export default {
-  layout: 'user',
   $_veeValidate: {
     validator: 'new'
   },

@@ -45,7 +45,6 @@ const debug = require('debug')('app:user-profile-personal')
 const isDebug = false
 
 export default {
-  layout: 'user',
   $_veeValidate: {
     validator: 'new'
   },

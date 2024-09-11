@@ -17,7 +17,8 @@
       :text-dialog="$t('profile.textDialog')"
       :run-action="remove"
       @onCloseDialog="confirmDialog = false"
-    ></ConfirmDialog>
+    >
+    </ConfirmDialog>
     <v-form @submit.prevent="onSubmit">
       <v-row>
         <v-col cols="12" sm="6">
@@ -135,19 +136,18 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+/* eslint-disable no-unused-vars */
+import { ref, reactive, computed, onBeforeMount } from '@vue/composition-api'
 import Auth from '@/plugins/auth/auth-client.class'
+import Avatar from '@/plugins/lib/avatar.class'
 import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
 import InputCodeDialog from '@/components/dialogs/InputDialog'
 // import createLogMessage from '~/plugins/service-helpers/create-log-message'
 
-const debug = require('debug')('app:page.user-profile')
-
-const isLog = false
+const debug = require('debug')('app:user-profile-account')
 const isDebug = true
 
 export default {
-  layout: 'user',
   $_veeValidate: {
     validator: 'new'
   },
@@ -155,80 +155,95 @@ export default {
     ConfirmDialog,
     InputCodeDialog
   },
-  data() {
-    return {
-      title: this.$t('profile.title'),
-      description: this.$t('profile.description'),
-      // saveLogMessage: null,
-      confirmDialog: false,
-      inputCodeDialog: false,
-      loadingSubmit: false,
-      loadingRemove: false,
-      error: undefined,
-      changeIdentity: false,
-      changePassword: false,
-      verifyCode: '',
-      model: {
-        firstName: '',
-        lastName: '',
-        email: '',
-        avatar: '',
-        password: '',
-        oldPassword: '',
-        newPassword: ''
+  setup(props, context) {
+    const { $store, $validator, $vuetify, $i18n, $router } = context.root
+
+    //-----------------------------------------------------
+    // Reactive values
+    let confirmDialog = ref(false)
+    let inputCodeDialog = ref(false)
+    let loadingSubmit = ref(false)
+    let loadingRemove = ref(false)
+    let changeIdentity = ref(false)
+    let changePassword = ref(false)
+    let verifyCode = ref('')
+
+    const model = reactive({
+      firstName: '',
+      lastName: '',
+      email: '',
+      avatar: '',
+      password: '',
+      oldPassword: '',
+      newPassword: '',
+      error: undefined
+    })
+
+    // Computed state
+    const user = computed(() => $store.state['auth']['user'])
+
+    // Computed getters
+    const config = computed(() => $store.getters.getConfig)
+    const isExternalAccount = computed(() => $store.getters.isExternalAccount)
+
+    // Mutations
+    const showSuccess = value => $store.commit('SHOW_SUCCESS', value)
+    const showError = value => $store.commit('SHOW_ERROR', value)
+    const showWarning = value => $store.commit('SHOW_WARNING', value)
+
+    // Actions
+    const logout = () => $store.dispatch('logout')
+
+    //-------------------------------------------------------------
+    // Lifecycle Hooks
+    onBeforeMount(() => {
+      initModel()
+    })
+
+    //----------------------------------------------------------
+    // Methods
+    const initModel = () => {
+      if (user.value) {
+        model.avatar = user.value.avatar
+        model.firstName = user.value.firstName
+        model.lastName = user.value.lastName
+        model.email = user.value.email
       }
     }
-  },
-  computed: {
-    ...mapGetters({
-      config: 'getConfig',
-      isExternalAccount: 'isExternalAccount'
-    }),
-    ...mapState('auth', ['user'])
-  },
-  created: function() {
-    if (this.user) {
-      this.model.avatar = this.user.avatar
-      this.model.firstName = this.user.firstName
-      this.model.lastName = this.user.lastName
-      this.model.email = this.user.email
-    }
-    // this.saveLogMessage = createLogMessage(this.$store)
-    if (isDebug) debug('created.isExternalAccount:', this.isExternalAccount)
-  },
-  methods: {
-    async onSubmit() {
-      this.dismissError()
-      await this.$validator.validateAll()
-      if (this.$validator.errors.any()) {
-        this.showError('Validation Error!')
+
+    const onSubmit = async () => {
+      dismissError()
+      await $validator.validateAll()
+      if ($validator.errors.any()) {
+        showError('Validation Error!')
       } else {
-        if (this.isAnyChange()) {
-          this.loadingSubmit = true
-          if (isLog) debug('onSubmit.formData:', this.model)
-          const saveResponse = await this.save(this.model)
+        if (isAnyChange()) {
+          loadingSubmit.value = true
+          if (isDebug) debug('onSubmit.formData:', model)
+          const saveResponse = await save(model)
           if (saveResponse) {
-            if (isLog) debug('onSubmit.saveResponse:', saveResponse)
-            if (!this.isChangeEmail()) {
-              this.showSuccess(`${this.$t('profile.successSaveUser')}!`)
+            if (isDebug) debug('onSubmit.saveResponse:', saveResponse)
+            if (!isChangeEmail()) {
+              showSuccess(`${$i18n.t('profile.successSaveUser')}!`)
             }
             setTimeout(() => {
-              this.loadingSubmit = false
+              loadingSubmit.value = false
             }, 1000)
           }
         }
       }
-    },
-    async save(data) {
+    }
+
+    const save = async data => {
       let changeResult = null
       let userData = null
-      const idFieldUser = this.$store.state.users.idField
-      const { User } = this.$FeathersVuex
+      const idFieldUser = $store.state.users.idField
+      const { User } = context.root.$FeathersVuex.api
       try {
-        if (this.isChangeUser()) {
+        if (isChangeUser()) {
           if (isDebug) debug('<<userChange>> Start userChange')
           userData = {
-            [idFieldUser]: this.user[idFieldUser],
+            [idFieldUser]: user.value[idFieldUser],
             firstName: data.firstName,
             lastName: data.lastName
           }
@@ -236,166 +251,182 @@ export default {
           changeResult = await user.save()
           if (isDebug) debug('userChange.OK')
         }
-        if (this.isChangePassword()) {
+        if (isChangePassword()) {
           if (isDebug) debug('<<passwordChange>> Start passwordChange')
           changeResult = await Auth.passwordChange(
             data.oldPassword,
             data.newPassword,
-            { email: this.user.email }
+            { email: user.value.email }
           )
           if (isDebug) debug('passwordChange.OK')
         }
-        if (this.isChangeEmail()) {
+        if (isChangeEmail()) {
           // Is auth manager
-          if (this.config.isAuthManager) {
+          if (config.value.isAuthManager) {
             if (isDebug) debug('<<identityChange>> Start identityChange')
             changeResult = await Auth.identityChange(
               data.password,
               { email: data.email },
-              { email: this.user.email }
+              { email: user.value.email }
             )
-            this.showWarning({
-              text: this.$t('authManagement.resendVerification'),
+            showWarning({
+              text: $i18n.t('authManagement.resendVerification'),
               timeout: 10000
             })
-            this.inputCodeDialog = true
+            inputCodeDialog = true
             if (isDebug) debug('identityChange.OK')
           } else {
             // Get new avatar
-            const avatar = new this.$Avatar(this.model.email)
+            const avatar = new Avatar(this.model.email)
             const avatarImage = await avatar.getImage()
             userData = {
-              [idFieldUser]: this.user[idFieldUser],
+              [idFieldUser]: user.value[idFieldUser],
               email: data.email,
               avatar: avatarImage
             }
             const user = new User(userData)
             changeResult = await user.save()
             if (isDebug) debug('emailChange.OK')
-            this.showSuccess(
-              this.$t('authManagement.successfulUserVerification')
-            )
+            showSuccess($i18n.t('authManagement.successfulUserVerification'))
           }
         }
         return changeResult
       } catch (error) {
-        if (isLog) debug('user.save.error:', error)
-        this.loadingSubmit = false
-        this.error = error
-        this.showError(error.message)
+        if (isDebug) debug('user.save.error:', error)
+        loadingSubmit.value = false
+        model.error = error
+        showError(error.message)
         // Recover user data
-        await User.get(this.user[idFieldUser])
+        await User.get(user.value[idFieldUser])
         // this.saveLogMessage('ERROR-CLIENT', { error })
       }
-    },
-    async remove() {
+    }
+
+    const remove = async () => {
       try {
-        this.loadingRemove = true
-        const idFieldUser = this.$store.state.users.idField
-        const { User } = this.$FeathersVuex
+        loadingRemove.value = true
+        const idFieldUser = $store.state.users.idField
+        const { User } = context.root.$FeathersVuex.api
         const user = new User({
-          [idFieldUser]: this.user[idFieldUser],
+          [idFieldUser]: user.value[idFieldUser],
           active: false
         })
         await user.save()
-        this.showSuccess(`${this.$t('profile.successRemoveUser')}!`)
-        await this.logout()
+        showSuccess(`${$i18n.t('profile.successRemoveUser')}!`)
+        await logout()
         setTimeout(() => {
-          this.$router.push(this.$i18n.path(this.config.homePath))
+          $router.push($i18n.path(config.value.homePath))
         }, 1000)
       } catch (error) {
-        if (isLog) debug('user.remove.error:', error)
-        this.loadingRemove = false
-        this.error = error
-        this.showError(error.message)
+        if (isDebug) debug('user.remove.error:', error)
+        loadingRemove.value = false
+        model.error = error
+        showError(error.message)
         // this.saveLogMessage('ERROR-CLIENT', { error })
       }
-    },
-    isChangeUser() {
+    }
+
+    const isChangeUser = () => {
       return (
-        this.model.firstName !== this.user.firstName ||
-        this.model.lastName !== this.user.lastName
+        model.firstName !== user.value.firstName ||
+        model.lastName !== user.value.lastName
       )
-    },
-    isChangeEmail() {
-      const changeEmail = this.model.email !== this.user.email
-      return this.changeIdentity ? changeEmail : false
-    },
-    isChangePassword() {
-      return this.changePassword ? !!this.model.oldPassword : false
-    },
-    isAnyChange() {
-      return (
-        this.isChangeUser() || this.isChangeEmail() || this.isChangePassword()
-      )
-    },
-    dismissError() {
-      this.error = undefined
-      this.clearError()
-    },
-    async verifySignupShort() {
+    }
+
+    const isChangeEmail = () => {
+      const changeEmail = model.email !== user.value.email
+      return changeIdentity.value ? changeEmail : false
+    }
+
+    const isChangePassword = () => {
+      return changePassword.value ? !!model.oldPassword : false
+    }
+
+    const isAnyChange = () => {
+      return isChangeUser() || isChangeEmail() || isChangePassword()
+    }
+
+    const dismissError = () => {
+      model.error = undefined
+    }
+
+    const verifySignupShort = async () => {
       try {
         if (isDebug) debug('<<verifySignUpShort>> Start verifySignUpShort')
-        const idFieldUser = this.$store.state.users.idField
-        const { User } = this.$FeathersVuex
+        const idFieldUser = $store.state.users.idField
+        const { User } = context.root.$FeathersVuex.api
         // Close input dialog
-        this.inputCodeDialog = false
-        if (isDebug) debug('verifySignUpShort.verifyCode:', this.verifyCode)
-        const token = this.verifyCode
+        inputCodeDialog.value = false
+        if (isDebug) debug('verifySignUpShort.verifyCode:', verifyCode.value)
+        const token = verifyCode.value
         const changeUser = await Auth.verifySignupShort(token, {
-          email: this.user.email
+          email: user.value.email
         })
         if (changeUser) {
-          if (isLog) debug('verifySignupShort.user:', changeUser)
+          if (isDebug) debug('verifySignupShort.user:', changeUser)
           if (isDebug) debug('verifySignUpShort.OK')
-          this.showSuccess(this.$t('authManagement.successfulUserVerification'))
+          showSuccess($i18n.t('authManagement.successfulUserVerification'))
           // Get new avatar
-          const avatar = new this.$Avatar(this.model.email)
+          const avatar = new this.Avatar(model.email)
           const avatarImage = await avatar.getImage()
           let userData = {
-            [idFieldUser]: this.user[idFieldUser],
+            [idFieldUser]: user.value[idFieldUser],
             avatar: avatarImage
           }
           const user = new User(userData)
           await user.save()
         } else {
-          this.showError({
-            text: this.$t('authManagement.errorUserVerification'),
+          showError({
+            text: $i18n.t('authManagement.errorUserVerification'),
             timeout: 10000
           })
           //            this.$redirect(this.config.homePath);
         }
       } catch (error) {
-        if (isLog) debug('verifySignupShort.error:', error)
-        this.error = error
+        if (isDebug) debug('verifySignupShort.error:', error)
+        model.error = error
         if (error.message === 'User not found.') {
-          this.showError({
-            text: this.$t('authManagement.msgForErrorUserNotFind'),
+          showError({
+            text: $i18n.t('authManagement.msgForErrorUserNotFind'),
             timeout: 10000
           })
         } else if (error.message.includes('Invalid token.')) {
-          this.showError({
-            text: this.$t('authManagement.msgForErrorInvalidToken'),
+          showError({
+            text: $i18n.t('authManagement.msgForErrorInvalidToken'),
             timeout: 10000
           })
         } else {
-          this.showError({ text: error.message, timeout: 10000 })
+          showError({ text: error.message, timeout: 10000 })
         }
         // this.saveLogMessage('ERROR-CLIENT', { error })
       }
-    },
-    setVerifyCode(val) {
-      this.verifyCode = val
-    },
-    ...mapMutations('auth', {
-      clearError: 'clearAuthenticateError'
-    }),
-    ...mapMutations({
-      showSuccess: 'SHOW_SUCCESS',
-      showError: 'SHOW_ERROR',
-      showWarning: 'SHOW_WARNING'
-    }),
-    ...mapActions(['logout'])
+    }
+    const setVerifyCode = val => {
+      verifyCode.value = val
+    }
+
+    return {
+      // React values
+      loadingSubmit,
+      loadingRemove,
+      confirmDialog,
+      inputCodeDialog,
+      isExternalAccount,
+      changeIdentity,
+      changePassword,
+      model,
+      // Computed state
+      user,
+      // Computed getters
+      config,
+      // Mutations
+      showError,
+      // Methods
+      onSubmit,
+      remove,
+      verifySignupShort,
+      setVerifyCode
+    }
   }
 }
 </script>

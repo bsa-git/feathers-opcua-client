@@ -112,6 +112,7 @@ const debug = require('debug')('app:user-profile')
 const isDebug = false
 
 export default {
+  name: 'Profile',
   components: {
     AccountForm,
     PersonalForm,
@@ -133,7 +134,7 @@ export default {
   setup(props, context) {
     const { $store, $i18n, $router, $redirect } = context.root
 
-    if (true && context) debug('setup.context.$redirect:', $redirect)
+    if (isDebug && context) debug('setup.context:', $store)
     //-----------------------------------------------------
     // Reactive values
     let step = ref(0)
@@ -178,7 +179,8 @@ export default {
     }
     const close = () => {
       const path = $i18n.path(config.value.homePath)
-      $redirect(path)
+      $router.push(path)
+      // $redirect(path)
     }
     const currentTitle = step => {
       switch (step) {

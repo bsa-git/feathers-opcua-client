@@ -8,7 +8,9 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn text @click="$emit('onCloseDialog')">{{ $t('common.disagree') }}</v-btn>
+          <v-btn text @click="$emit('onCloseDialog')">{{
+            $t('common.disagree')
+          }}</v-btn>
           <v-btn text @click="runAction">{{ $t('common.agree') }}</v-btn>
         </v-card-actions>
       </v-card>
@@ -23,9 +25,18 @@ import { computed } from '@vue/composition-api'
 export default {
   props: {
     dialog: Boolean,
-    runAction: Function,
-    titleDialog: String,
-    textDialog: String,
+    runAction: {
+      type: Function,
+      default: () => {}
+    },
+    titleDialog: {
+      type: String,
+      default: ''
+    },
+    textDialog: {
+      type: String,
+      default: ''
+    }
   },
   setup(props, context) {
     const { $store, $validator, $vuetify, $i18n, $router } = context.root
@@ -34,8 +45,8 @@ export default {
 
     return {
       // Computed getters
-      theme,
+      theme
     }
   }
-};
+}
 </script>

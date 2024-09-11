@@ -8,23 +8,48 @@
             <v-container grid-list-md>
               <v-layout wrap>
                 <v-flex xs12>
-                  <v-text-field v-if="validateType === 'numeric'" v-validate="'required|numeric'"
-                    :error-messages="errors.collect('inputValue')" data-vv-name="inputValue" v-model="model.inputValue"
-                    :label="labelInput" :hint="hintInput" persistent-hint></v-text-field>
-                  <v-text-field v-else-if="validateType === 'alpha_num'" v-validate="'required|alpha_num'"
-                    :error-messages="errors.collect('inputValue')" data-vv-name="inputValue" v-model="model.inputValue"
-                    :label="labelInput" :hint="hintInput" persistent-hint></v-text-field>
-                  <v-text-field v-else-if="validateType === 'email'" v-validate="'required|email'"
-                    :error-messages="errors.collect('inputValue')" data-vv-name="inputValue" v-model="model.inputValue"
-                    :label="labelInput" :hint="hintInput" persistent-hint></v-text-field>
+                  <v-text-field
+                    v-if="validateType === 'numeric'"
+                    v-model="model.inputValue"
+                    v-validate="'required|numeric'"
+                    :error-messages="errors.collect('inputValue')"
+                    data-vv-name="inputValue"
+                    :label="labelInput"
+                    :hint="hintInput"
+                    persistent-hint
+                  ></v-text-field>
+                  <v-text-field
+                    v-else-if="validateType === 'alpha_num'"
+                    v-model="model.inputValue"
+                    v-validate="'required|alpha_num'"
+                    :error-messages="errors.collect('inputValue')"
+                    data-vv-name="inputValue"
+                    :label="labelInput"
+                    :hint="hintInput"
+                    persistent-hint
+                  ></v-text-field>
+                  <v-text-field
+                    v-else-if="validateType === 'email'"
+                    v-model="model.inputValue"
+                    v-validate="'required|email'"
+                    :error-messages="errors.collect('inputValue')"
+                    data-vv-name="inputValue"
+                    :label="labelInput"
+                    :hint="hintInput"
+                    persistent-hint
+                  ></v-text-field>
                 </v-flex>
               </v-layout>
             </v-container>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn text type="submit" color="primary">{{ $t('common.enter') }}</v-btn>
-            <v-btn text @click="$emit('onCloseInputDialog')">{{ $t('common.close') }}</v-btn>
+            <v-btn text type="submit" color="primary">{{
+              $t('common.enter')
+            }}</v-btn>
+            <v-btn text @click="$emit('onCloseInputDialog')">{{
+              $t('common.close')
+            }}</v-btn>
           </v-card-actions>
         </v-form>
       </v-card>
@@ -34,9 +59,13 @@
 
 <script>
 /* eslint-disable no-unused-vars */
-import { ref, reactive, computed, onBeforeMount, watch } from '@vue/composition-api'
-
-import { mapGetters } from 'vuex'
+import {
+  ref,
+  reactive,
+  computed,
+  onBeforeMount,
+  watch
+} from '@vue/composition-api'
 
 export default {
   $_veeValidate: {
@@ -44,39 +73,30 @@ export default {
   },
   props: {
     dialog: Boolean,
-    runAction: Function,
-    showError: Function,
-    titleDialog: String,
-    validateType: String,
-    labelInput: String,
-    hintInput: String
-  },
-  data() {
-    return {
-      model: {
-        inputValue: '',
-      }
+    runAction: {
+      type: Function,
+      default: () => {}
+    },
+    showError: {
+      type: Function,
+      default: () => {}
+    },
+    titleDialog: {
+      type: String,
+      default: ''
+    },
+    validateType: {
+      type: String,
+      default: ''
+    },
+    labelInput: {
+      type: String,
+      default: ''
+    },
+    hintInput: {
+      type: String,
+      default: ''
     }
-  },
-  watch: {
-    'model.inputValue': function (val, oldVal) {
-      this.$emit('onInput', val);
-    },
-  },
-  computed: {
-    ...mapGetters({
-      theme: 'getTheme',
-    }),
-  },
-  methods: {
-    async onSubmit() {
-      await this.$validator.validateAll();
-      if (this.$validator.errors.any()) {
-        this.showError('Validation Error!');
-      } else {
-        this.runAction();
-      }
-    },
   },
   setup(props, context) {
     const { $store, $validator, $vuetify, $i18n, $router } = context.root
@@ -89,22 +109,23 @@ export default {
     // Computed getters
     const theme = computed(() => $store.getters.getTheme)
 
+    // Mutations
+    const showError = value => $store.commit('SHOW_ERROR', value)
+
+    // Watch
     watch(
-      () => $store.state.auth.user,
-      user => {
-        const toRouteName = user ? 'Chat' : 'Home'
-        $router.replace({ name: toRouteName })
-      },
+      () => model.inputValue,
+      val => context.emit('onInput', val),
       { lazy: true }
     )
 
     // Methods
     const onSubmit = async () => {
-      await this.$validator.validateAll();
-      if (this.$validator.errors.any()) {
-        this.showError('Validation Error!');
+      await $validator.validateAll()
+      if ($validator.errors.any()) {
+        showError('Validation Error!')
       } else {
-        this.runAction();
+        props.runAction()
       }
     }
 
@@ -117,5 +138,5 @@ export default {
       onSubmit
     }
   }
-};
+}
 </script>
