@@ -36,7 +36,7 @@
         <v-col cols="12" sm="6">
           <v-text-field
             v-model="model.addressZipCode"
-            v-validate="{ regex: $util.getRegex('zip_code') }"
+            v-validate="{ regex: getRegex('zip_code') }"
             :counter="15"
             :error-messages="errors.collect('addressZipCode')"
             data-vv-name="addressZipCode"
@@ -86,7 +86,7 @@
         <v-col cols="12" sm="6">
           <v-text-field
             v-model="model.addressLatitude"
-            v-validate="{ regex: $util.getRegex('lat') }"
+            v-validate="{ regex: getRegex('lat') }"
             :counter="10"
             :error-messages="errors.collect('addressLatitude')"
             data-vv-name="addressLatitude"
@@ -96,7 +96,7 @@
         <v-col cols="12" sm="6">
           <v-text-field
             v-model="model.addressLongitude"
-            v-validate="{ regex: $util.getRegex('long') }"
+            v-validate="{ regex: getRegex('long') }"
             :counter="10"
             :error-messages="errors.collect('addressLongitude')"
             data-vv-name="addressLongitude"
@@ -121,8 +121,9 @@
 <script>
 /* eslint-disable no-unused-vars */
 import { ref, reactive, computed, onBeforeMount } from '@vue/composition-api'
+import { getRegex } from '@/plugins/lib/util'
 
-const debug = require('debug')('app:user-profile-address')
+const debug = require('debug')('app:user-profile-address')// getRegex
 const isDebug = false
 
 export default {
@@ -259,7 +260,8 @@ export default {
       config,
       // Methods
       onSubmit,
-      onClear
+      onClear,
+      getRegex
     }
   }
 }
