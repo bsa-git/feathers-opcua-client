@@ -142,6 +142,7 @@ import Auth from '@/plugins/auth/auth-client.class'
 import Avatar from '@/plugins/lib/avatar.class'
 import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
 import InputCodeDialog from '@/components/dialogs/InputDialog'
+import { use } from 'vue/types/umd'
 // import createLogMessage from '~/plugins/service-helpers/create-log-message'
 
 const debug = require('debug')('app:user-profile-account')
@@ -181,6 +182,7 @@ export default {
 
     // Computed state
     const user = computed(() => $store.state['auth']['user'])
+    // if(true && user) debug('user.id:', user.value)
 
     // Computed getters
     const config = computed(() => $store.getters.getConfig)
@@ -242,8 +244,9 @@ export default {
       try {
         if (isChangeUser()) {
           if (isDebug) debug('<<userChange>> Start userChange')
+          const idUserValue = user.value[idFieldUser]
           userData = {
-            [idFieldUser]: user.value[idFieldUser],
+            [idFieldUser]: idUserValue,
             firstName: data.firstName,
             lastName: data.lastName
           }

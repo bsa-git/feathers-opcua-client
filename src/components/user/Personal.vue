@@ -6,7 +6,7 @@
         <v-col cols="12">
           <v-text-field
             v-model="model.personalPhone"
-            v-validate="{ regex: getRegex('phone') }"
+            v-validate="{ regex: $util.getRegex('phone') }"
             :counter="20"
             :error-messages="errors.collect('personalPhone')"
             data-vv-name="personalPhone"
@@ -40,7 +40,7 @@
 <script>
 /* eslint-disable no-unused-vars */
 import { ref, reactive, computed, onBeforeMount } from '@vue/composition-api'
-import { getRegex } from '@/plugins/lib/util'
+import util from '@/plugins/lib/util'
 
 const debug = require('debug')('app:user-profile-personal')
 const isDebug = false
@@ -89,6 +89,7 @@ export default {
         model.personalWebSite = user.value.profile.personalWebSite
       }
     }
+
     const onSubmit = async () => {
       dismissError()
       await $validator.validateAll()
@@ -107,12 +108,14 @@ export default {
         }
       }
     }
+
     const onClear = () => {
       model.personalPhone = ''
       model.personalWebSite = ''
       $validator.reset()
       dismissError()
     }
+
     const dismissError = () => {
       model.error = undefined
     }
@@ -149,7 +152,7 @@ export default {
       // Methods
       onSubmit,
       onClear,
-      getRegex
+      $util: util
     }
   }
 }
