@@ -146,7 +146,7 @@ import InputCodeDialog from '@/components/dialogs/InputDialog'
 // import createLogMessage from '~/plugins/service-helpers/create-log-message'
 
 const debug = require('debug')('app:user-profile-account')
-const isDebug = true
+const isDebug = false
 
 export default {
   $_veeValidate: {
@@ -183,6 +183,7 @@ export default {
     // Computed state
     const user = computed(() => $store.state['auth']['user'])
     const idFieldUser = $store.state.users.idField
+    const idUserValue = user.value[idFieldUser]
     if (isDebug && user) debug('user.id:', user.value[idFieldUser])
 
     // Computed getters
@@ -225,7 +226,7 @@ export default {
           if (isDebug) debug('onSubmit.formData:', model)
           const saveResponse = await save(model)
           if (saveResponse) {
-            if (isDebug) debug('onSubmit.saveResponse:', saveResponse)
+            if (isDebug && saveResponse) debug('onSubmit.saveResponse:', saveResponse)
             if (!isChangeEmail()) {
               showSuccess(`${$i18n.t('profile.successSaveUser')}!`)
             }
@@ -245,13 +246,12 @@ export default {
       try {
         if (isChangeUser()) {
           if (isDebug) debug('<<userChange>> Start userChange')
-          const idUserValue = user.value[idFieldUser]
           userData = {
             [idFieldUser]: idUserValue,
             firstName: data.firstName,
             lastName: data.lastName
           }
-          if(isDebug && userData) debug('save.userData:', userData)
+          if (isDebug && userData) debug('save.userData:', userData)
           const user = new User(userData)
           changeResult = await user.save()
           if (isDebug) debug('userChange.OK')

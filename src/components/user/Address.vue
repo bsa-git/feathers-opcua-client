@@ -133,7 +133,7 @@ export default {
   setup(props, context) {
     const { $store, $validator, $vuetify, $i18n, $router } = context.root
 
-    if (isDebug && context) debug('setup.context.$i18n:', $i18n)
+    // if (isDebug && context) debug('setup.context.$i18n:', $i18n)
 
     //-----------------------------------------------------
     // Reactive values
@@ -187,12 +187,12 @@ export default {
 
     const onSubmit = async () => {
       dismissError()
-      await this.$validator.validateAll()
+      await $validator.validateAll()
       if ($validator.errors.any()) {
         showError('Validation Error!')
       } else {
         loadingSubmit.value = true
-        if (isDebug) debug('onSubmit.formData:', model)
+        if (isDebug && model) debug('onSubmit.formData:', model)
         const profileResponse = await save(model)
         if (profileResponse) {
           if (isDebug) debug('onSubmit.profileResponse:', profileResponse)
@@ -222,11 +222,11 @@ export default {
     }
 
     const save = async data => {
-      const idFieldUserProfile = $store.state['user-profiles'].idField
+      const idFieldUserProfile = $store.state.users.idField
       const { UserProfile } = context.root.$FeathersVuex.api
       try {
         let profileData = {
-          [idFieldUserProfile]: user.value.profile.id,
+          [idFieldUserProfile]: user.value.profile[idFieldUserProfile],
           addressSuite: data.addressSuite,
           addressStreet: data.addressStreet,
           addressCity: data.addressCity,
@@ -238,6 +238,7 @@ export default {
           addressLatitude: data.addressLatitude,
           addressLongitude: data.addressLongitude
         }
+        if(isDebug && profileData) debug('save.profileData:', profileData)
         const userProfile = new UserProfile(profileData)
         return await userProfile.save()
       } catch (error) {

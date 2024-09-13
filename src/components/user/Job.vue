@@ -91,7 +91,7 @@ export default {
   setup(props, context) {
     const { $store, $validator, $vuetify, $i18n, $router } = context.root
 
-    if (isDebug && context) debug('setup.context.$i18n:', $i18n)
+    // if (isDebug && context) debug('setup.context.$i18n:', $i18n)
 
     //-----------------------------------------------------
     // Reactive values
@@ -167,11 +167,11 @@ export default {
     }
 
     const save = async data => {
-      const idFieldUserProfile = $store.state['user-profiles'].idField
+      const idFieldUserProfile = $store.state.users.idField
       const { UserProfile } = context.root.$FeathersVuex.api
       try {
         let profileData = {
-          [idFieldUserProfile]: user.value.profile.id,
+          [idFieldUserProfile]: user.value.profile[idFieldUserProfile],
           jobCompanyName: data.jobCompanyName,
           jobTitle: data.jobTitle,
           jobType: data.jobType,

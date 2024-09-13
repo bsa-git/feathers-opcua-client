@@ -51,10 +51,7 @@ export default {
   },
   setup(props, context) {
     const { $store, $validator, $vuetify, $i18n, $router } = context.root
-    const { User } = context.root.$FeathersVuex.api
-
-    if (isDebug && context) debug('setup.context.$i18n:', $i18n)
-    if (isDebug && context) debug('setup.context.User:', User)
+    // const { User } = context.root.$FeathersVuex.api
 
     //-----------------------------------------------------
     // Reactive values
@@ -100,7 +97,7 @@ export default {
         if (isDebug) debug('onSubmit.formData:', model)
         const profileResponse = await save(model)
         if (profileResponse) {
-          if (isDebug) debug('onSubmit.profileResponse:', profileResponse)
+          if (isDebug && profileResponse) debug('onSubmit.profileResponse:', profileResponse)
           showSuccess(`${$i18n.t('profile.successSaveUser')}!`)
           setTimeout(() => {
             loadingSubmit.value = false
@@ -121,14 +118,15 @@ export default {
     }
 
     const save = async data => {
-      const idFieldUserProfile = $store.state['user-profiles'].idField
+      const idFieldUserProfile = $store.state.users.idField
       const { UserProfile } = context.root.$FeathersVuex.api
       try {
         let profileData = {
-          [idFieldUserProfile]: user.value.profile.id,
+          [idFieldUserProfile]: user.value.profile[idFieldUserProfile],
           personalPhone: data.personalPhone,
           personalWebSite: data.personalWebSite
         }
+        if(isDebug && profileData) debug('save.profileData:', profileData)
         const userProfile = new UserProfile(profileData)
         return await userProfile.save()
       } catch (error) {
