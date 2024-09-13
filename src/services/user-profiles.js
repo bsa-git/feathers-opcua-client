@@ -3,9 +3,8 @@ import feathersClient, {
   BaseModel
 } from '@/plugins/auth/feathers-client'
 
-const debug = require('debug')('app:service.user-profiles');
-const isDebug = false;
-
+const debug = require('debug')('app:service.user-profiles')
+const isDebug = false
 
 class UserProfile extends BaseModel {
   constructor(data, options) {
@@ -17,11 +16,13 @@ class UserProfile extends BaseModel {
   static instanceDefaults() {
     return {
       get fullAddress() {
-        const isFullAddress = !!this.addressCountry;
-        const fullAddress = isFullAddress? `${this.addressStreet} ${this.addressSuite}, ${this.addressCity}, ${this.addressStateAbbr} ${this.addressZipCode}, ${this.addressCountry}` : '';
-        if(isDebug && fullAddress) debug('fullAddress:', fullAddress);
-        return fullAddress;
-      },
+        const isFullAddress = !!this.addressCountry
+        const fullAddress = isFullAddress
+          ? `${this.addressStreet} ${this.addressSuite}, ${this.addressCity}, ${this.addressStateAbbr} ${this.addressZipCode}, ${this.addressCountry}`
+          : ''
+        if (isDebug && fullAddress) debug('fullAddress:', fullAddress)
+        return fullAddress
+      }
     }
   }
 }

@@ -97,7 +97,8 @@ export default {
         if (isDebug) debug('onSubmit.formData:', model)
         const profileResponse = await save(model)
         if (profileResponse) {
-          if (isDebug && profileResponse) debug('onSubmit.profileResponse:', profileResponse)
+          if (isDebug && profileResponse)
+            debug('onSubmit.profileResponse:', profileResponse)
           showSuccess(`${$i18n.t('profile.successSaveUser')}!`)
           setTimeout(() => {
             loadingSubmit.value = false
@@ -126,7 +127,7 @@ export default {
           personalPhone: data.personalPhone,
           personalWebSite: data.personalWebSite
         }
-        if(isDebug && profileData) debug('save.profileData:', profileData)
+        if (isDebug && profileData) debug('save.profileData:', profileData)
         const userProfile = new UserProfile(profileData)
         return await userProfile.save()
       } catch (error) {

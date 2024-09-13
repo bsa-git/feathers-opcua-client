@@ -226,7 +226,8 @@ export default {
           if (isDebug) debug('onSubmit.formData:', model)
           const saveResponse = await save(model)
           if (saveResponse) {
-            if (isDebug && saveResponse) debug('onSubmit.saveResponse:', saveResponse)
+            if (isDebug && saveResponse)
+              debug('onSubmit.saveResponse:', saveResponse)
             if (!isChangeEmail()) {
               showSuccess(`${$i18n.t('profile.successSaveUser')}!`)
             }

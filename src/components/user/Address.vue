@@ -238,7 +238,7 @@ export default {
           addressLatitude: data.addressLatitude,
           addressLongitude: data.addressLongitude
         }
-        if(isDebug && profileData) debug('save.profileData:', profileData)
+        if (isDebug && profileData) debug('save.profileData:', profileData)
         const userProfile = new UserProfile(profileData)
         return await userProfile.save()
       } catch (error) {
