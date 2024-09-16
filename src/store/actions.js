@@ -71,11 +71,11 @@ const actions = {
       if (!util.isAccessToken) {
         util.setAccessToken(response.accessToken)
       }
-      // if (isAdmin) {
-      //   await service.findAllForAdmin();
-      // } else {
-      //   await service.findAllForUser();
-      // }
+      if (isAdmin) {
+        await service.findAllForAdmin();
+      } else {
+        await service.findAllForUser();
+      }
       if (isDebug && response)
         debug(
           `<<authenticate>> Authenticate completed; <<isAuth>>: ${isAuth}; <<myRole>>: ${

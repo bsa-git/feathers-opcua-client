@@ -198,12 +198,6 @@ export default {
     // Actions
     const logout = () => $store.dispatch('logout')
 
-    //-------------------------------------------------------------
-    // Lifecycle Hooks
-    onBeforeMount(() => {
-      initModel()
-    })
-
     //----------------------------------------------------------
     // Methods
     const initModel = () => {
@@ -410,6 +404,9 @@ export default {
     const setVerifyCode = val => {
       verifyCode.value = val
     }
+
+    // Init model
+    initModel()
 
     return {
       // React values

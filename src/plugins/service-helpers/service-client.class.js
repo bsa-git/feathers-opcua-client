@@ -147,8 +147,12 @@ class Service {
     // Find chat messages for user
     const user = this.getAuthUser()
     if (user) {
-      const paths = Service.getServicePaths().filter(
-        path => path !== 'chat-messages' && path !== 'user-teams'
+      // const paths = Service.getServicePaths().filter(
+      //   path => path !== 'chat-messages' && path !== 'user-teams'
+      // )
+      let paths = Service.getServicePaths()
+      paths = paths.filter(
+        path => path === 'users' || path === 'user-profiles' || path === 'messages'
       )
       if (true && paths.length) console.log('findAllForAdmin.paths:', paths)
       // paths.forEach(path => this.findAll(path, { query: {} }));
@@ -158,8 +162,8 @@ class Service {
         console.log('findAllForAdmin.result:', result)
       }
       // Find all chat messages for admin
-      await this.findChatMessagesForAdmin(user)
-      this.initStateChatCheckAt()
+      // await this.findChatMessagesForAdmin(user)
+      // this.initStateChatCheckAt()
     }
   }
 

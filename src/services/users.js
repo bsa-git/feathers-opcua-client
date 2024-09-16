@@ -44,24 +44,24 @@ class User extends BaseModel {
       get fullName() {
         return `${this.firstName} ${this.lastName}`
       },
-
-      // get profile() {
-      //   if (this.profileId) {
-      //     const { UserProfile } = models.api
-      //     // const idFieldProfile = store.state['user-profiles'].idField;
-      //     let profile = UserProfile.getFromStore(this.profileId)
-      //     if (profile) {
-      //       const id = profile[idField]
-      //       // profile = loPick(profile, Service.serviceFields('userProfiles'), ['fullAddress']);
-      //       profile.id = id
-      //     } else {
-      //       profile = null
-      //     }
-      //     return profile
-      //   } else {
-      //     return null
-      //   }
-      // }
+      get profile() {
+        if (this.profileId) {
+          const { UserProfile } = models.api
+          // const idFieldProfile = store.state['user-profiles'].idField;
+          let profile = UserProfile.getFromStore(this.profileId)
+          // let profile = UserProfile.get(this.profileId)
+          if (profile) {
+            const id = profile[idField]
+            // profile = loPick(profile, Service.serviceFields('userProfiles'), ['fullAddress']);
+            profile.id = id
+          } else {
+            profile = null
+          }
+          return profile
+        } else {
+          return null
+        }
+      }
     }
   }
 }

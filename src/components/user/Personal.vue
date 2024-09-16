@@ -72,12 +72,6 @@ export default {
     const showSuccess = value => $store.commit('SHOW_SUCCESS', value)
     const showError = value => $store.commit('SHOW_ERROR', value)
 
-    //-------------------------------------------------------------
-    // Lifecycle Hooks
-    onBeforeMount(() => {
-      // initModel()
-    })
-
     //----------------------------------------------------------
     // Methods
     const initModel = () => {
@@ -140,6 +134,7 @@ export default {
       }
     }
 
+    // Init model
     initModel()
 
     return {
