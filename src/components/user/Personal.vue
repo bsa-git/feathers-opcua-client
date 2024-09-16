@@ -75,7 +75,7 @@ export default {
     //-------------------------------------------------------------
     // Lifecycle Hooks
     onBeforeMount(() => {
-      initModel()
+      // initModel()
     })
 
     //----------------------------------------------------------
@@ -139,6 +139,8 @@ export default {
         await UserProfile.get(user.value.profile.id)
       }
     }
+
+    initModel()
 
     return {
       // React values
