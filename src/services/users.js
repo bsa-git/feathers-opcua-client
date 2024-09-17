@@ -1,11 +1,14 @@
 /* eslint-disable no-unused-vars */
+const loPick = require('lodash/pick')
 import feathersClient, {
   makeServicePlugin,
   BaseModel
 } from '@/plugins/auth/feathers-client'
 
+import Service from '@/plugins/service-helpers/service-client.class'
+
 const debug = require('debug')('app:service.users')
-const isDebug = true
+const isDebug = false
 
 class User extends BaseModel {
   constructor(data, options) {
@@ -15,29 +18,12 @@ class User extends BaseModel {
   static modelName = 'User'
   // Define default properties here
   static instanceDefaults(data, { store, models }) {
-    // instanceDefaults(data, {store, Model, Models}) {
-
-    // if (isDebug && params) debug('instanceDefaults.params:', params)
     const idField = store.state.users.idField
     if (isDebug && store)
       debug('instanceDefaults:', {
-        // servicePath: Model.servicePath,
-        // namespace: Model.namespace,
         idField: idField,
         data: data
       })
-
-    // if (data.profileId) {
-    //   const { UserProfile } = models.api
-    //   let profile = UserProfile.getFromStore(data.profileId);
-    //   if(profile){
-    //     const id = profile[idField];
-    //     // profile = loPick(profile, Service.serviceFields('userProfiles'), ['fullAddress']);
-    //     profile.id = id;
-    //   }
-    //   if (isDebug && profile) debug('instanceDefaults.profile:', profile)
-    // }
-
     return {
       email: '',
       password: '',
@@ -47,12 +33,12 @@ class User extends BaseModel {
       get profile() {
         if (this.profileId) {
           const { UserProfile } = models.api
-          // const idFieldProfile = store.state['user-profiles'].idField;
           let profile = UserProfile.getFromStore(this.profileId)
-          // let profile = UserProfile.get(this.profileId)
           if (profile) {
             const id = profile[idField]
-            // profile = loPick(profile, Service.serviceFields('userProfiles'), ['fullAddress']);
+            profile = loPick(profile, Service.serviceFields('userProfiles'), [
+              'fullAddress'
+            ])
             profile.id = id
           } else {
             profile = null
@@ -61,6 +47,42 @@ class User extends BaseModel {
         } else {
           return null
         }
+      },
+      get role() {
+        if (this.roleId) {
+          const { Role } = models.api
+          let role = Role.getFromStore(this.roleId)
+          if (role) {
+            const id = role[idField]
+            role = loPick(role, Service.serviceFields('roles'))
+            role.id = id
+            role.isAdmin = store.getters.isAdmin
+          } else {
+            role = null
+          }
+          return role
+        } else {
+          return null
+        }
+      },
+      get teams() {
+        const { Team, UserTeam } = models.api
+        const userId = data[idField]
+        let teamIdsForUser = UserTeam.findInStore({
+          query: { userId: userId, $sort: { teamId: 1 } }
+        }).data
+        teamIdsForUser = teamIdsForUser.map(row => row.teamId.toString())
+        let teamsForUser = Team.findInStore({
+          query: { [idField]: { $in: teamIdsForUser }, $sort: { name: 1 } }
+        }).data
+        teamsForUser = teamsForUser.map(team => {
+          const id = team[idField]
+          team = loPick(team, Service.serviceFields('teams'))
+          team.id = id
+          return team
+        })
+        if (isDebug && teamsForUser) debug('teams.teamsForUser:', teamsForUser)
+        return teamsForUser
       }
     }
   }

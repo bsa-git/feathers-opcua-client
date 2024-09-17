@@ -72,9 +72,9 @@ const actions = {
         util.setAccessToken(response.accessToken)
       }
       if (isAdmin) {
-        await service.findAllForAdmin();
+        await service.findAllForAdmin()
       } else {
-        await service.findAllForUser();
+        await service.findAllForUser()
       }
       if (isDebug && response)
         debug(

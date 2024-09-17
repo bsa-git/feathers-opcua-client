@@ -152,14 +152,23 @@ class Service {
       // )
       let paths = Service.getServicePaths()
       paths = paths.filter(
-        path => path === 'users' || path === 'user-profiles' || path === 'messages'
+        path =>
+          path === 'users' ||
+          path === 'user-profiles' ||
+          path === 'roles' ||
+          path === 'teams' ||
+          path === 'user-teams' ||
+          path === 'opcua-tags' ||
+          path === 'opcua-values' ||
+          path === 'log-messages' ||
+          path === 'chat-messages'
       )
-      if (true && paths.length) console.log('findAllForAdmin.paths:', paths)
+      if (isDebug && paths.length) console.log('findAllForAdmin.paths:', paths)
       // paths.forEach(path => this.findAll(path, { query: {} }));
       for (let index = 0; index < paths.length; index++) {
         const path = paths[index]
         const result = await this.findAll(path, { query: {} })
-        console.log('findAllForAdmin.result:', result)
+        if (isDebug && result) console.log('findAllForAdmin.result:', result)
       }
       // Find all chat messages for admin
       // await this.findChatMessagesForAdmin(user)
