@@ -24,21 +24,7 @@ class UserTeam extends BaseModel {
         data: data
       })
     return {
-      getters: {
-        userIdsForTeam: (state, getters) => (teamId = null) => {
-          const _usersForTeam = getters.find({
-            query: { teamId: teamId, $sort: { userId: 1 } }
-          }).data
-          return _usersForTeam.map(row => row.userId.toString())
-        },
-        teamIdsForUser: (state, getters) => (userId = null) => {
-          // const _teamsForUser = getters.find({query: {userId: userId, $sort: {teamId: 1}}}).data;
-          const _teamsForUser = getters.find({ query: { userId: userId } }).data
-          return _teamsForUser && _teamsForUser.lenth
-            ? _teamsForUser.map(row => row.teamId.toString())
-            : []
-        }
-      }
+      getters: {}
     }
   }
 }

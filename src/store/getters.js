@@ -139,8 +139,22 @@ const getters = {
     return result
   },
 
+  getUser: state => {
+    return state.auth.user
+  },
+
   getTeamIdsForUser: (state, getters) => userId => {
-    return getters['user-teams/teamIdsForUser'](userId)
+    const _teamsForUser = getters['user-teams/find']({ query: { userId: userId } }).data // ['user-teams/find']
+    return _teamsForUser && _teamsForUser.lenth
+      ? _teamsForUser.map(row => row.teamId.toString())
+      : []
+  },
+
+  getUserIdsForTeam: (state, getters) => teamId => {
+    const _usersForTeam = getters['user-teams/find']({
+      query: { teamId: teamId, $sort: { userId: 1 } }
+    }).data
+    return _usersForTeam.map(row => row.userId.toString())
   },
 
   isMyTeam: (state, getters) => (userId, teamId) => {
@@ -149,16 +163,8 @@ const getters = {
     return findIndex > -1
   },
 
-  detUserIdsForTeam: (state, getters) => teamId => {
-    return getters['user-teams/userIdsForTeam'](teamId)
-  },
-
-  getUser: state => {
-    return state.auth.user
-  },
-
   isExternalAccount: state => {
-    const found = state.config.externalAccounts.find(function(account) {
+    const found = state.config.externalAccounts.find(function (account) {
       const accountId = `${account}Id`
       return state.auth.user && state.auth.user[accountId]
         ? !!state.auth.user[accountId]
@@ -168,7 +174,7 @@ const getters = {
   },
 
   isUserExternalAccount: state => user => {
-    const found = state.config.externalAccounts.find(function(account) {
+    const found = state.config.externalAccounts.find(function (account) {
       const accountId = `${account}Id`
       return user && user[accountId] ? !!user[accountId] : false
     })

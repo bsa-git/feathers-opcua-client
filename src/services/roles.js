@@ -31,14 +31,19 @@ class Role extends BaseModel {
         let users = User.findInStore({
           query: { roleId: roleId, $sort: { fullName: 1 } }
         }).data
-        users = users.map(user => {
-          const id = user[idField]
-          user = loPick(user, ['email', 'fullName', 'avatar'])
-          user.id = id
-          return user
-        })
-        if (isDebug && users) debug('users:', users)
-        return users
+        if (users.length) {
+          users = users.map(user => {
+            const id = user[idField]
+            user = loPick(user, ['email', 'fullName', 'avatar'])
+            user.id = id
+            return user
+          })
+          if (isDebug && users) debug('users:', users)
+          return users
+        } else {
+          return []
+        }
+
       }
     }
   }

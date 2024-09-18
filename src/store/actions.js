@@ -63,7 +63,7 @@ const actions = {
 
     // authenticate
     let response = await service.authenticate(credentials)
-    if (isDebug && response) debug('service.authenticate.response:', response)
+    if (isDebug && response) debug('authenticate.response:', response)
     if (response && response.accessToken) {
       const isAuth = store.getters.isAuth
       const isAdmin = store.getters.isAdmin
@@ -72,7 +72,8 @@ const actions = {
         util.setAccessToken(response.accessToken)
       }
       if (isAdmin) {
-        await service.findAllForAdmin()
+        // await service.findAllForAdmin()
+        service.findAllForAdmin()
       } else {
         await service.findAllForUser()
       }

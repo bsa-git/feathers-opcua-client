@@ -155,10 +155,6 @@ export default {
     // Emit onStandAlone -> true
     context.emit('onStandAlone', true)
 
-    // Lifecycle Hooks
-    onBeforeMount(() => {
-      initModel()
-    })
     onUnmounted(() => {
       // Emit onStandAlone -> false
       context.emit('onStandAlone', false)
@@ -172,17 +168,17 @@ export default {
       }
     }
     const next = () => {
-      step = step + 1
+      step.value = step.value + 1
     }
     const prev = () => {
-      step = step - 1
+      step.value = step.value - 1
     }
     const close = () => {
       const path = $i18n.path(config.value.homePath)
       $router.push(path)
       // $redirect(path)
     }
-    const currentTitle = step => {
+    const currentTitle = (step) => {
       switch (step) {
         case 0:
           return $i18n.t('profile.userAccount')
@@ -196,6 +192,9 @@ export default {
           return 'Account created'
       }
     }
+
+    // Inin model
+    initModel()
 
     return {
       // React values

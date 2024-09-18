@@ -71,18 +71,23 @@ class User extends BaseModel {
         let teamIdsForUser = UserTeam.findInStore({
           query: { userId: userId, $sort: { teamId: 1 } }
         }).data
-        teamIdsForUser = teamIdsForUser.map(row => row.teamId.toString())
-        let teamsForUser = Team.findInStore({
-          query: { [idField]: { $in: teamIdsForUser }, $sort: { name: 1 } }
-        }).data
-        teamsForUser = teamsForUser.map(team => {
-          const id = team[idField]
-          team = loPick(team, Service.serviceFields('teams'))
-          team.id = id
-          return team
-        })
-        if (isDebug && teamsForUser) debug('teams.teamsForUser:', teamsForUser)
-        return teamsForUser
+        if (teamIdsForUser.length) {
+          teamIdsForUser = teamIdsForUser.map(row => row.teamId.toString())
+          let teamsForUser = Team.findInStore({
+            query: { [idField]: { $in: teamIdsForUser }, $sort: { name: 1 } }
+          }).data
+          teamsForUser = teamsForUser.map(team => {
+            const id = team[idField]
+            team = loPick(team, Service.serviceFields('teams'))
+            team.id = id
+            return team
+          })
+          if (isDebug && teamsForUser) debug('teams.teamsForUser:', teamsForUser)
+          return teamsForUser
+        } else {
+          return []
+        }
+
       }
     }
   }

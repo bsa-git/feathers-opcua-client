@@ -6,8 +6,7 @@ const loKebabCase = require('lodash/kebabCase')
 const loMerge = require('lodash/merge')
 // const errors = require('@feathersjs/errors');
 const debug = require('debug')('app:plugins.service-client.class')
-
-const isDebug = false
+let isDebug = false
 
 class Service {
   /**
@@ -147,32 +146,18 @@ class Service {
     // Find chat messages for user
     const user = this.getAuthUser()
     if (user) {
-      // const paths = Service.getServicePaths().filter(
-      //   path => path !== 'chat-messages' && path !== 'user-teams'
-      // )
-      let paths = Service.getServicePaths()
-      paths = paths.filter(
-        path =>
-          path === 'users' ||
-          path === 'user-profiles' ||
-          path === 'roles' ||
-          path === 'teams' ||
-          path === 'user-teams' ||
-          path === 'opcua-tags' ||
-          path === 'opcua-values' ||
-          path === 'log-messages' ||
-          path === 'chat-messages'
+      const paths = Service.getServicePaths().filter(
+        path => path !== 'chat-messages'
       )
-      if (isDebug && paths.length) console.log('findAllForAdmin.paths:', paths)
-      // paths.forEach(path => this.findAll(path, { query: {} }));
+      if (isDebug && paths.length) debug('findAllForAdmin.paths:', paths)
       for (let index = 0; index < paths.length; index++) {
         const path = paths[index]
         const result = await this.findAll(path, { query: {} })
-        if (isDebug && result) console.log('findAllForAdmin.result:', result)
+        if (isDebug && result) debug(`findAllForAdmin.result for "${path}":`, result)
       }
       // Find all chat messages for admin
-      // await this.findChatMessagesForAdmin(user)
-      // this.initStateChatCheckAt()
+      await this.findChatMessagesForAdmin(user)
+      this.initStateChatCheckAt()
     }
   }
 
@@ -184,11 +169,11 @@ class Service {
   async findChatMessagesForAdmin(user) {
     const idField = this.getServiceIdField('users')
     const userId = user[idField]
-    // Find chat messages
-    await this.findAll('user-teams', { query: {} })
-    const teamIdsForUser = this.getters.getTeamIdsForUser(userId)
     // getTeamIdsForUser
-    await this.findAll('chat-messages', {
+    const teamIdsForUser = this.getters.getTeamIdsForUser(userId)
+    if (isDebug && teamIdsForUser) debug('findChatMessagesForAdmin.teamIdsForUser:', teamIdsForUser)
+    // Find chat-messages
+    const result = await this.findAll('chat-messages', {
       query: {
         $or: [
           { ownerId: userId },
@@ -198,6 +183,7 @@ class Service {
         ]
       }
     })
+    if (isDebug && result) debug('findChatMessagesForAdmin.result for "chat-messages":', result)
   }
 
   /**
@@ -205,34 +191,44 @@ class Service {
    * @return {Promise.<void>}
    */
   async findAllForUser() {
+    let results
     if (isDebug) debug('findAllForUser: START')
     const user = this.getAuthUser()
     if (user) {
-      // getRole
-      await this.get('roles', user.roleId)
-      await this.find('roles', { query: { alias: 'isAdministrator' } })
+      const idField = this.state.users.idField
+
       // getUserProfiles
-      await this.get('user-profiles', user.profileId)
+      results = await this.get('user-profiles', user.profileId)
+      if (true && results) debug('findAllForUser.user-profiles for user:', results)
+
+      // getRole
+      results = await this.get('roles', user.roleId)
+      if (true && results) debug('findAllForUser.role for user:', results)
+      results = await this.find('roles', { query: { alias: 'isAdministrator' } })
+      if (true && results) debug('findAllForUser.roles for administrators:', results)
+      
       // getTeams
-      const idFieldTeam = this.state.teams.idField
-      const idFieldUser = this.state.users.idField
-      const userId = user[idFieldUser]
+      const userId = user[idField]
 
       // Find teams for user
       let teamIdsForUser = await this.findAll('user-teams', {
         query: { userId: userId, $sort: { teamId: 1 } }
       })
       teamIdsForUser = teamIdsForUser.map(row => row.teamId.toString())
+      if (true && teamIdsForUser) debug('findAllForUser.teamIdsForUser:', teamIdsForUser)
       if (teamIdsForUser.length) {
-        await this.findAll('teams', {
-          query: { [idFieldTeam]: { $in: teamIdsForUser }, $sort: { name: 1 } }
+        results = await this.findAll('teams', {
+          query: { [idField]: { $in: teamIdsForUser }, $sort: { name: 1 } }
         })
+        if (true && results) debug('findAllForUser.teams:', results)
       }
+      
       // Find log messages
       let logMessages = await this.findAll('log-messages', {
         query: { userId: userId }
       })
       logMessages = logMessages.filter(msg => msg.ownerId !== msg.userId)
+      if (true && logMessages.length) debug('findAllForUser.logMessages:', logMessages)
       if (logMessages.length) {
         let ownerIds = logMessages.map(msg => msg.ownerId)
         // Get users for log-messages ownerIds
@@ -242,13 +238,16 @@ class Service {
         }
       }
       // Find chat messages for user
-      await this.findChatMessagesForUser(user)
+      results = await this.findChatMessagesForUser(user)
+      if (true && results) debug('findAllForUser.findChatMessagesForUser:', results)
       // Init state chat checkAt
       this.initStateChatCheckAt()
       // Find all opcua tags
-      this.findAll('opcua-tags', { query: {} })
+      results = this.findAll('opcua-tags', { query: {} })
+      if (true && results) debug('findAllForUser.opcua-tags:', results)
       // Find all opcua values
-      this.findAll('opcua-values', { query: {} })
+      results = this.findAll('opcua-values', { query: {} })
+      if (true && results) debug('findAllForUser.opcua-values:', results)
     }
   }
 
@@ -482,7 +481,7 @@ class Service {
   getChatUsers() {
     let users = this.findInStore('users', { query: { $sort: { fullName: 1 } } })
     // let users = this.findInStore('users', { query: { } });
-    // console.log('getChatUsers.users:', users);
+    // debug('getChatUsers.users:', users);
     // util.sortByStringField(users, 'fullName');
     users = users.filter(user => this.isChatFilterUser(user))
     return users
@@ -817,7 +816,7 @@ class Service {
       results = this.getters[`${path}/find`]({ query: params })
     }
     results = results.data || results
-    if (true && results)
+    if (isDebug && results)
       debug(
         `findInStore.path: ${path}`,
         `findInStore.params: ${JSON.stringify(params)}`,
@@ -844,7 +843,7 @@ class Service {
     }
     results = this.getters[`${path}/find`](newParams)
     results = results.total
-    if (isDebug)
+    if (isDebug && results)
       debug(
         `findCountInStore.path: ${path}`,
         `findCountInStore.params: ${JSON.stringify(newParams)}`,
@@ -871,7 +870,7 @@ class Service {
     }
     results = this.getters[`${path}/find`](newParams)
     results = results.data || results
-    if (isDebug)
+    if (isDebug && results)
       debug(
         `findAllInStore.path: ${path}`,
         `findAllInStore.params: ${JSON.stringify(newParams)}`,
@@ -892,7 +891,7 @@ class Service {
    */
   async get(path, id, params = {}) {
     let results = await this.dispatch(`${path}/get`, id, params)
-    if (isDebug)
+    if (isDebug && results)
       debug(`get.path: ${path}`, `get.id: ${id}`, 'get.results:', results)
     return results
   }
@@ -906,7 +905,7 @@ class Service {
    */
   getFromStore(path, id, params = {}) {
     let results = this.getters[`${path}/get`](id, params)
-    if (isDebug)
+    if (isDebug && results)
       debug(
         `getFromStore.path: ${path}`,
         `getFromStore.id: ${id}`,
@@ -927,7 +926,7 @@ class Service {
    */
   async create(path, data, params = {}) {
     let results = await this.dispatch(`${path}/create`, [data, params])
-    if (isDebug)
+    if (isDebug && results)
       debug(
         `create.path: ${path}`,
         `create.data: ${data}`,
@@ -949,7 +948,7 @@ class Service {
    */
   async patch(path, id, data, params = {}) {
     let results = await this.dispatch(`${path}/patch`, [id, data, params])
-    if (isDebug)
+    if (isDebug && results)
       debug(
         `patch.path: ${path}`,
         `patch.id: ${id}`,
@@ -970,7 +969,7 @@ class Service {
    */
   async remove(path, id) {
     let results = await this.dispatch(`${path}/remove`, id)
-    if (isDebug)
+    if (isDebug && results)
       debug(
         `remove.path: ${path}`,
         `remove.id: ${id}`,
