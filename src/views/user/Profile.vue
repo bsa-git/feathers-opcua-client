@@ -178,7 +178,7 @@ export default {
       $router.push(path)
       // $redirect(path)
     }
-    const currentTitle = (step) => {
+    const currentTitle = step => {
       switch (step) {
         case 0:
           return $i18n.t('profile.userAccount')

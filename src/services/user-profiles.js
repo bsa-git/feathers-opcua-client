@@ -14,7 +14,9 @@ class UserProfile extends BaseModel {
   // Required for $FeathersVuex plugin to work after production transpile.
   static modelName = 'UserProfile'
   // Define default properties here
-  static instanceDefaults() {
+  static instanceDefaults(data) {
+    if (isDebug && data) debug('ServiceInfo.data:', data)
+
     return {
       get fullAddress() {
         const isFullAddress = !!this.addressCountry

@@ -48,13 +48,14 @@ const actions = {
     if (util.isAccessToken) {
       util.removeAccessToken()
     }
-    // service.clearAll();
     const isAuth = store.getters.isAuth
     const myRole = store.getters.getMyRole ? store.getters.getMyRole : 'No'
     if (isDebug)
       debug(
         `<<logout>> Logout completed; <<isAuth>>: ${isAuth}; <<myRole>>: ${myRole}`
       )
+    // Clear all services from store
+    service.clearAll()
   },
 
   async authenticate(store, credentials = null) {
@@ -75,7 +76,8 @@ const actions = {
         // await service.findAllForAdmin()
         service.findAllForAdmin()
       } else {
-        await service.findAllForUser()
+        // await service.findAllForUser()
+        service.findAllForUser()
       }
       if (isDebug && response)
         debug(

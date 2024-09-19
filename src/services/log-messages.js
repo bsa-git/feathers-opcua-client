@@ -67,12 +67,7 @@ class LogMessage extends BaseModel {
   // Define default properties here
   static instanceDefaults(data, { store, models }) {
     const moment = require('moment')
-    const idField = store.state['log-messages'].idField
-    if (isDebug)
-      debug('ServiceInfo:', {
-        idField: idField,
-        data: data
-      })
+    if (isDebug && data) debug('ServiceInfo.data:', data)
     return {
       get owner() {
         return this && this.ownerId

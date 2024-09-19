@@ -153,7 +153,8 @@ class Service {
       for (let index = 0; index < paths.length; index++) {
         const path = paths[index]
         const result = await this.findAll(path, { query: {} })
-        if (isDebug && result) debug(`findAllForAdmin.result for "${path}":`, result)
+        if (isDebug && result)
+          debug(`findAllForAdmin.result for "${path}":`, result)
       }
       // Find all chat messages for admin
       await this.findChatMessagesForAdmin(user)
@@ -171,7 +172,8 @@ class Service {
     const userId = user[idField]
     // getTeamIdsForUser
     const teamIdsForUser = this.getters.getTeamIdsForUser(userId)
-    if (isDebug && teamIdsForUser) debug('findChatMessagesForAdmin.teamIdsForUser:', teamIdsForUser)
+    if (isDebug && teamIdsForUser)
+      debug('findChatMessagesForAdmin.teamIdsForUser:', teamIdsForUser)
     // Find chat-messages
     const result = await this.findAll('chat-messages', {
       query: {
@@ -183,7 +185,8 @@ class Service {
         ]
       }
     })
-    if (isDebug && result) debug('findChatMessagesForAdmin.result for "chat-messages":', result)
+    if (isDebug && result)
+      debug('findChatMessagesForAdmin.result for "chat-messages":', result)
   }
 
   /**
@@ -199,14 +202,18 @@ class Service {
 
       // getUserProfiles
       results = await this.get('user-profiles', user.profileId)
-      if (true && results) debug('findAllForUser.user-profiles for user:', results)
+      if (isDebug && results)
+        debug('findAllForUser.user-profiles.get:', results)
 
       // getRole
       results = await this.get('roles', user.roleId)
-      if (true && results) debug('findAllForUser.role for user:', results)
-      results = await this.find('roles', { query: { alias: 'isAdministrator' } })
-      if (true && results) debug('findAllForUser.roles for administrators:', results)
-      
+      if (isDebug && results) debug('findAllForUser.role for user:', results)
+      results = await this.find('roles', {
+        query: { alias: 'isAdministrator' }
+      })
+      if (isDebug && results)
+        debug('findAllForUser.roles for administrators:', results)
+
       // getTeams
       const userId = user[idField]
 
@@ -215,20 +222,22 @@ class Service {
         query: { userId: userId, $sort: { teamId: 1 } }
       })
       teamIdsForUser = teamIdsForUser.map(row => row.teamId.toString())
-      if (true && teamIdsForUser) debug('findAllForUser.teamIdsForUser:', teamIdsForUser)
+      if (isDebug && teamIdsForUser)
+        debug('findAllForUser.teamIdsForUser:', teamIdsForUser)
       if (teamIdsForUser.length) {
         results = await this.findAll('teams', {
           query: { [idField]: { $in: teamIdsForUser }, $sort: { name: 1 } }
         })
-        if (true && results) debug('findAllForUser.teams:', results)
+        if (isDebug && results) debug('findAllForUser.teams:', results)
       }
-      
+
       // Find log messages
       let logMessages = await this.findAll('log-messages', {
         query: { userId: userId }
       })
       logMessages = logMessages.filter(msg => msg.ownerId !== msg.userId)
-      if (true && logMessages.length) debug('findAllForUser.logMessages:', logMessages)
+      if (isDebug && logMessages.length)
+        debug('findAllForUser.logMessages:', logMessages)
       if (logMessages.length) {
         let ownerIds = logMessages.map(msg => msg.ownerId)
         // Get users for log-messages ownerIds
@@ -239,15 +248,16 @@ class Service {
       }
       // Find chat messages for user
       results = await this.findChatMessagesForUser(user)
-      if (true && results) debug('findAllForUser.findChatMessagesForUser:', results)
+      if (isDebug && results)
+        debug('findAllForUser.findChatMessagesForUser:', results)
       // Init state chat checkAt
       this.initStateChatCheckAt()
       // Find all opcua tags
-      results = this.findAll('opcua-tags', { query: {} })
-      if (true && results) debug('findAllForUser.opcua-tags:', results)
+      results = await this.findAll('opcua-tags', { query: {} })
+      if (isDebug && results) debug('findAllForUser.opcua-tags:', results)
       // Find all opcua values
-      results = this.findAll('opcua-values', { query: {} })
-      if (true && results) debug('findAllForUser.opcua-values:', results)
+      results = await this.findAll('opcua-values', { query: {} })
+      if (isDebug && results) debug('findAllForUser.opcua-values:', results)
     }
   }
 

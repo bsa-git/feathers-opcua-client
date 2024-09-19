@@ -18,12 +18,8 @@ class Team extends BaseModel {
   static modelName = 'Team'
   // Define default properties here
   static instanceDefaults(data, { store, models }) {
-    const idField = store.state.roles.idField
-    if (isDebug)
-      debug('ServiceInfo:', {
-        idField: idField,
-        data: data
-      })
+    const idField = store.state.users.idField
+    if (isDebug && data) debug('ServiceInfo.data:', data)
     return {
       get members() {
         const { User, UserTeam } = models.api
@@ -35,7 +31,10 @@ class Team extends BaseModel {
           userIdsForTeam = userIdsForTeam.map(row => row.userId.toString())
           if (isDebug) debug('members.userIdsForTeam:', userIdsForTeam)
           let usersForTeam = User.findInStore({
-            query: { [idField]: { $in: userIdsForTeam }, $sort: { fullName: 1 } }
+            query: {
+              [idField]: { $in: userIdsForTeam },
+              $sort: { fullName: 1 }
+            }
           }).data
           usersForTeam = usersForTeam.map(user => {
             const id = user[idField]
@@ -48,7 +47,6 @@ class Team extends BaseModel {
         } else {
           return []
         }
-
       }
     }
   }

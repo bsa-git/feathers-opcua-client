@@ -18,12 +18,8 @@ class OpcuaValue extends BaseModel {
   static modelName = 'OpcuaValue'
   // Define default properties here
   static instanceDefaults(data, { store, models }) {
-    const idField = store.state.roles.idField
-    if (isDebug)
-      debug('ServiceInfo:', {
-        idField: idField,
-        data: data
-      })
+    const idField = store.state.users.idField
+    if (isDebug && data) debug('ServiceInfo.data:', data)
     return {
       get tag() {
         if (this.tagId) {

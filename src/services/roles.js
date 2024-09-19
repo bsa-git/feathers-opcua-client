@@ -18,12 +18,8 @@ class Role extends BaseModel {
   static modelName = 'Role'
   // Define default properties here
   static instanceDefaults(data, { store, models }) {
-    const idField = store.state.roles.idField
-    if (isDebug)
-      debug('ServiceInfo:', {
-        idField: idField,
-        data: data
-      })
+    const idField = store.state.users.idField
+    if (isDebug && data) debug('ServiceInfo.data:', data)
     return {
       get users() {
         const { User } = models.api
@@ -43,7 +39,6 @@ class Role extends BaseModel {
         } else {
           return []
         }
-
       }
     }
   }

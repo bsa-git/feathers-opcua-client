@@ -75,13 +75,8 @@ class ChatMessage extends BaseModel {
   static instanceDefaults(data, { store, models }) {
     let dt = ''
     const moment = require('moment')
-    const idField = store.state.users.idField
     const dbNullIdValue = store.getters.getDbNullIdValue
-    if (isDebug)
-      debug('ServiceInfo:', {
-        idField: idField,
-        data: data
-      })
+    if (isDebug && data) debug('ServiceInfo.data:', data)
     return {
       get owner() {
         return this && this.ownerId

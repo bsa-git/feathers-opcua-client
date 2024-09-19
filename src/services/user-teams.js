@@ -16,13 +16,9 @@ class UserTeam extends BaseModel {
   // Required for $FeathersVuex plugin to work after production transpile.
   static modelName = 'UserTeam'
   // Define default properties here
-  static instanceDefaults(data, { store, models }) {
-    const idField = store.state.roles.idField
-    if (isDebug)
-      debug('ServiceInfo:', {
-        idField: idField,
-        data: data
-      })
+  static instanceDefaults(data) {
+    if (isDebug && data) debug('ServiceInfo.data:', data)
+
     return {
       getters: {}
     }

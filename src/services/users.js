@@ -19,11 +19,7 @@ class User extends BaseModel {
   // Define default properties here
   static instanceDefaults(data, { store, models }) {
     const idField = store.state.users.idField
-    if (isDebug && store)
-      debug('instanceDefaults:', {
-        idField: idField,
-        data: data
-      })
+    if (isDebug && data) debug('ServiceInfo.data:', data)
     return {
       email: '',
       password: '',
@@ -82,12 +78,12 @@ class User extends BaseModel {
             team.id = id
             return team
           })
-          if (isDebug && teamsForUser) debug('teams.teamsForUser:', teamsForUser)
+          if (isDebug && teamsForUser)
+            debug('teams.teamsForUser:', teamsForUser)
           return teamsForUser
         } else {
           return []
         }
-
       }
     }
   }
