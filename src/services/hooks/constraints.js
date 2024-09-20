@@ -1,35 +1,38 @@
-const {getItems, replaceItems} = require('feathers-hooks-common');
-import HookHelper from '@/plugins/service-helpers/hook-helper.class';
+const { getItems, replaceItems } = require('feathers-hooks-common')
+import HookHelper from '@/plugins/service-helpers/hook-helper.class'
 
-const debug = require('debug')('app:services.hook.constraints');
-const isDebug = false;
+const debug = require('debug')('app:services.hook.constraints')
+const isDebug = false
 
 // eslint-disable-next-line no-unused-vars
-export default function (options = {}) {
+export default function(options = {}) {
   // Return the actual hook.
-  return async (context) => {
+  return async context => {
     // Get the record(s) from context.data (before), context.result.data or context.result (after).
     // getItems always returns an array to simplify your processing.
-    let records = getItems(context);
+    let records = getItems(context)
 
     // Create HookHelper object
-    const hh = new HookHelper(context);
+    const hh = new HookHelper(context)
     // Show debug info
-    hh.showDebugInfo('', isDebug);
+    hh.showDebugInfo('', isDebug)
 
-    if(isDebug && hh) debug('Context:', `${hh.contextPath}.${hh.contextMethod}.${hh.contextType}`);
+    if (isDebug && hh)
+      debug(
+        'Context:',
+        `${hh.contextPath}.${hh.contextMethod}.${hh.contextType}`
+      )
     //----- SERVICES CONSTRAINT ---//
     switch (`${hh.contextPath}.${hh.contextMethod}.${hh.contextType}`) {
-    case 'users.patch.after':
-      break;
-    default:
-      break;
+      case 'users.patch.after':
+        break
+      default:
+        break
     }
 
     // Place the modified records back in the context.
-    replaceItems(context, records);
+    replaceItems(context, records)
     // Best practice: hooks should always return the context.
-    return context;
-  };
+    return context
+  }
 }
-

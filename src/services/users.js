@@ -1,11 +1,13 @@
 /* eslint-disable no-unused-vars */
 const loPick = require('lodash/pick')
+const commonHooks = require('feathers-hooks-common')
 import feathersClient, {
   makeServicePlugin,
   BaseModel
 } from '@/plugins/auth/feathers-client'
-
 import Service from '@/plugins/service-helpers/service-client.class'
+import normalize from '@/services/hooks/normalize'
+import log from '@/services/hooks/log'
 
 const debug = require('debug')('app:service.users')
 const isDebug = false
@@ -98,16 +100,34 @@ const servicePlugin = makeServicePlugin({
 // Setup the client-side Feathers hooks.
 feathersClient.service(servicePath).hooks({
   before: {
-    all: [],
+    all: [log()],
     find: [],
     get: [],
-    create: [],
-    update: [],
-    patch: [],
+    create: [normalize()],
+    update: [normalize()],
+    patch: [
+      normalize(),
+      commonHooks.discard(
+        'isVerified',
+        'verifyToken',
+        'verifyShortToken',
+        'verifyExpires',
+        'verifyChanges',
+        'resetToken',
+        'resetShortToken',
+        'resetExpires',
+        'googleId',
+        'githubId',
+        'googleAccessToken',
+        'googleRefreshToken',
+        'githubAccessToken',
+        'githubRefreshToken'
+      )
+    ],
     remove: []
   },
   after: {
-    all: [],
+    all: [log()],
     find: [],
     get: [],
     create: [],
@@ -116,7 +136,7 @@ feathersClient.service(servicePath).hooks({
     remove: []
   },
   error: {
-    all: [],
+    all: [log()],
     find: [],
     get: [],
     create: [],

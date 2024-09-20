@@ -6,8 +6,8 @@ import feathersClient, {
 } from '@/plugins/auth/feathers-client'
 import jsonLogData from '@/api/app/app-log-msg.json'
 import colors from 'vuetify/lib/util/colors'
-// import normalize from '~/services/hooks/normalize';
-// import log from '~/services/hooks/log';
+import normalize from '@/services/hooks/normalize';
+import log from '@/services/hooks/log';
 
 const debug = require('debug')('app:service.log-messages')
 const isDebug = false
@@ -124,16 +124,16 @@ const servicePlugin = makeServicePlugin({
 // Setup the client-side Feathers hooks.
 feathersClient.service(servicePath).hooks({
   before: {
-    all: [],
+    all: [log()],
     find: [],
     get: [],
-    create: [],
-    update: [],
-    patch: [],
+    create: [normalize()],
+    update: [normalize()],
+    patch: [normalize()],
     remove: []
   },
   after: {
-    all: [],
+    all: [log()],
     find: [],
     get: [],
     create: [],
@@ -142,7 +142,7 @@ feathersClient.service(servicePath).hooks({
     remove: []
   },
   error: {
-    all: [],
+    all: [log()],
     find: [],
     get: [],
     create: [],
