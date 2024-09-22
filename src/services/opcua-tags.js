@@ -3,8 +3,8 @@ import feathersClient, {
   makeServicePlugin,
   BaseModel
 } from '@/plugins/auth/feathers-client'
-import normalize from '@/services/hooks/normalize';
-import log from '@/services/hooks/log';
+import normalize from '@/services/hooks/normalize'
+import log from '@/services/hooks/log'
 
 const debug = require('debug')('app:service.opcua-tags')
 const isDebug = false

@@ -6,8 +6,8 @@ import feathersClient, {
 } from '@/plugins/auth/feathers-client'
 import jsonLogData from '@/api/app/app-log-msg.json'
 import colors from 'vuetify/lib/util/colors'
-import normalize from '@/services/hooks/normalize';
-import log from '@/services/hooks/log';
+import normalize from '@/services/hooks/normalize'
+import log from '@/services/hooks/log'
 
 const debug = require('debug')('app:service.log-messages')
 const isDebug = false
