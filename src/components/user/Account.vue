@@ -247,8 +247,8 @@ export default {
             lastName: data.lastName
           }
           if (isDebug && userData) debug('save.userData:', userData)
-          const user = new User(userData)
-          changeResult = await user.save()
+          const service = new User(userData)
+          changeResult = await service.save()
           if (isDebug) debug('userChange.OK')
         }
         if (isChangePassword()) {
@@ -307,11 +307,11 @@ export default {
         loadingRemove.value = true
         const idFieldUser = $store.state.users.idField
         const { User } = context.root.$FeathersVuex.api
-        const user = new User({
+        const service = new User({
           [idFieldUser]: user.value[idFieldUser],
           active: false
         })
-        await user.save()
+        await service.save()
         showSuccess(`${$i18n.t('profile.successRemoveUser')}!`)
         await logout()
         setTimeout(() => {
@@ -354,7 +354,6 @@ export default {
       try {
         if (isDebug) debug('<<verifySignUpShort>> Start verifySignUpShort')
         const idFieldUser = $store.state.users.idField
-        const { User } = context.root.$FeathersVuex.api
         // Close input dialog
         inputCodeDialog.value = false
         if (isDebug) debug('verifySignUpShort.verifyCode:', verifyCode.value)
@@ -373,8 +372,9 @@ export default {
             [idFieldUser]: user.value[idFieldUser],
             avatar: avatarImage
           }
-          const user = new User(userData)
-          await user.save()
+          const { User } = context.root.$FeathersVuex.api
+          const service = new User(userData)
+          await service.save()
         } else {
           showError({
             text: $i18n.t('authManagement.errorUserVerification'),
