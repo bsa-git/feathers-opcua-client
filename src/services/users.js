@@ -22,7 +22,7 @@ class User extends BaseModel {
   static instanceDefaults(data, { store, models }) {
     const idField = store.state.users.idField
     if (isDebug && data) debug('ServiceInfo.data:', data)
-    return {
+      return {
       email: '',
       password: '',
       get fullName() {
