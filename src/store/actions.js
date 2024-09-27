@@ -5,6 +5,7 @@ const debug = require('debug')('app:store.actions')
 const isDebug = false
 
 const actions = {
+  
   async checkAuth({ dispatch }) {
     if (isDebug) debug('<<checkAuth>>Start checkAuth')
     let result = false

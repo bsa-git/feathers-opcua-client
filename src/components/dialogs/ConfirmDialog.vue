@@ -2,7 +2,7 @@
   <v-row justify="center">
     <v-dialog v-model="dialog" persistent max-width="320">
       <!-- <v-card color="secondary" :dark="theme.dark"> -->
-      <v-card color="" :dark="theme.dark">  
+      <v-card color="" :dark="theme.dark">
         <v-card-title class="title">{{ titleDialog }}?</v-card-title>
         <v-card-text>
           {{ textDialog }}
