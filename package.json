@@ -12,6 +12,8 @@
     "update-packages": "npm outdated --depth=0"
   },
   "dependencies": {
+    "@casl/ability": "^6.7.1",
+    "@casl/vue": "1.x",
     "@feathersjs/authentication-client": "4.5.18",
     "@feathersjs/feathers": "4.5.17",
     "@feathersjs/socketio-client": "4.5.18",

@@ -78,10 +78,6 @@ export default {
   setup(props, context) {
     const { $store, $router } = context.root
 
-    if (isDebug && context) debug('setup.context:', context)
-    if (isDebug && props) debug('setup.props:', props)
-    if (isDebug && $router) debug('setup.$router:', $router)
-
     // Set app
     // context.app = feathersClient
 
@@ -98,6 +94,9 @@ export default {
     // Mutations
     const setSnackBar = value => $store.commit('SET_SNACK_BAR', value)
 
+    // Actions
+    const authenticate = payload => $store.dispatch('authenticate', payload)
+
     // Redirect to chat page if there's a user, otherwise to login page.
     /*
     watch(
@@ -112,13 +111,20 @@ export default {
 
     //----------------------------------------------------
     // Lifecycle Hooks
-    onMounted(() => {
-      // Attempt jwt auth when the app mounts.
-      $store.dispatch('auth/authenticate').catch(error => {
+    onMounted(async () => {
+      try {
+        const loginResponse = await authenticate()
+        if (isDebug && loginResponse)
+          debug('authenticate.loginResponse:', loginResponse)
+      } catch (error) {
         if (error.name !== 'NotAuthenticated') {
-          console.error(error)
+          console.error(
+            'Authenticate.error:',
+            `name="${error.name}"`,
+            `message="${error.message}"`
+          )
         }
-      })
+      }
     })
 
     //-----------------------------------------------------
