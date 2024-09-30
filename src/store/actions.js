@@ -39,25 +39,6 @@ const actions = {
     return result
   },
 
-  async logout(store) {
-    if (isDebug) debug('<<logout>> Start logout')
-    const service = new Service(store)
-    // logout
-    await service.logout()
-    // Remove access token
-    if (util.isAccessToken) {
-      util.removeAccessToken()
-    }
-    const isAuth = store.getters.isAuth
-    const myRole = store.getters.getMyRole ? store.getters.getMyRole : 'No'
-    if (isDebug)
-      debug(
-        `<<logout>> Logout completed; <<isAuth>>: ${isAuth}; <<myRole>>: ${myRole}`
-      )
-    // Clear all services from store
-    service.clearAll()
-  },
-
   async authenticate(store, credentials = null) {
     if (isDebug && store) debug('<<authenticate>> Start authenticate')
     const service = new Service(store)
@@ -87,6 +68,25 @@ const actions = {
         )
     }
     return response
+  },
+
+  async logout(store) {
+    if (isDebug) debug('<<logout>> Start logout')
+    const service = new Service(store)
+    // logout
+    await service.logout()
+    // Remove access token
+    if (util.isAccessToken) {
+      util.removeAccessToken()
+    }
+    const isAuth = store.getters.isAuth
+    const myRole = store.getters.getMyRole ? store.getters.getMyRole : 'No'
+    if (isDebug)
+      debug(
+        `<<logout>> Logout completed; <<isAuth>>: ${isAuth}; <<myRole>>: ${myRole}`
+      )
+    // Clear all services from store
+    service.clearAll()
   }
 }
 export default actions

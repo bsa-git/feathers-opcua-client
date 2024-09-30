@@ -15,15 +15,37 @@
           class="button button-secondary block"
           >Home</router-link
         >
+        <!-- <button v-if="can('manage', 'all')">Create Post</button> -->
       </div>
     </div>
   </main>
 </template>
 
 <script>
+/* eslint-disable no-unused-vars */
+import { useAbility } from '@casl/vue';
+const debug = require('debug')('app:view.Dashboard')
+const isDebug = false
 export default {
-  name: 'Dashboard'
+  name: 'Dashboard',
+
+  setup(props, context) {
+
+    // debug('setup.useAbility:', useAbility)
+    // debug('setup.context:', context)
+
+    const { $store, $router } = context.root
+
+    // some code
+    // const { can } = useAbility();
+
+    return {
+      // other props
+      // can
+    };
+  }
 }
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

@@ -5,6 +5,10 @@ import moment from 'moment'
 const loKebabCase = require('lodash/kebabCase')
 const loMerge = require('lodash/merge')
 // const errors = require('@feathersjs/errors');
+import Vue from 'vue'
+import { abilitiesPlugin } from '@casl/vue'
+import { defineAbilitiesFor } from '../auth/abilities'
+
 const debug = require('debug')('app:plugins.service-client.class')
 let isDebug = false
 
@@ -82,6 +86,9 @@ class Service {
     } else {
       result = await this.dispatch('auth/authenticate')
     }
+    if(result.user){
+      this.updateAbilityForUser(result.user)
+    }
     if (isDebug && result) debug('authenticate: OK', 'result:', result)
     return result
   }
@@ -93,6 +100,17 @@ class Service {
   async logout() {
     await this.dispatch('auth/logout')
     if (isDebug) debug('logout: OK')
+  }
+
+  /**
+   * updateAbilityForUser
+   * @param {Object} currentUser
+   */
+  updateAbilityForUser(currentUser) {
+    const ability = defineAbilitiesFor(currentUser)
+    if (true && ability) debug('updateAbilityForUser.ability:', ability)
+    // Vue.use(abilitiesPlugin, ability, { useGlobalProperties: true })
+    Vue.use(abilitiesPlugin, ability)
   }
 
   /**
