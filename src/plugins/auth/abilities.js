@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { AbilityBuilder } from '@casl/ability'
+import { AbilityBuilder, defineAbility } from '@casl/ability'
 
 export function defineAbilitiesFor(user) {
   const { can, cannot, rules } = new AbilityBuilder()

@@ -23,14 +23,13 @@
 
 <script>
 /* eslint-disable no-unused-vars */
-import { useAbility } from '@casl/vue';
+import { useAbility } from '@casl/vue'
 const debug = require('debug')('app:view.Dashboard')
 const isDebug = false
 export default {
   name: 'Dashboard',
 
   setup(props, context) {
-
     // debug('setup.useAbility:', useAbility)
     // debug('setup.context:', context)
 
@@ -42,10 +41,9 @@ export default {
     return {
       // other props
       // can
-    };
+    }
   }
 }
-
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
