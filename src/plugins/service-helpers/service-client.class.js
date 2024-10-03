@@ -7,7 +7,11 @@ const loMerge = require('lodash/merge')
 // const errors = require('@feathersjs/errors');
 import Vue from 'vue'
 import { abilitiesPlugin } from '@casl/vue'
-import { defineAbilitiesFor } from '../auth/defineAbilities'
+// import { defineAbilitiesFor } from '../auth/define-abilities'
+import {
+  defineAbilitiesFor,
+  defineRulesFor
+} from '../auth/ability-builder.class'
 
 const debug = require('debug')('app:plugins.service-client.class')
 let isDebug = false
@@ -108,12 +112,20 @@ class Service {
    */
   updateAbilityForUser(currentUser) {
     const ability = defineAbilitiesFor(currentUser)
+    const rules = defineRulesFor(currentUser)
     // if (true && ability) debug('updateAbilityForUser.ability:', ability)
     if (true && ability) {
-      debug('updateAbilityForUser.ability.can("read", "users"):', ability.can('read', 'users'))
-      debug('updateAbilityForUser.ability.can("delete", "roles"):', ability.can('delete', 'roles'))
+      debug(
+        'updateAbilityForUser.ability.can("read", "users"):',
+        ability.can('read', 'users')
+      )
+      debug(
+        'updateAbilityForUser.ability.can("delete", "roles"):',
+        ability.can('delete', 'roles')
+      )
+      debug('updateAbilityForUser.rules:', rules)
     }
-      
+
     // Vue.use(abilitiesPlugin, ability, { useGlobalProperties: true })
     Vue.use(abilitiesPlugin, ability)
   }

@@ -1,8 +1,33 @@
 /* eslint-disable no-unused-vars */
-import { AbilityBuilder, defineAbility } from '@casl/ability'
+import {
+  AbilityBuilder,
+  createMongoAbility,
+  PureAbility,
+  createAliasResolver,
+  detectSubjectType as defaultDetector
+} from '@casl/ability'
 
-export function defineAbilitiesFor(user) {
-  const { can, cannot, rules } = new AbilityBuilder()
+import { BaseModel } from '@/plugins/auth/feathers-client'
+
+const detectSubjectType = subject => {
+  if (typeof subject === 'string') return subject
+  if (!(subject instanceof BaseModel)) return defaultDetector(subject)
+  return subject.constructor.servicePath
+}
+
+const resolveAction = createAliasResolver({
+  update: 'patch', // define the same rules for update & patch
+  read: ['get', 'find'], // use 'read' as a equivalent for 'get' & 'find'
+  delete: 'remove' // use 'delete' or 'remove'
+})
+
+/**
+ * defineRulesFor
+ * @param {Object} user
+ * @returns {Object[]}
+ */
+const defineRulesFor = user => {
+  const { can, cannot, build, rules } = new AbilityBuilder(createMongoAbility)
 
   if (user.roleAlias === 'isAdministrator') {
     // Administrator can do all
@@ -68,3 +93,17 @@ export function defineAbilitiesFor(user) {
 
   return rules
 }
+
+/**
+ * defineAbilitiesFor
+ * @param {Object} user
+ * @returns {Object}
+ */
+const defineAbilitiesFor = user => {
+  const rules = defineRulesFor(user)
+
+  // return new PureAbility(rules, { detectSubjectType, resolveAction })
+  return new PureAbility(rules)
+}
+
+export { defineRulesFor, defineAbilitiesFor }

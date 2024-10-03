@@ -5,7 +5,7 @@ export function defineAbilitiesFor(user) {
   return defineAbility((can, cannot) => {
     if (user.roleAlias === 'isAdministrator') {
       // Administrator can do all
-      can('manage', 'all');
+      can('manage', 'all')
     }
 
     if (user.roleAlias !== 'isAdministrator') {
