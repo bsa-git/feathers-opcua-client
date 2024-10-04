@@ -90,9 +90,9 @@ class Service {
     } else {
       result = await this.dispatch('auth/authenticate')
     }
-    if (result.user) {
-      this.updateAbilityForUser(result.user)
-    }
+    // if (result.user) {
+    //   this.updateAbilityForUser(result.user)
+    // }
     if (isDebug && result) debug('authenticate: OK', 'result:', result)
     return result
   }

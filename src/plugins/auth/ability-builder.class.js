@@ -3,6 +3,7 @@ import {
   AbilityBuilder,
   createMongoAbility,
   PureAbility,
+  Ability,
   createAliasResolver,
   detectSubjectType as defaultDetector
 } from '@casl/ability'
@@ -28,7 +29,7 @@ const resolveAction = createAliasResolver({
  */
 const defineRulesFor = user => {
   const { can, cannot, build, rules } = new AbilityBuilder(createMongoAbility)
-
+  const idField = 'id' in user ? 'id' : '_id'
   if (user.roleAlias === 'isAdministrator') {
     // Administrator can do all
     can('manage', 'all')
@@ -42,7 +43,7 @@ const defineRulesFor = user => {
     'update',
     'users',
     ['active', 'email', 'password', 'firstName', 'lastName', 'avatar'],
-    { id: user.id }
+    { id: user[idField] }
   )
   // can('delete', 'users', {id: user.id});
 
@@ -66,8 +67,8 @@ const defineRulesFor = user => {
   // Can 'chat-messages' actions
   can('create', 'chat-messages')
   can('read', 'chat-messages')
-  can('update', 'chat-messages', ['msg'], { ownerId: user.id })
-  can('remove', 'chat-messages', { ownerId: user.id })
+  can('update', 'chat-messages', ['msg'], { ownerId: user[idField] })
+  can('remove', 'chat-messages', { ownerId: user[idField] })
 
   // Can 'opcua-tags' actions
   can('read', 'opcua-tags')
@@ -88,8 +89,8 @@ const defineRulesFor = user => {
   // Can 'messages' actions
   can('create', 'messages')
   can('read', 'messages')
-  can('update', 'messages', ['text'], { userId: user.id })
-  can('remove', 'messages', { userId: user.id })
+  can('update', 'messages', ['text'], { userId: user[idField] })
+  can('remove', 'messages', { userId: user[idField] })
 
   return rules
 }
@@ -102,8 +103,8 @@ const defineRulesFor = user => {
 const defineAbilitiesFor = user => {
   const rules = defineRulesFor(user)
 
-  // return new PureAbility(rules, { detectSubjectType, resolveAction })
-  return new PureAbility(rules)
+  return new Ability(rules, { detectSubjectType, resolveAction })
+  // return new PureAbility(rules)
 }
 
 export { defineRulesFor, defineAbilitiesFor }

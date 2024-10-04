@@ -1,10 +1,14 @@
 /* eslint-disable no-unused-vars */
 import {
   PureAbility,
+  Ability,
   createAliasResolver,
   detectSubjectType as defaultDetector
 } from '@casl/ability'
 import { BaseModel } from '@/plugins/auth/feathers-client'
+
+const debug = require('debug')('app:store.vuex.plugin.casl')
+let isDebug = true
 
 const detectSubjectType = subject => {
   if (typeof subject === 'string') return subject
@@ -18,7 +22,7 @@ const resolveAction = createAliasResolver({
   delete: 'remove' // use 'delete' or 'remove'
 })
 
-const ability = new PureAbility([], { detectSubjectType, resolveAction })
+const ability = new Ability([], { detectSubjectType, resolveAction })
 
 const caslPlugin = store => {
   store.registerModule('casl', {
@@ -37,6 +41,8 @@ const caslPlugin = store => {
   store.subscribeAction({
     after: (action, state) => {
       if (action.type === 'auth/responseHandler') {
+      // if (action.type === 'auth/authenticate') {  
+        if(isDebug && action) debug('caslPlugin.action:', action)
         const { rules } = action.payload
         if (!rules || !state.auth.user) {
           store.commit('casl/setRules', [])
@@ -51,4 +57,4 @@ const caslPlugin = store => {
   })
 }
 
-export default { ability, caslPlugin }
+export default caslPlugin

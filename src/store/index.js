@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { FeathersVuex } from '@/plugins/auth/feathers-client'
 import authPlugin from './vuex.plugin.auth'
-// import caslPlugin from './vuex.plugin.casl'
+import caslPlugin from './vuex.plugin.casl'
 import state from './state'
 import getters from './getters'
 import mutations from './mutations'
@@ -28,6 +28,6 @@ export default new Vuex.Store({
   getters,
   mutations,
   actions,
-  plugins: [...servicePlugins, authPlugin /*, caslPlugin*/],
+  plugins: [...servicePlugins, authPlugin, caslPlugin],
   strict: process.env.NODE_ENV !== 'production'
 })
