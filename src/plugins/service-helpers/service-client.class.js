@@ -114,7 +114,7 @@ class Service {
     const ability = defineAbilitiesFor(currentUser)
     const rules = defineRulesFor(currentUser)
     // if (true && ability) debug('updateAbilityForUser.ability:', ability)
-    if (true && ability) {
+    if (isDebug && ability) {
       debug(
         'updateAbilityForUser.ability.can("read", "users"):',
         ability.can('read', 'users')

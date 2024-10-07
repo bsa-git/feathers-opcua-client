@@ -40,18 +40,35 @@ const caslPlugin = store => {
   })
   store.subscribeAction({
     after: (action, state) => {
-      if (action.type === 'auth/responseHandler') {
-      // if (action.type === 'auth/authenticate') {  
-        if(isDebug && action) debug('caslPlugin.action:', action)
+      let ability = null
+      let rules = null
+      const isAuthenticate = (action.type === 'auth/responseHandler')
+      const isLogout = (action.type === 'auth/logout')
+      if (isAuthenticate) {
+        if (isDebug && action) debug('caslPlugin.action:', action)
         const { rules } = action.payload
         if (!rules || !state.auth.user) {
           store.commit('casl/setRules', [])
           return
         }
-
         store.commit('casl/setRules', rules)
-      } else if (action.type === 'auth/logout') {
+      } else if (isLogout) {
+        if (isDebug && action) debug('caslPlugin.action:', action)
         store.commit('casl/setRules', [])
+        
+      }
+      if(isAuthenticate || isLogout){
+        ability = store.state.casl.ability
+        rules = store.state.casl.rules
+        debug(
+          'updateAbilityForUser.ability.can("read", "users"):',
+          ability.can('read', 'users')
+        )
+        debug(
+          'updateAbilityForUser.ability.can("delete", "roles"):',
+          ability.can('delete', 'roles')
+        )
+        debug('updateAbilityForUser.rules:', rules)
       }
     }
   })
