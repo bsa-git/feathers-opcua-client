@@ -5,13 +5,8 @@ import moment from 'moment'
 const loKebabCase = require('lodash/kebabCase')
 const loMerge = require('lodash/merge')
 // const errors = require('@feathersjs/errors');
-import Vue from 'vue'
-import { abilitiesPlugin } from '@casl/vue'
-// import { defineAbilitiesFor } from '../auth/define-abilities'
-import {
-  defineAbilitiesFor,
-  defineRulesFor
-} from '../auth/ability-builder.class'
+// import Vue from 'vue'
+// import { abilitiesPlugin } from '@casl/vue'
 
 const debug = require('debug')('app:plugins.service-client.class')
 let isDebug = false
@@ -90,9 +85,6 @@ class Service {
     } else {
       result = await this.dispatch('auth/authenticate')
     }
-    // if (result.user) {
-    //   this.updateAbilityForUser(result.user)
-    // }
     if (isDebug && result) debug('authenticate: OK', 'result:', result)
     return result
   }
@@ -110,25 +102,25 @@ class Service {
    * updateAbilityForUser
    * @param {Object} currentUser
    */
-  updateAbilityForUser(currentUser) {
-    const ability = defineAbilitiesFor(currentUser)
-    const rules = defineRulesFor(currentUser)
-    // if (true && ability) debug('updateAbilityForUser.ability:', ability)
-    if (isDebug && ability) {
-      debug(
-        'updateAbilityForUser.ability.can("read", "users"):',
-        ability.can('read', 'users')
-      )
-      debug(
-        'updateAbilityForUser.ability.can("delete", "roles"):',
-        ability.can('delete', 'roles')
-      )
-      debug('updateAbilityForUser.rules:', rules)
-    }
+  // updateAbilityForUser(currentUser) {
+  //   const ability = defineAbilitiesFor(currentUser)
+  //   const rules = defineRulesFor(currentUser)
+  //   // if (true && ability) debug('updateAbilityForUser.ability:', ability)
+  //   if (isDebug && ability) {
+  //     debug(
+  //       'updateAbilityForUser.ability.can("read", "users"):',
+  //       ability.can('read', 'users')
+  //     )
+  //     debug(
+  //       'updateAbilityForUser.ability.can("delete", "roles"):',
+  //       ability.can('delete', 'roles')
+  //     )
+  //     debug('updateAbilityForUser.rules:', rules)
+  //   }
 
-    // Vue.use(abilitiesPlugin, ability, { useGlobalProperties: true })
-    Vue.use(abilitiesPlugin, ability)
-  }
+  //   // Vue.use(abilitiesPlugin, ability, { useGlobalProperties: true })
+  //   Vue.use(abilitiesPlugin, ability)
+  // }
 
   /**
    * Get auth user

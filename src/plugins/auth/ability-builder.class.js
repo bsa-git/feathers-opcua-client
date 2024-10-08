@@ -29,13 +29,20 @@ const resolveAction = createAliasResolver({
  */
 const defineRulesFor = user => {
   const { can, cannot, build, rules } = new AbilityBuilder(createMongoAbility)
+  
+  if (!user) return []
+
   const idField = 'id' in user ? 'id' : '_id'
+
   if (user.roleAlias === 'isAdministrator') {
     // Administrator can do all
-    can('manage', 'all')
+    can('show', 'all')
     return rules
   }
 
+  can('show', 'all')
+  cannot('show', 'menu/dashboard')
+  /*
   // Can 'users' actions
   can('create', 'users')
   can('read', 'users')
@@ -91,6 +98,7 @@ const defineRulesFor = user => {
   can('read', 'messages')
   can('update', 'messages', ['text'], { userId: user[idField] })
   can('remove', 'messages', { userId: user[idField] })
+  */
 
   return rules
 }
@@ -102,9 +110,7 @@ const defineRulesFor = user => {
  */
 const defineAbilitiesFor = user => {
   const rules = defineRulesFor(user)
-
   return new Ability(rules, { detectSubjectType, resolveAction })
-  // return new PureAbility(rules)
 }
 
 export { defineRulesFor, defineAbilitiesFor }

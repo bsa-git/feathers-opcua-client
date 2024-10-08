@@ -13,13 +13,13 @@
     <v-divider></v-divider>
 
     <v-list dense>
-      <v-list-item v-for="item in items" :key="item.title" :to="item.path" link>
+      <v-list-item v-for="menuItem in menuItems" :key="menuItem.title" :to="menuItem.path" link>
         <v-list-item-icon>
-          <v-icon>{{ item.icon }}</v-icon>
+          <v-icon>{{ menuItem.icon }}</v-icon>
         </v-list-item-icon>
 
         <v-list-item-content>
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
+          <v-list-item-title>{{ menuItem.title }}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -35,7 +35,7 @@ const isDebug = false
 export default {
   props: {
     drawer: Boolean,
-    items: {
+    menuItems: {
       type: Array,
       default: function() {
         return [{ title: 'Home', icon: 'mdi-home', path: '/' }]

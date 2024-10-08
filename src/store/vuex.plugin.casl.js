@@ -1,28 +1,15 @@
 /* eslint-disable no-unused-vars */
+import Vue from 'vue'
+import { abilitiesPlugin } from '@casl/vue'
 import {
-  PureAbility,
-  Ability,
-  createAliasResolver,
-  detectSubjectType as defaultDetector
-} from '@casl/ability'
-import { BaseModel } from '@/plugins/auth/feathers-client'
+  defineRulesFor,
+  defineAbilitiesFor
+} from '@/plugins/auth/ability-builder.class'
 
 const debug = require('debug')('app:store.vuex.plugin.casl')
 let isDebug = true
 
-const detectSubjectType = subject => {
-  if (typeof subject === 'string') return subject
-  if (!(subject instanceof BaseModel)) return defaultDetector(subject)
-  return subject.constructor.servicePath
-}
-
-const resolveAction = createAliasResolver({
-  update: 'patch', // define the same rules for update & patch
-  read: ['get', 'find'], // use 'read' as a equivalent for 'get' & 'find'
-  delete: 'remove' // use 'delete' or 'remove'
-})
-
-const ability = new Ability([], { detectSubjectType, resolveAction })
+const ability = defineAbilitiesFor()
 
 const caslPlugin = store => {
   store.registerModule('casl', {
@@ -41,25 +28,38 @@ const caslPlugin = store => {
   store.subscribeAction({
     after: (action, state) => {
       let ability = null
-      let rules = null
-      const isAuthenticate = (action.type === 'auth/responseHandler')
-      const isLogout = (action.type === 'auth/logout')
+      let _rules = []
+      const isAuthenticate = action.type === 'auth/responseHandler'
+      const isLogout = action.type === 'auth/logout'
+      // Authenticate user
       if (isAuthenticate) {
         if (isDebug && action) debug('caslPlugin.action:', action)
+
+        // Get rules from server
         const { rules } = action.payload
         if (!rules || !state.auth.user) {
           store.commit('casl/setRules', [])
           return
         }
-        store.commit('casl/setRules', rules)
+        if (isDebug && rules.length) debug('caslPlugin.rules:', rules)
+
+        // Merge two arrays (rules + )
+        _rules = defineRulesFor(state.auth.user)
+        if (isDebug && _rules.length) debug('caslPlugin._rules:', _rules)
+        _rules = rules.concat(_rules)
+        if (isDebug && _rules.length)
+          debug('caslPlugin.rules + _rules:', _rules)
+        // Mutations.setRules
+        store.commit('casl/setRules', _rules)
+        // Logout user
       } else if (isLogout) {
         if (isDebug && action) debug('caslPlugin.action:', action)
         store.commit('casl/setRules', [])
-        
       }
-      if(isAuthenticate || isLogout){
+      if (isAuthenticate || isLogout) {
         ability = store.state.casl.ability
-        rules = store.state.casl.rules
+        Vue.use(abilitiesPlugin, ability)
+
         debug(
           'updateAbilityForUser.ability.can("read", "users"):',
           ability.can('read', 'users')
@@ -68,7 +68,9 @@ const caslPlugin = store => {
           'updateAbilityForUser.ability.can("delete", "roles"):',
           ability.can('delete', 'roles')
         )
-        debug('updateAbilityForUser.rules:', rules)
+
+        _rules = store.state.casl.rules
+        debug('updateAbilityForUser.rules:', _rules)
       }
     }
   })

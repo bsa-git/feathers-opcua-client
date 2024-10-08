@@ -7,7 +7,7 @@
     <LeftDrawer
       v-if="!isStandAlone"
       :drawer="navLeft"
-      :items="menuItems"
+      :menuItems="menuItems"
       @onNavLeft="modelNavLeft"
     />
 
