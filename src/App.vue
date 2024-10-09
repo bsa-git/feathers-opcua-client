@@ -88,6 +88,7 @@ export default {
     const menuItems = reactive(appMenu)
 
     // Computed getters
+    const user = computed(() => $store.state['auth']['user'])
     const config = computed(() => $store.getters.getConfig)
     const snackBar = computed(() => $store.getters.getSnackBar)
 
