@@ -1,0 +1,17 @@
+[
+  {
+    "title": "Home",
+    "icon": "mdi-home",
+    "path": "/"
+  },
+  {
+    "title": "About",
+    "icon": "mdi-forum",
+    "path": "/vuetify"
+  },
+  {
+    "title": "Dashboard",
+    "icon": "mdi-view-dashboard",
+    "path": "/dashboard"
+  }
+]

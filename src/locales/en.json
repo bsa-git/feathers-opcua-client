@@ -54,7 +54,9 @@
     "close": "Close",
     "edit": "Edit",
     "remove": "Remove",
-    "range": "Range"
+    "range": "Range",
+    "hi": "Hi",
+    "guest": "Guest"
   },
   "app_menu": {
     "apps": "Apps",

@@ -5,8 +5,6 @@ import moment from 'moment'
 const loKebabCase = require('lodash/kebabCase')
 const loMerge = require('lodash/merge')
 // const errors = require('@feathersjs/errors');
-// import Vue from 'vue'
-// import { abilitiesPlugin } from '@casl/vue'
 
 const debug = require('debug')('app:plugins.service-client.class')
 let isDebug = false
@@ -97,30 +95,6 @@ class Service {
     await this.dispatch('auth/logout')
     if (isDebug) debug('logout: OK')
   }
-
-  /**
-   * updateAbilityForUser
-   * @param {Object} currentUser
-   */
-  // updateAbilityForUser(currentUser) {
-  //   const ability = defineAbilitiesFor(currentUser)
-  //   const rules = defineRulesFor(currentUser)
-  //   // if (true && ability) debug('updateAbilityForUser.ability:', ability)
-  //   if (isDebug && ability) {
-  //     debug(
-  //       'updateAbilityForUser.ability.can("read", "users"):',
-  //       ability.can('read', 'users')
-  //     )
-  //     debug(
-  //       'updateAbilityForUser.ability.can("delete", "roles"):',
-  //       ability.can('delete', 'roles')
-  //     )
-  //     debug('updateAbilityForUser.rules:', rules)
-  //   }
-
-  //   // Vue.use(abilitiesPlugin, ability, { useGlobalProperties: true })
-  //   Vue.use(abilitiesPlugin, ability)
-  // }
 
   /**
    * Get auth user

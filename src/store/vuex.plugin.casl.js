@@ -7,7 +7,7 @@ import {
 } from '@/plugins/auth/ability-builder.class'
 
 const debug = require('debug')('app:store.vuex.plugin.casl')
-let isDebug = true
+let isDebug = false
 
 const ability = defineAbilitiesFor()
 
@@ -43,7 +43,7 @@ const caslPlugin = store => {
         }
         if (isDebug && rules.length) debug('caslPlugin.rules:', rules)
 
-        // Merge two arrays (rules + )
+        // Merge two arrays (rules + _rules)
         _rules = defineRulesFor(state.auth.user)
         if (isDebug && _rules.length) debug('caslPlugin._rules:', _rules)
         _rules = rules.concat(_rules)
@@ -56,7 +56,7 @@ const caslPlugin = store => {
         if (isDebug && action) debug('caslPlugin.action:', action)
         store.commit('casl/setRules', [])
       }
-      if (isAuthenticate || isLogout) {
+      if (isDebug && (isAuthenticate || isLogout)) {
         ability = store.state.casl.ability
         Vue.use(abilitiesPlugin, ability)
 

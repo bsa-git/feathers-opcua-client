@@ -29,7 +29,7 @@ const resolveAction = createAliasResolver({
  */
 const defineRulesFor = user => {
   const { can, cannot, build, rules } = new AbilityBuilder(createMongoAbility)
-  
+
   if (!user) return []
 
   const idField = 'id' in user ? 'id' : '_id'
