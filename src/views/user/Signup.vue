@@ -225,7 +225,8 @@ export default {
         if (isDebug) debug('<<save>> Start save')
         if (!data.avatar) {
           const avatar = new Avatar(data.email)
-          data.avatar = await avatar.getImage()
+          // data.avatar = await avatar.getImage()
+          data.avatar = await avatar.imageUrl()
         }
         const user = new User({
           firstName: data.firstName,

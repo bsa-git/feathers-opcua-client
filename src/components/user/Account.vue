@@ -278,7 +278,8 @@ export default {
           } else {
             // Get new avatar
             const avatar = new Avatar(this.model.email)
-            const avatarImage = await avatar.getImage()
+            // const avatarImage = await avatar.getImage()
+            const avatarImage = await avatar.imageUrl()
             userData = {
               [idFieldUser]: user.value[idFieldUser],
               email: data.email,
@@ -366,8 +367,9 @@ export default {
           if (isDebug) debug('verifySignUpShort.OK')
           showSuccess($i18n.t('authManagement.successfulUserVerification'))
           // Get new avatar
-          const avatar = new this.Avatar(model.email)
-          const avatarImage = await avatar.getImage()
+          const avatar = new Avatar(model.email)
+          // const avatarImage = await avatar.getImage()
+          const avatarImage = await avatar.imageUrl()
           let userData = {
             [idFieldUser]: user.value[idFieldUser],
             avatar: avatarImage

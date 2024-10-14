@@ -3,13 +3,13 @@ const debug = require('debug')('app:plugin.avatar')
 const isDebug = false
 
 const localAvatars = [
-  '/assets/img/avatar/user_1.png',
-  '/assets/img/avatar/user_2.png',
-  '/assets/img/avatar/user_3.png',
-  '/assets/img/avatar/user_4.png',
-  '/assets/img/avatar/user_5.png',
-  '/assets/img/avatar/user_6.png',
-  '/assets/img/avatar/user_7.png'
+  '@/assets/img/avatar/user_1.png',
+  '@/assets/img/avatar/user_2.png',
+  '@/assets/img/avatar/user_3.png',
+  '@/assets/img/avatar/user_4.png',
+  '@/assets/img/avatar/user_5.png',
+  '@/assets/img/avatar/user_6.png',
+  '@/assets/img/avatar/user_7.png'
 ]
 
 const vuetifyAvatars = [
