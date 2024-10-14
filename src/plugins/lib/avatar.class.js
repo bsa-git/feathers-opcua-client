@@ -3,13 +3,13 @@ const debug = require('debug')('app:plugin.avatar')
 const isDebug = false
 
 const localAvatars = [
-  '/static/img/avatar/user_1.png',
-  '/static/img/avatar/user_2.png',
-  '/static/img/avatar/user_3.png',
-  '/static/img/avatar/user_4.png',
-  '/static/img/avatar/user_5.png',
-  '/static/img/avatar/user_6.png',
-  '/static/img/avatar/user_7.png'
+  '/assets/img/avatar/user_1.png',
+  '/assets/img/avatar/user_2.png',
+  '/assets/img/avatar/user_3.png',
+  '/assets/img/avatar/user_4.png',
+  '/assets/img/avatar/user_5.png',
+  '/assets/img/avatar/user_6.png',
+  '/assets/img/avatar/user_7.png'
 ]
 
 const vuetifyAvatars = [
@@ -33,7 +33,7 @@ class Avatar {
     this.params = {
       defaultType: 'mp', // '404'
       size: 80,
-      defaultImage: '/static/img/avatar/user_default.png',
+      defaultImage: '/assets/img/avatar/user_default.png',
       isMultiImages: false,
       multiImages: 'vuetifyAvatars' // avataaars | vuetifyAvatars | localAvatars | pravatar
     }

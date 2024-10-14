@@ -3,7 +3,7 @@
     <!-- Img  -->
     <template v-if="imgName">
       <v-img
-        :src="require(`@/assets/pic/${imgName}`)"
+        :src="require(`@/assets/img/logo/${imgName}`)"
         class="mu-3 mb-10"
         contain
         height="50"
