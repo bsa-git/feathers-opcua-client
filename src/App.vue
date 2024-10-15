@@ -7,8 +7,9 @@
     <LeftDrawer
       v-if="!isStandAlone"
       :drawer="navLeft"
-      :home-path="config.homePath"
+      :home-path="getHomePath()"
       :menu-items="menuItems"
+      :badge-chat="getNewChatMessages"
       @onNavLeft="modelNavLeft"
     />
 
@@ -40,7 +41,8 @@
 /* eslint-disable no-unused-vars */
 import { ref, reactive, computed, onMounted, watch } from '@vue/composition-api'
 import appMenu from '@/api/app/app-menu.json'
-// import feathersClient from '@/plugins/auth/feathers-client'
+import ServiceClient from '@/plugins/service-helpers/service-client.class'
+import AuthClient from '@/plugins/auth/auth-client.class'
 const pkg = require('@/../package')
 
 import LeftDrawer from '@/components/layout/LeftDrawer'
@@ -77,7 +79,9 @@ export default {
   },
 
   setup(props, context) {
-    const { $store, $router } = context.root
+    const { $store, $router, $route, $i18n } = context.root
+
+    if (isDebug && context.root) debug('Toolbar.context.route:', $route)
 
     // Set app
     // context.app = feathersClient
@@ -93,11 +97,24 @@ export default {
     const config = computed(() => $store.getters.getConfig)
     const snackBar = computed(() => $store.getters.getSnackBar)
 
+    const getNewChatMessages = computed(() => {
+      let count = 0
+      if (user.value) {
+        const srv = new ServiceClient($store)
+        count = srv.getNewChatMessages()
+      }
+      return count
+    })
+
     // Mutations
     const setSnackBar = value => $store.commit('SET_SNACK_BAR', value)
+    const showSuccess = value => $store.commit('SHOW_SUCCESS', value)
+    const showWarning = value => $store.commit('SHOW_WARNING', value)
+    const showError = value => $store.commit('SHOW_ERROR', value)
 
     // Actions
     const authenticate = payload => $store.dispatch('authenticate', payload)
+    const logout = () => $store.dispatch('logout')
 
     // Redirect to chat page if there's a user, otherwise to login page.
     /*
@@ -109,7 +126,50 @@ export default {
       },
       { lazy: true }
     )
+
+    'user.roleAlias': function (val) {
+        if (isDebug) debug('watch.user.roleAlias - Changed!');
+        if (val) {
+          if (isDebug) debug('watch.user.roleAlias:', val);
+          this.checkAccessToRoutePath();
+        }
+      },
+      'user.active': function (val) {
+        if (isDebug) debug('watch.user.active - Changed!');
+        if (val === false) {
+          if (isDebug) debug('watch.user.active:', val);
+          this.showWarning({text: this.$t('management.userToInactiveMode'), timeout: 10000});
+          this.logout();
+          this.$router.push(this.$i18n.path(this.config.homePath));
+        }
+      },
       */
+    watch(
+      () => (user.value ? user.value.active : false),
+      userActive => {
+        if (isDebug && user.value)
+          debug(`watch.user.active: ${userActive} - Changed!`)
+        if (user.value && userActive === false) {
+          showWarning({
+            text: $i18n.t('management.userToInactiveMode'),
+            timeout: 10000
+          })
+          logout()
+          $router.push($i18n.path(config.value.homePath))
+        }
+      },
+      { lazy: true }
+    )
+
+    watch(
+      () => (user.value ? user.value.roleAlias : ''),
+      roleAlias => {
+        if (true && roleAlias)
+          debug(`watch.user.roleAlias: ${roleAlias} - Changed!`)
+        // if (user.value && roleAlias) checkAccessToRoutePath()
+      },
+      { lazy: true }
+    )
 
     //----------------------------------------------------
     // Lifecycle Hooks
@@ -143,6 +203,29 @@ export default {
       isStandAlone.value = newValue
     }
 
+    const getHomePath = () => {
+      return user.value ? config.value.homePath : '/home'
+    }
+
+    const refresh = () => {
+      location.reload()
+    }
+    const checkAccessToRoutePath = () => {
+      const authClient = new AuthClient($store)
+      // Check auth access for route.path
+      if (!authClient.isAccess($route.path)) {
+        if (isDebug && $route.path)
+          debug(
+            `This path "${$route.path}" is not available. Not enough rights.`
+          )
+        showError({ text: $i18n.t('error.not_enough_rights'), timeout: 10000 })
+        // this.$redirect(this.fullPath('/user/login'));
+        $router.push($i18n.path('/user/login'))
+      } else {
+        refresh()
+      }
+    }
+
     return {
       // React values
       isStandAlone,
@@ -153,7 +236,9 @@ export default {
       // Methods
       modelNavLeft,
       modelStandAlone,
-      modelSnackBar
+      modelSnackBar,
+      getHomePath,
+      getNewChatMessages
     }
   }
 }

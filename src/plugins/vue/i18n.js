@@ -1,26 +1,21 @@
+/* eslint-disable no-unused-vars */
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 
 import util from '@/plugins/lib/util'
+const loMerge = require('lodash/merge')
 
 Vue.use(VueI18n)
 
-function loadLocaleMessages() {
-  const locales = require.context(
-    '@/locales',
-    true,
-    /[A-Za-z0-9-_,\s]+\.json$/i
-  )
-  const messages = {}
-  locales.keys().forEach(key => {
-    const matched = key.match(/([A-Za-z0-9-_]+)\./i)
-    if (matched && matched.length > 1) {
-      const locale = matched[1]
-      messages[locale] = locales(key)
-    }
-  })
-  return messages
-}
+let en = require('@/locales/en.json')
+let ru = require('@/locales/ru.json')
+const enRtdata = require('@/locales/en-rtdata.json')
+const ruRtdata = require('@/locales/ru-rtdata.json')
+const enUnits = require('@/locales/en-units.json')
+const ruUnits = require('@/locales/ru-units.json')
+
+en = loMerge({}, en, enRtdata, enUnits)
+ru = loMerge({}, ru, ruRtdata, ruUnits)
 
 const path = function(link) {
   const _link = util.stripSlashes(link)
@@ -31,7 +26,11 @@ const path = function(link) {
 const i18n = new VueI18n({
   locale: process.env.VUE_APP_I18N_LOCALE || 'en',
   fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || 'en',
-  messages: loadLocaleMessages()
+  // messages: loadLocaleMessages()
+  messages: {
+    en,
+    ru
+  }
 })
 
 i18n['path'] = path.bind(i18n)
