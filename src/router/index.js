@@ -24,8 +24,8 @@ const locales = store.state.config.locales.join('|')
 const langTmpl = `/:lang(${locales})?`
 
 const routes = [
-  // { path: `${langTmpl}/`, name: 'Home', component: Home },
-  { path: `${langTmpl}/home`, name: 'Home', component: Home },
+  { path: `${langTmpl}/`, name: 'Home', component: Home },
+  // { path: `${langTmpl}/home`, name: 'Home', component: Home },
   { path: `${langTmpl}/user/login`, name: 'Login', component: Login },
   { path: `${langTmpl}/user/signup`, name: 'Signup', component: Signup },
   { path: `${langTmpl}/user/profile`, name: 'Profile', component: Profile },

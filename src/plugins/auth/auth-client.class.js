@@ -3,7 +3,7 @@ import appMenu from '@/api/app/app-menu'
 import feathersClient from '@/plugins/auth/feathers-client'
 
 const debug = require('debug')('app:plugins.auth-client.class')
-const isLog = false
+const isDebug = true
 
 class AuthClient {
   /**
@@ -14,7 +14,7 @@ class AuthClient {
     this.store = store
     this.menu = appMenu
     this.config = store.getters.getConfig
-    this.locales = this.config.locales //this.config.locales.filter(locale => locale !== this.config.fallbackLocale);
+    this.locales = this.config.locales 
     this.envPublicPaths = this.config.publicPaths
     this.envAdminPaths = this.config.adminPaths
     this.envPublicServices = this.config.publicServices
@@ -26,7 +26,7 @@ class AuthClient {
     this.isAdmin = store.getters.isAdmin
     this.getMyRole = store.getters.getMyRole
     // Set this.envRoles
-    if (isLog) debug('envRoles:', this.envRoles)
+    if (isDebug && this.envRoles.length) debug('envRoles:', this.envRoles)
   }
 
   /**
@@ -93,10 +93,13 @@ class AuthClient {
         }
       }
     })
+    if (isDebug && paths.length) debug('AuthClient.listPaths.paths:', paths)
     // Get paths from envPaths
     filterEnvPaths = envPaths.filter(envPath => {
       return !paths.includes(envPath)
     })
+    if (isDebug && filterEnvPaths.length)
+      debug('AuthClient.listPaths.filterEnvPaths:', filterEnvPaths)
     paths = loConcat(paths, filterEnvPaths)
     // Get localePaths from paths
     this.locales.forEach(locale => {
@@ -105,7 +108,9 @@ class AuthClient {
         paths.map(path => `/${locale}${path}`)
       )
     })
-    localePaths = loConcat(localePaths, paths)
+    if (isDebug && localePaths.length)
+      debug('AuthClient.listPaths.localePaths:', localePaths)
+    // localePaths = loConcat(localePaths, paths)
     return localePaths
   }
 
