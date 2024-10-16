@@ -50,6 +50,7 @@ class AuthClient {
     let paths = []
     let filterEnvPaths
     let localePaths = []
+    //--------------------------
     // Get paths from menu
     this.menu.forEach(item => {
       if (item.to) {
