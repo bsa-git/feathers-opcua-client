@@ -164,7 +164,7 @@ export default {
     watch(
       () => (user.value ? user.value.roleAlias : ''),
       roleAlias => {
-        if (true && roleAlias)
+        if (isDebug && roleAlias)
           debug(`watch.user.roleAlias: ${roleAlias} - Changed!`)
         if (user.value && roleAlias) checkAccessToRoutePath()
       },
@@ -215,7 +215,9 @@ export default {
       // Check auth access for route.path
       if (!authClient.isAccess($route.path)) {
         if (isDebug && $route.path)
-          debug(`checkAccessToRoutePath: This path "${$route.path}" is not available. Not enough rights.`)
+          debug(
+            `checkAccessToRoutePath: This path "${$route.path}" is not available. Not enough rights.`
+          )
         showError({ text: $i18n.t('error.not_enough_rights'), timeout: 10000 })
         // this.$redirect(this.fullPath('/user/login'));
         $router.push($i18n.path('/user/login'))

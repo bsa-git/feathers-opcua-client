@@ -29,6 +29,8 @@ const caslPlugin = store => {
     after: (action, state) => {
       let ability = null
       let _rules = []
+      //-----------------------------------
+      if (true && action) debug('caslPlugin.action:', action)
       const isAuthenticate = action.type === 'auth/responseHandler'
       const isLogout = action.type === 'auth/logout'
       // Authenticate user
@@ -41,20 +43,22 @@ const caslPlugin = store => {
           store.commit('casl/setRules', [])
           return
         }
-        if (isDebug && rules.length) debug('caslPlugin.rules:', rules)
+        if (isDebug && rules.length) debug('caslPlugin.isAuthenticate.rules:', rules)
 
         // Merge two arrays (rules + _rules)
         _rules = defineRulesFor(state.auth.user)
-        if (isDebug && _rules.length) debug('caslPlugin._rules:', _rules)
+        if (isDebug && _rules.length) debug('caslPlugin.isAuthenticate._rules:', _rules)
         _rules = rules.concat(_rules)
         if (isDebug && _rules.length)
-          debug('caslPlugin.rules + _rules:', _rules)
+          debug('caslPlugin.isAuthenticate.rules + _rules:', _rules)
         // Mutations.setRules
         store.commit('casl/setRules', _rules)
         // Logout user
       } else if (isLogout) {
-        if (isDebug && action) debug('caslPlugin.action:', action)
-        store.commit('casl/setRules', [])
+        if (isDebug && action) debug('caslPlugin.isLogout.action:', action)
+        _rules = []
+        store.commit('casl/setRules', _rules)
+        if (isDebug && _rules) debug('caslPlugin.isLogout.rules:', _rules)
       }
       if (isDebug && (isAuthenticate || isLogout)) {
         ability = store.state.casl.ability
