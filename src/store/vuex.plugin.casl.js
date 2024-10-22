@@ -30,9 +30,11 @@ const caslPlugin = store => {
       let ability = null
       let _rules = []
       //-----------------------------------
-      if (true && action) debug('caslPlugin.action:', action)
+      if (isDebug && action) debug('caslPlugin.action:', action)
       const isAuthenticate = action.type === 'auth/responseHandler'
       const isLogout = action.type === 'auth/logout'
+      const isOpcuaValues = action.type === 'opcua-values/addOrUpdate'
+      if (true && isOpcuaValues) debug('caslPlugin.action.isOpcuaValues:', action)
       // Authenticate user
       if (isAuthenticate) {
         if (isDebug && action) debug('caslPlugin.action:', action)
@@ -43,11 +45,13 @@ const caslPlugin = store => {
           store.commit('casl/setRules', [])
           return
         }
-        if (isDebug && rules.length) debug('caslPlugin.isAuthenticate.rules:', rules)
+        if (isDebug && rules.length)
+          debug('caslPlugin.isAuthenticate.rules:', rules)
 
         // Merge two arrays (rules + _rules)
         _rules = defineRulesFor(state.auth.user)
-        if (isDebug && _rules.length) debug('caslPlugin.isAuthenticate._rules:', _rules)
+        if (isDebug && _rules.length)
+          debug('caslPlugin.isAuthenticate._rules:', _rules)
         _rules = rules.concat(_rules)
         if (isDebug && _rules.length)
           debug('caslPlugin.isAuthenticate.rules + _rules:', _rules)
