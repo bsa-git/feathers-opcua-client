@@ -15,17 +15,40 @@
           class="button button-secondary block"
           >Home</router-link
         >
-        <!-- <button v-if="can('manage', 'all')">Create Post</button> -->
       </div>
+    </div>
+    <div class="row">
+      <ol>
+        <li>
+          ability.can('create', 'authentication') =
+          {{ ability.can('create', 'authentication') }}
+        </li>
+        <li>
+          ability.can('read', 'users') = {{ ability.can('read', 'users') }}
+        </li>
+        <li>
+          ability.can('remove', 'users') = {{ ability.can('remove', 'users') }}
+        </li>
+      </ol>
     </div>
   </main>
 </template>
 
 <script>
 /* eslint-disable no-unused-vars */
+import {
+  ref,
+  reactive,
+  computed,
+  watch,
+  onBeforeMount,
+  onUnmounted
+} from '@vue/composition-api'
 import { useAbility } from '@casl/vue'
+
 const debug = require('debug')('app:view.Dashboard')
-const isDebug = false
+const isDebug = true
+
 export default {
   name: 'Dashboard',
 
@@ -35,12 +58,26 @@ export default {
 
     const { $store, $router } = context.root
 
+    // Computed state
+    const user = computed(() => $store.state['auth']['user']) //$store.getters.getMyRole
+    const myRole = computed(() => $store.getters.getMyRole)
+    const ability = computed(() => $store.state.casl.ability)
+    const rules = computed(() => $store.state.casl.rules)
+
+    // watch(
+    //   () => myRole.value,
+    //   roleName => {
+    //     if (isDebug && roleName) debug('watch.user.roleName:', roleName)
+    //   },
+    //   { lazy: true }
+    // )
+
     // some code
     // const { can } = useAbility();
 
     return {
-      // other props
-      // can
+      // can: ability.value.can
+      ability
     }
   }
 }

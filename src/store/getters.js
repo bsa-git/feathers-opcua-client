@@ -88,8 +88,8 @@ const getters = {
   },
 
   getMyRole: (state, getters) => {
-    let roleAlias = ''
-    let roleName = ''
+    let roleAlias = 'isGuest'
+    let roleName = 'Guest'
     if (getters.isAuth) {
       roleAlias = getters.getUser.roleAlias
       roleName = getters.getRoles(roleAlias)

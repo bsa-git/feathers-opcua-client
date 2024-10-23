@@ -4,7 +4,7 @@ import { abilitiesPlugin } from '@casl/vue'
 import {
   defineRulesFor,
   defineAbilitiesFor
-} from '@/plugins/auth/ability-builder.class'
+} from '@/plugins/auth/ability-builder'
 
 const debug = require('debug')('app:store.vuex.plugin.casl')
 let isDebug = false
@@ -30,11 +30,14 @@ const caslPlugin = store => {
       let ability = null
       let _rules = []
       //-----------------------------------
-      if (isDebug && action) debug('caslPlugin.action:', action)
       const isAuthenticate = action.type === 'auth/responseHandler'
       const isLogout = action.type === 'auth/logout'
       const isOpcuaValues = action.type === 'opcua-values/addOrUpdate'
-      if (true && isOpcuaValues) debug('caslPlugin.action.isOpcuaValues:', action)
+
+      if (isDebug && action) debug('caslPlugin.action:', action)
+      if (isDebug && isOpcuaValues)
+        debug('caslPlugin.action.isOpcuaValues:', action)
+
       // Authenticate user
       if (isAuthenticate) {
         if (isDebug && action) debug('caslPlugin.action:', action)
@@ -57,6 +60,7 @@ const caslPlugin = store => {
           debug('caslPlugin.isAuthenticate.rules + _rules:', _rules)
         // Mutations.setRules
         store.commit('casl/setRules', _rules)
+
         // Logout user
       } else if (isLogout) {
         if (isDebug && action) debug('caslPlugin.isLogout.action:', action)
@@ -64,21 +68,22 @@ const caslPlugin = store => {
         store.commit('casl/setRules', _rules)
         if (isDebug && _rules) debug('caslPlugin.isLogout.rules:', _rules)
       }
-      if (isDebug && (isAuthenticate || isLogout)) {
+      if (true && (isAuthenticate || isLogout)) {
         ability = store.state.casl.ability
         Vue.use(abilitiesPlugin, ability)
 
-        debug(
-          'updateAbilityForUser.ability.can("read", "users"):',
-          ability.can('read', 'users')
-        )
-        debug(
-          'updateAbilityForUser.ability.can("delete", "roles"):',
-          ability.can('delete', 'roles')
-        )
+        // debug(
+        //   'updateAbilityForUser.ability.can("read", "users"):',
+        //   ability.can('read', 'users')
+        // )
+        // debug(
+        //   'updateAbilityForUser.ability.can("delete", "roles"):',
+        //   ability.can('delete', 'roles')
+        // )
 
         _rules = store.state.casl.rules
-        debug('updateAbilityForUser.rules:', _rules)
+        const roleName = store.getters.getMyRole //state.auth.user? store.getters.getMyRole()
+        debug(`updateAbilityForUser("${roleName}").rules:`, _rules)
       }
     }
   })

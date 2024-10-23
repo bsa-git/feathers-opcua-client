@@ -3,7 +3,7 @@ import appMenu from '@/api/app/app-menu'
 import feathersClient from '@/plugins/auth/feathers-client'
 
 const debug = require('debug')('app:plugins.auth-client.class')
-const isDebug = true
+const isDebug = false
 
 class AuthClient {
   /**
