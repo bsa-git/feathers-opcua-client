@@ -1,6 +1,11 @@
+/* eslint-disable no-unused-vars */
+// import Service from '@/plugins/service-helpers/service-client.class'
 import colors from 'vuetify/lib/util/colors'
 import themeColorOptions from '@/api/app/theme-color-options.json'
 import util from '@/plugins/lib/util'
+
+const debug = require('debug')('app:store.getters')
+let isDebug = false
 
 const getters = {
   getConfig: state => {
@@ -68,6 +73,10 @@ const getters = {
     return fullPath
   },
 
+  getUser: state => {
+    return state.auth.user
+  },
+
   isAuth: state => {
     return !!state.auth.accessToken
   },
@@ -87,10 +96,25 @@ const getters = {
     return getters.getMyRole === getters.getRoles(isRole)
   },
 
+  getRole: (state, getters) => {
+    let role = { alias: 'isGuest', name: 'Guest' }
+    if (getters.isAuth && state.auth.user.role) {
+      role = state.auth.user? state.auth.user.role : null
+      if (isDebug) debug('getRole.role:', role)
+    }
+    return role
+  },
+
   getMyRole: (state, getters) => {
     let roleAlias = 'isGuest'
     let roleName = 'Guest'
     if (getters.isAuth) {
+      const user = getters.getUser
+      // const role = user.role
+      // getFromStore('roles', user.roleId)
+      if (isDebug) debug('getMyRole.user:', user)
+      // if(isDebug) debug('getMyRole.role:', user.role)
+
       roleAlias = getters.getUser.roleAlias
       roleName = getters.getRoles(roleAlias)
     }
@@ -137,10 +161,6 @@ const getters = {
     const names = Object.values(getters.getBaseRoles())
     const result = names.indexOf(roleName) >= 0
     return result
-  },
-
-  getUser: state => {
-    return state.auth.user
   },
 
   getTeamIdsForUser: (state, getters) => userId => {

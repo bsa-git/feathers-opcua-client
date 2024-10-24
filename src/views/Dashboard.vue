@@ -6,16 +6,12 @@
       </div>
     </div>
     <div class="row">
-      <div
-        class="col-12 col-6-tablet push-3-tablet col-4-desktop push-4-desktop"
-      >
-        <router-link
-          as="button"
-          :to="{ name: 'Home' }"
-          class="button button-secondary block"
-          >Home</router-link
-        >
+      <div class="col-12 col-6-tablet push-3-tablet col-4-desktop push-4-desktop">
+        <router-link as="button" :to="{ name: 'Home' }" class="button button-secondary block">Home</router-link>
       </div>
+    </div>
+    <div class="row">
+      <span style="color: red;">{{ myRole ? myRole.name : '' }}</span>
     </div>
     <div class="row">
       <ol>
@@ -60,23 +56,25 @@ export default {
 
     // Computed state
     const user = computed(() => $store.state['auth']['user']) //$store.getters.getMyRole
-    const myRole = computed(() => $store.getters.getMyRole)
+    const myRole = computed(() => $store.getters.getRole)
     const ability = computed(() => $store.state.casl.ability)
     const rules = computed(() => $store.state.casl.rules)
 
-    // watch(
-    //   () => myRole.value,
-    //   roleName => {
-    //     if (isDebug && roleName) debug('watch.user.roleName:', roleName)
-    //   },
-    //   { lazy: true }
-    // )
+    // if (isDebug && myRole.value) debug('setup.myRole:', myRole.value)
+
+    watch(
+      () => myRole.value,
+      value => {
+        if (isDebug) debug('watch.rules:', value)
+      },
+      { lazy: false }
+    )
 
     // some code
     // const { can } = useAbility();
 
     return {
-      // can: ability.value.can
+      myRole,
       ability
     }
   }
