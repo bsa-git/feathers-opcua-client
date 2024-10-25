@@ -82,9 +82,6 @@ const caslPlugin = store => {
         // )
 
         _rules = store.state.casl.rules
-        const role = store.getters.getRole
-        // if(role) debug('updateAbilityForUser.role:', role)
-        // const roleName = store.getters.getMyRole
         debug(`updateAbilityForUser.rules:`, _rules)
       }
     }

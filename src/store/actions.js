@@ -60,12 +60,12 @@ const actions = {
         // await service.findAllForUser()
         service.findAllForUser()
       }
-      if (isDebug && response)
+      if (isDebug && response) {
+        const myNameRole = store.getters.getMyNameRole
         debug(
-          `<<authenticate>> Authenticate completed; <<isAuth>>: ${isAuth}; <<myRole>>: ${
-            store.getters.getMyRole ? store.getters.getMyRole : 'No'
-          }`
+          `<<authenticate>> Authenticate completed; <<isAuth>>: ${isAuth}; <<myRole>>: "${myNameRole}"`
         )
+      }
     }
     return response
   },
@@ -80,10 +80,10 @@ const actions = {
       util.removeAccessToken()
     }
     const isAuth = store.getters.isAuth
-    const myRole = store.getters.getMyRole ? store.getters.getMyRole : 'No'
+    const myNameRole = store.getters.getMyNameRole
     if (isDebug)
       debug(
-        `<<logout>> Logout completed; <<isAuth>>: ${isAuth}; <<myRole>>: ${myRole}`
+        `<<logout>> Logout completed; <<isAuth>>: ${isAuth}; <<myRole>>: ${myNameRole}`
       )
     // Clear all services from store
     service.clearAll()

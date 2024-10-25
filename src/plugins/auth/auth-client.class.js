@@ -24,7 +24,6 @@ class AuthClient {
     this.user = auth ? auth.user : null
     this.isAuth = store.getters.isAuth
     this.isAdmin = store.getters.isAdmin
-    this.getMyRole = store.getters.getMyRole
     // Set this.envRoles
     if (isDebug && this.envRoles.length) debug('envRoles:', this.envRoles)
   }

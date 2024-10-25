@@ -12,6 +12,14 @@
     "to": "/dashboard"
   },
   {
+    "title": "Dashboard",
+    "group": "apps",
+    "icon": "mdi-view-dashboard",
+    "name": "guest-dashboard",
+    "alias": "guest_dashboard",
+    "to": "/guest-dashboard"
+  },
+  {
     "title": "Log...",
     "group": "apps",
     "icon": "mdi-order-bool-descending",

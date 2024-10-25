@@ -34,72 +34,75 @@ const defineRulesFor = user => {
 
   const idField = 'id' in user ? 'id' : '_id'
 
-  if (user.roleAlias === 'isAdministrator') {
+  // if (user.roleAlias === 'isAdministrator') {
+  //   // Administrator can do all
+  //   can('enable', 'all')
+  //   cannot('enable', '/guest-dashboard')
+  //   return rules
+  // }
+
+  // can('show', 'all')
+  // cannot('show', 'menu/dashboard')
+
+  // PUBLIC_PATHS="/; /guest-dashboard; /media; /widgets; /components; /pickers; /layout; /forms; /system; /user/verify; /user/forgot; /user/change;"
+  // ADMIN_PATHS="/admins; /services"
+
+  // Define path rules for administrator
+  const definePathRulesFor_Admin = () => {
     // Administrator can do all
-    can('show', 'all')
+    can('enable', 'all')
+    cannot('enable', '/guest-dashboard')
+    cannot('enable', '/media')
+    cannot('enable', '/widgets')
+    cannot('enable', '/components')
+    cannot('enable', '/pickers')
+    cannot('enable', '/layout')
+    cannot('enable', '/forms')
+    cannot('enable', '/system')
+    cannot('enable', '/user/verify')
+    cannot('enable', '/user/forgot')
+    cannot('enable', '/user/change')
+  }
+
+  // Define path public rules for guest
+  const definePathRulesFor_Guest = () => {
+    can('enable', '/')
+    can('enable', '/guest-dashboard')
+    can('enable', '/media')
+    can('enable', '/widgets')
+    can('enable', '/components')
+    can('enable', '/pickers')
+    can('enable', '/layout')
+    can('enable', '/forms')
+    can('enable', '/system')
+    can('enable', '/user/verify')
+    can('enable', '/user/forgot')
+    can('enable', '/user/change')
+  }
+
+  // Define path public rules for user
+  const definePathRulesFor_User = () => {
+    definePathRulesFor_Admin()
+    cannot('enable', '/admins')
+    cannot('enable', '/services')
+  }
+
+  //-----------------------------------------------
+
+  // Define rules for guest
+  if (!user) {
+    definePathRulesFor_Guest()
     return rules
   }
 
-  can('show', 'all')
-  cannot('show', 'menu/dashboard')
-  /*
-  // Can 'users' actions
-  can('create', 'users')
-  can('read', 'users')
-  can(
-    'update',
-    'users',
-    ['active', 'email', 'password', 'firstName', 'lastName', 'avatar'],
-    { id: user[idField] }
-  )
-  // can('delete', 'users', {id: user.id});
+  // Define rules for administrator
+  if (user && user.roleAlias === 'isAdministrator') {
+    definePathRulesFor_Admin()
+    return rules
+  }
 
-  // Can 'user-profiles' actions
-  can('create', 'user-profiles')
-  can('read', 'user-profiles')
-  can('update', 'user-profiles', { id: user.profileId })
-
-  // Can 'roles' actions
-  can('read', 'roles')
-
-  // Can 'teams' actions
-  can('read', 'teams')
-
-  // Can 'user-teams' actions
-  can('read', 'user-teams')
-
-  // Can 'log-messages' actions
-  can('read', 'log-messages')
-
-  // Can 'chat-messages' actions
-  can('create', 'chat-messages')
-  can('read', 'chat-messages')
-  can('update', 'chat-messages', ['msg'], { ownerId: user[idField] })
-  can('remove', 'chat-messages', { ownerId: user[idField] })
-
-  // Can 'opcua-tags' actions
-  can('read', 'opcua-tags')
-  // can('manage', 'opcua-tags');
-  // can('create', 'opcua-tags');
-  // can('read', 'opcua-tags');
-  // can('update', 'opcua-tags');
-  // can('remove', 'opcua-tags');
-
-  // Can 'opcua-values' actions
-  can('read', 'opcua-values')
-  // can('manage', 'opcua-values');
-  // can('create', 'opcua-values');
-  // can('read', 'opcua-values');
-  // can('update', 'opcua-values');
-  // can('remove', 'opcua-values');
-
-  // Can 'messages' actions
-  can('create', 'messages')
-  can('read', 'messages')
-  can('update', 'messages', ['text'], { userId: user[idField] })
-  can('remove', 'messages', { userId: user[idField] })
-  */
-
+  // Define rules for user
+  definePathRulesFor_User()
   return rules
 }
 

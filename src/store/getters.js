@@ -93,28 +93,22 @@ const getters = {
   },
 
   isMyRole: (state, getters) => (isRole = '') => {
-    return getters.getMyRole === getters.getRoles(isRole)
+    return getters.getMyNameRole === getters.getRoles(isRole)
   },
 
-  getRole: (state, getters) => {
+  getMyRole: (state, getters) => {
     let role = { alias: 'isGuest', name: 'Guest' }
     if (getters.isAuth && state.auth.user.role) {
-      role = state.auth.user? state.auth.user.role : null
+      role = state.auth.user ? state.auth.user.role : null
       if (isDebug) debug('getRole.role:', role)
     }
     return role
   },
 
-  getMyRole: (state, getters) => {
+  getMyNameRole: (state, getters) => {
     let roleAlias = 'isGuest'
     let roleName = 'Guest'
     if (getters.isAuth) {
-      const user = getters.getUser
-      // const role = user.role
-      // getFromStore('roles', user.roleId)
-      if (isDebug) debug('getMyRole.user:', user)
-      // if(isDebug) debug('getMyRole.role:', user.role)
-
       roleAlias = getters.getUser.roleAlias
       roleName = getters.getRoles(roleAlias)
     }
@@ -123,7 +117,7 @@ const getters = {
 
   /**
    * Get roles
-   * e.g. { isAdministrator: 'Administrator', isGuest: 'Guest', isSuperRole: 'superRole' }
+   * e.g. { isAdministrator: 'Administrator', isUser: 'User', isSuperRole: 'superRole' }
    * @param state
    * @param isRole
    * @return {Object}
@@ -138,7 +132,7 @@ const getters = {
 
   /**
    * Get base roles
-   * e.g. { isAdministrator: 'Administrator', isGuest: 'Guest' }
+   * e.g. { isAdministrator: 'Administrator', isUser: 'User' }
    * @param state
    * @param isBaseRole
    * @return {Object}

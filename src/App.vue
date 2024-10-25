@@ -116,34 +116,6 @@ export default {
     const authenticate = payload => $store.dispatch('authenticate', payload)
     const logout = () => $store.dispatch('logout')
 
-    // Redirect to chat page if there's a user, otherwise to login page.
-    /*
-    watch(
-      () => $store.state.auth.user,
-      user => {
-        const toRouteName = user ? 'Chat' : 'Home'
-        $router.replace({ name: toRouteName })
-      },
-      { lazy: true }
-    )
-
-    'user.roleAlias': function (val) {
-        if (isDebug) debug('watch.user.roleAlias - Changed!');
-        if (val) {
-          if (isDebug) debug('watch.user.roleAlias:', val);
-          this.checkAccessToRoutePath();
-        }
-      },
-      'user.active': function (val) {
-        if (isDebug) debug('watch.user.active - Changed!');
-        if (val === false) {
-          if (isDebug) debug('watch.user.active:', val);
-          this.showWarning({text: this.$t('management.userToInactiveMode'), timeout: 10000});
-          this.logout();
-          this.$router.push(this.$i18n.path(this.config.homePath));
-        }
-      },
-      */
     watch(
       () => (user.value ? user.value.active : false),
       userActive => {
@@ -162,10 +134,10 @@ export default {
     )
 
     watch(
-      () => (user.value ? user.value.roleAlias : ''),
+      () => (user.value ? user.value.roleAlias : 'isGuest'),
       roleAlias => {
-        if (isDebug && roleAlias)
-          debug(`watch.user.roleAlias: ${roleAlias} - Changed!`)
+        if (true && roleAlias)
+          debug(`watch.user.roleAlias: "${roleAlias}" - Changed!`)
         if (user.value && roleAlias) checkAccessToRoutePath()
       },
       { lazy: true }
@@ -204,7 +176,7 @@ export default {
     }
 
     const getHomePath = () => {
-      return user.value ? config.value.homePath : '/'
+      return user.value ? config.value.homePath : 'guest-dashboard'
     }
 
     const refresh = () => {
@@ -219,11 +191,11 @@ export default {
             `checkAccessToRoutePath: This path "${$route.path}" is not available. Not enough rights.`
           )
         showError({ text: $i18n.t('error.not_enough_rights'), timeout: 10000 })
-        // this.$redirect(this.fullPath('/user/login'));
         $router.push($i18n.path('/user/login'))
-      } else {
-        // refresh()
       }
+      // else {
+      //   refresh()
+      // }
     }
 
     return {

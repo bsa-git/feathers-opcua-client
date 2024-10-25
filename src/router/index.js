@@ -13,6 +13,7 @@ import Signup from '@/views/user/Signup'
 import Profile from '@/views/user/Profile.vue'
 import Chat from '@/views/Chat'
 import Dashboard from '@/views/Dashboard.vue'
+import GuestDashboard from '@/views/GuestDashboard.vue'
 
 const debug = require('debug')('app:router.index')
 const isDebug = false
@@ -25,12 +26,16 @@ const langTmpl = `/:lang(${locales})?`
 
 const routes = [
   { path: `${langTmpl}/`, name: 'Home', component: Home },
-  // { path: `${langTmpl}/home`, name: 'Home', component: Home },
+  { path: `${langTmpl}/dashboard`, name: 'Dashboard', component: Dashboard },
+  {
+    path: `${langTmpl}/guest-dashboard`,
+    name: 'GuestDashboard',
+    component: GuestDashboard
+  },
   { path: `${langTmpl}/user/login`, name: 'Login', component: Login },
   { path: `${langTmpl}/user/signup`, name: 'Signup', component: Signup },
   { path: `${langTmpl}/user/profile`, name: 'Profile', component: Profile },
   { path: `${langTmpl}/chat`, name: 'Chat', component: Chat },
-  { path: `${langTmpl}/dashboard`, name: 'Dashboard', component: Dashboard },
   { path: `${langTmpl}/vuetify', name: 'Vuetify`, component: Vuetify }
 ]
 

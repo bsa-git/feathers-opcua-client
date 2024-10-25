@@ -63,6 +63,7 @@
     "home": "Home",
     "about": "About",
     "dashboard": "Dashboard",
+    "guest_dashboard": "Dashboard",
     "chat": "Chat",
     "chat_user": "User",
     "chat_messages": "Messages",
