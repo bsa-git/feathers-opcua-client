@@ -64,9 +64,11 @@ const caslPlugin = store => {
         // Logout user
       } else if (isLogout) {
         if (isDebug && action) debug('caslPlugin.isLogout.action:', action)
-        _rules = []
-        store.commit('casl/setRules', _rules)
+        // _rules = []
+        // Define rules for user => NULL
+        _rules = defineRulesFor(null)
         if (isDebug && _rules) debug('caslPlugin.isLogout.rules:', _rules)
+        store.commit('casl/setRules', _rules)
       }
       if (true && (isAuthenticate || isLogout)) {
         ability = store.state.casl.ability
@@ -81,7 +83,6 @@ const caslPlugin = store => {
         //   ability.can('delete', 'roles')
         // )
 
-        _rules = store.state.casl.rules
         debug(`updateAbilityForUser.rules:`, _rules)
       }
     }

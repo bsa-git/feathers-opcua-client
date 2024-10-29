@@ -119,14 +119,16 @@ class AuthClient {
    * @return Array
    */
   filterMenu() {
+    const ability = this.store.state.casl.ability
     return this.menu.filter(item => {
       if (item.divider) return true
       if (item.header) return true
-      if (this.envPublicPaths.includes(item.to)) return true
-      if (this.isAuth && this.isAdmin) return true
-      if (this.isAuth && !this.isAdmin && !this.envAdminPaths.includes(item.to))
-        return true
-      return false
+      return ability.can('enable', item.to)
+      // if (this.envPublicPaths.includes(item.to)) return true
+      // if (this.isAuth && this.isAdmin) return true
+      // if (this.isAuth && !this.isAdmin && !this.envAdminPaths.includes(item.to))
+      //   return true
+      // return false
     })
   }
 
