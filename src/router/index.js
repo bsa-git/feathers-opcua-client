@@ -16,7 +16,7 @@ import Dashboard from '@/views/Dashboard.vue'
 import GuestDashboard from '@/views/GuestDashboard.vue'
 
 const debug = require('debug')('app:router.index')
-const isDebug = false
+const isDebug = true
 
 Vue.use(VueRouter)
 
@@ -45,11 +45,13 @@ const router = new VueRouter({
 
 // Hook for middleware
 router.beforeEach((to, from, next) => {
-  // Init i18n
-  const path = initI18n(to, i18n, store)
-
   if (isDebug && to.path)
     debug('router.beforeEach.path:', from.path, ',', to.path)
+
+  // Init i18n
+  const path = initI18n(to, i18n, store)
+  if (isDebug && to)
+    debug('router.beforeEach.to:', to)
 
   // Redirecting to a path with a language prefix
   path ? next(path) : next()

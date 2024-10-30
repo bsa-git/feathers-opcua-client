@@ -121,14 +121,11 @@ class AuthClient {
   filterMenu() {
     const ability = this.store.state.casl.ability
     return this.menu.filter(item => {
-      if (item.divider) return true
-      if (item.header) return true
+      if (item.divider) return true // 
+      if (item.header && item.alias === 'apps') return true
+      if (item.header && item.alias === 'ui_elements' && ability.can('enable', '/components')) return true
+      if (item.header && item.alias === 'extras' && ability.can('enable', '/user/signup')) return true
       return ability.can('enable', item.to)
-      // if (this.envPublicPaths.includes(item.to)) return true
-      // if (this.isAuth && this.isAdmin) return true
-      // if (this.isAuth && !this.isAdmin && !this.envAdminPaths.includes(item.to))
-      //   return true
-      // return false
     })
   }
 

@@ -28,7 +28,7 @@ const caslPlugin = store => {
   store.subscribeAction({
     after: (action, state) => {
       let ability = null
-      let _rules = []
+      let clientRules = []
       //-----------------------------------
       const isAuthenticate = action.type === 'auth/responseHandler'
       const isLogout = action.type === 'auth/logout'
@@ -51,24 +51,25 @@ const caslPlugin = store => {
         if (isDebug && rules.length)
           debug('caslPlugin.isAuthenticate.rules:', rules)
 
-        // Merge two arrays (rules + _rules)
-        _rules = defineRulesFor(state.auth.user)
-        if (isDebug && _rules.length)
-          debug('caslPlugin.isAuthenticate._rules:', _rules)
-        _rules = rules.concat(_rules)
-        if (isDebug && _rules.length)
-          debug('caslPlugin.isAuthenticate.rules + _rules:', _rules)
+        // Merge two arrays (rules + clientRules)
+        clientRules = defineRulesFor(state.auth.user)
+        if (isDebug && clientRules.length)
+          debug('caslPlugin.isAuthenticate.clientRules:', clientRules)
+        clientRules = rules.concat(clientRules)
+        if (isDebug && clientRules.length)
+          debug('caslPlugin.isAuthenticate.(rules + clientRules):', clientRules)
         // Mutations.setRules
-        store.commit('casl/setRules', _rules)
+        store.commit('casl/setRules', clientRules)
 
         // Logout user
       } else if (isLogout) {
         if (isDebug && action) debug('caslPlugin.isLogout.action:', action)
-        // _rules = []
+        // clientRules = []
         // Define rules for user => NULL
-        _rules = defineRulesFor(null)
-        if (isDebug && _rules) debug('caslPlugin.isLogout.rules:', _rules)
-        store.commit('casl/setRules', _rules)
+        clientRules = defineRulesFor(null)
+        if (isDebug && clientRules.length)
+          debug('caslPlugin.isLogout.clientRules:', clientRules)
+        store.commit('casl/setRules', clientRules)
       }
       if (true && (isAuthenticate || isLogout)) {
         ability = store.state.casl.ability
@@ -83,7 +84,7 @@ const caslPlugin = store => {
         //   ability.can('delete', 'roles')
         // )
 
-        debug(`updateAbilityForUser.rules:`, _rules)
+        debug(`updateAbilityForUser.clientRules:`, clientRules)
       }
     }
   })

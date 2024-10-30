@@ -30,43 +30,15 @@ const resolveAction = createAliasResolver({
 const defineRulesFor = user => {
   const { can, cannot, build, rules } = new AbilityBuilder(createMongoAbility)
 
-  // if (!user) return []
-
-  // const idField = 'id' in user ? 'id' : '_id'
-
-  // if (user.roleAlias === 'isAdministrator') {
-  //   // Administrator can do all
-  //   can('enable', 'all')
-  //   cannot('enable', '/guest-dashboard')
-  //   return rules
-  // }
-
-  // can('show', 'all')
-  // cannot('show', 'menu/dashboard')
 
   // PUBLIC_PATHS="/; /guest-dashboard; /media; /widgets; /components; /pickers; /layout; /forms; /system; /user/verify; /user/forgot; /user/change;"
   // ADMIN_PATHS="/admins; /services"
 
-  // Define path rules for administrator
-  const definePathRulesFor_Admin = () => {
-    // Administrator can do all
-    can('enable', 'all')
-    cannot('enable', '/guest-dashboard')
-    cannot('enable', '/media')
-    cannot('enable', '/widgets')
-    cannot('enable', '/components')
-    cannot('enable', '/pickers')
-    cannot('enable', '/layout')
-    cannot('enable', '/forms')
-    cannot('enable', '/system')
-    cannot('enable', '/user/verify')
-    cannot('enable', '/user/forgot')
-    cannot('enable', '/user/change')
-  }
-
   // Define path public rules for guest
   const definePathRulesFor_Guest = () => {
     can('enable', '/')
+    can('enable', '/user/signup')
+    can('enable', '/user/login')
     can('enable', '/guest-dashboard')
     can('enable', '/media')
     can('enable', '/widgets')
@@ -75,16 +47,23 @@ const defineRulesFor = user => {
     can('enable', '/layout')
     can('enable', '/forms')
     can('enable', '/system')
-    can('enable', '/user/verify')
-    can('enable', '/user/forgot')
-    can('enable', '/user/change')
   }
 
   // Define path public rules for user
   const definePathRulesFor_User = () => {
-    definePathRulesFor_Admin()
-    cannot('enable', '/admins')
-    cannot('enable', '/services')
+    can('enable', '/user/profile')
+    can('enable', '/user/verify')
+    can('enable', '/user/forgot')
+    can('enable', '/user/change')
+    can('enable', '/log')
+    can('enable', '/chat')
+    can('enable', '/rtdata')
+  }
+  
+  // Define path rules for administrator
+  const definePathRulesFor_Admin = () => {
+    can('enable', '/admins')
+    can('enable', '/services')
   }
 
   //-----------------------------------------------
@@ -98,7 +77,6 @@ const defineRulesFor = user => {
   // Define rules for administrator
   if (user && user.roleAlias === 'isAdministrator') {
     definePathRulesFor_Admin()
-    return rules
   }
 
   // Define rules for user
