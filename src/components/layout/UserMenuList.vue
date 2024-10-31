@@ -108,7 +108,8 @@ export default {
           let path = ''
           await logout()
           showSuccess(`${$i18n.t('login.successLogout')}!`)
-          path = $i18n.path(config.value.homePath)
+          // path = $i18n.path(config.value.homePath)
+          path = $i18n.path('/')
           if (path !== $route.fullPath) {
             $router.push(path)
           }

@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 import i18n from '@/plugins/vue/i18n'
 import store from '@/store'
 import initI18n from '@/middleware/init-i18n'
+import AuthClient from '@/plugins/auth/auth-client.class'
 
 // Route components
 import Home from '@/views/Home'
@@ -45,16 +46,23 @@ const router = new VueRouter({
 
 // Hook for middleware
 router.beforeEach((to, from, next) => {
-  if (isDebug && to.path)
-    debug('router.beforeEach.path:', from.path, ',', to.path)
-
   // Init i18n
-  const path = initI18n(to, i18n, store)
-  if (isDebug && to)
-    debug('router.beforeEach.to:', to)
-
-  // Redirecting to a path with a language prefix
-  path ? next(path) : next()
+  let path = initI18n(to, i18n, store)
+  if (isDebug && to) debug('router.beforeEach.to:', to)
+  
+  // Create auth
+  const auth = new AuthClient(store)
+  // Check access to path
+  if(auth.isAccess(to)){
+    // Redirecting to a path with a language prefix
+    path ? next(path) : next()    
+  } else {
+    const user = store.state['auth']['user']
+    store.commit('SHOW_ERROR', `This path "${to.path}" is not available. Not enough rights.`)
+    path = user? `/${i18n.locale}/user/login` : `/${i18n.locale}/`
+    throw new Error(`This path "${to.path}" is not available. Not enough rights.`)
+    // next(path)
+  } 
 })
 
 export default router

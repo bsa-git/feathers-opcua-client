@@ -1,4 +1,6 @@
+/* eslint-disable no-unused-vars */
 const loConcat = require('lodash/concat')
+const loReplace = require('lodash/replace')
 import appMenu from '@/api/app/app-menu'
 import feathersClient from '@/plugins/auth/feathers-client'
 
@@ -24,20 +26,25 @@ class AuthClient {
     this.user = auth ? auth.user : null
     this.isAuth = store.getters.isAuth
     this.isAdmin = store.getters.isAdmin
+    this.ability = store.state.casl.ability
     // Set this.envRoles
     if (isDebug && this.envRoles.length) debug('envRoles:', this.envRoles)
   }
 
   /**
    * Is access right for path
-   * @param path
+   * @param toRoute {Route}
    * @return Boolean
    */
-  isAccess(path) {
-    const notAccess =
-      (!this.isAuth && !this.publicPaths().includes(path)) ||
-      (this.isAuth && !this.isAdmin && this.adminPaths().includes(path))
-    return !notAccess
+  isAccess(toRoute) {
+    let path = ''
+    //--------------------
+    const lang = toRoute.params.lang? toRoute.params.lang : ''
+    path = lang? loReplace(toRoute.path, `/${lang}/`, '') : toRoute.path
+    path = '/' + path
+    const canAbility = this.ability.can('enable', path)
+    if(true && toRoute) debug('isAccess.path:', `path="${path}"`, `canAbility=${canAbility}`)
+    return canAbility
   }
 
   /**
@@ -119,13 +126,22 @@ class AuthClient {
    * @return Array
    */
   filterMenu() {
-    const ability = this.store.state.casl.ability
     return this.menu.filter(item => {
-      if (item.divider) return true // 
+      if (item.divider) return true //
       if (item.header && item.alias === 'apps') return true
-      if (item.header && item.alias === 'ui_elements' && ability.can('enable', '/components')) return true
-      if (item.header && item.alias === 'extras' && ability.can('enable', '/user/signup')) return true
-      return ability.can('enable', item.to)
+      if (
+        item.header &&
+        item.alias === 'ui_elements' &&
+        this.ability.can('show', '/components')
+      )
+        return true
+      if (
+        item.header &&
+        item.alias === 'extras' &&
+        this.ability.can('show', '/user/signup')
+      )
+        return true
+      return this.ability.can('show', item.to)
     })
   }
 

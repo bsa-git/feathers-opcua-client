@@ -176,7 +176,7 @@ export default {
     }
 
     const getHomePath = () => {
-      return user.value ? config.value.homePath : 'guest-dashboard'
+      return user.value ? config.value.homePath : '/'
     }
 
     const refresh = () => {
@@ -185,7 +185,7 @@ export default {
     const checkAccessToRoutePath = () => {
       const authClient = new AuthClient($store)
       // Check auth access for route.path
-      if (!authClient.isAccess($route.path)) {
+      if (!authClient.isAccess($route)) {
         if (isDebug && $route.path)
           debug(
             `checkAccessToRoutePath: This path "${$route.path}" is not available. Not enough rights.`
