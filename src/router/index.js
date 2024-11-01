@@ -49,20 +49,22 @@ router.beforeEach((to, from, next) => {
   // Init i18n
   let path = initI18n(to, i18n, store)
   if (isDebug && to) debug('router.beforeEach.to:', to)
-  
+
   // Create auth
   const auth = new AuthClient(store)
   // Check access to path
-  if(auth.isAccess(to)){
+  if (auth.isAccess(to)) {
     // Redirecting to a path with a language prefix
-    path ? next(path) : next()    
+    path ? next(path) : next()
   } else {
     const user = store.state['auth']['user']
-    store.commit('SHOW_ERROR', `This path "${to.path}" is not available. Not enough rights.`)
-    path = user? `/${i18n.locale}/user/login` : `/${i18n.locale}/`
-    throw new Error(`This path "${to.path}" is not available. Not enough rights.`)
-    // next(path)
-  } 
+    store.commit(
+      'SHOW_ERROR',
+      i18n.t('error.not_enough_rights')
+    )
+    path = user ? `/${i18n.locale}/user/login` : `/${i18n.locale}/`
+    next(path)
+  }
 })
 
 export default router
