@@ -58,10 +58,7 @@ router.beforeEach((to, from, next) => {
     path ? next(path) : next()
   } else {
     const user = store.state['auth']['user']
-    store.commit(
-      'SHOW_ERROR',
-      i18n.t('error.not_enough_rights')
-    )
+    store.commit('SHOW_ERROR', i18n.t('error.not_enough_rights'))
     path = user ? `/${i18n.locale}/user/login` : `/${i18n.locale}/`
     next(path)
   }
