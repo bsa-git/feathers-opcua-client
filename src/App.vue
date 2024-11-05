@@ -133,15 +133,15 @@ export default {
       { lazy: true }
     )
 
-    watch(
-      () => (user.value ? user.value.roleAlias : 'isGuest'),
-      roleAlias => {
-        if (true && roleAlias)
-          debug(`watch.user.roleAlias: "${roleAlias}" - Changed!`)
-        if (user.value && roleAlias) checkAccessToRoutePath()
-      },
-      { lazy: true }
-    )
+    // watch(
+    //   () => (user.value ? user.value.roleAlias : 'isGuest'),
+    //   roleAlias => {
+    //     if (true && roleAlias)
+    //       debug(`watch.user.roleAlias: "${roleAlias}" - Changed!`)
+    //     if (user.value && roleAlias) checkAccessToRoutePath()
+    //   },
+    //   { lazy: true }
+    // )
 
     //----------------------------------------------------
     // Lifecycle Hooks

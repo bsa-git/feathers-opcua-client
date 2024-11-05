@@ -71,20 +71,16 @@ const caslPlugin = store => {
           debug('caslPlugin.isLogout.clientRules:', clientRules)
         store.commit('casl/setRules', clientRules)
       }
-      if (isDebug && (isAuthenticate || isLogout)) {
+      if (true && (isAuthenticate || isLogout)) {
         ability = store.state.casl.ability
         Vue.use(abilitiesPlugin, ability)
 
         // debug(
-        //   'updateAbilityForUser.ability.can("read", "users"):',
-        //   ability.can('read', 'users')
-        // )
-        // debug(
-        //   'updateAbilityForUser.ability.can("delete", "roles"):',
-        //   ability.can('delete', 'roles')
+        //   'defineRulesFor.ability.can("enable", "/dashboard"):',
+        //   ability.can('enable', '/dashboard')
         // )
 
-        debug(`updateAbilityForUser.clientRules:`, clientRules)
+        // debug(`defineRulesFor.clientRules:`, clientRules)
       }
     }
   })

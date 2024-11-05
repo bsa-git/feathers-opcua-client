@@ -26,6 +26,7 @@ class AuthClient {
     this.user = auth ? auth.user : null
     this.isAuth = store.getters.isAuth
     this.isAdmin = store.getters.isAdmin
+    this.myRole = store.getters.getMyRole
     this.ability = store.state.casl.ability
     // Set this.envRoles
     if (isDebug && this.envRoles.length) debug('envRoles:', this.envRoles)
@@ -43,7 +44,12 @@ class AuthClient {
     path = lang ? '/' + loReplace(toRoute.path, `/${lang}/`, '') : toRoute.path
     const canAbility = this.ability.can('enable', path)
     if (true && toRoute)
-      debug('isAccess.path:', `path="${path}"`, `canAbility=${canAbility}`)
+      debug(
+        'isAccess.path:',
+        `path="${path}"`,
+        `canAbility=${canAbility}`,
+        `myNameRole: "${this.myRole.name}"`
+      )
     return canAbility
   }
 

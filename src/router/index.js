@@ -2,6 +2,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import i18n from '@/plugins/vue/i18n'
+import util from '../plugins/lib/util'
 import store from '@/store'
 import initI18n from '@/middleware/init-i18n'
 import AuthClient from '@/plugins/auth/auth-client.class'
@@ -45,7 +46,7 @@ const router = new VueRouter({
 })
 
 // Hook for middleware
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   // Init i18n
   let path = initI18n(to, i18n, store)
   if (isDebug && to) debug('router.beforeEach.to:', to)
@@ -53,14 +54,32 @@ router.beforeEach((to, from, next) => {
   // Create auth
   const auth = new AuthClient(store)
   // Check access to path
-  if (auth.isAccess(to)) {
-    // Redirecting to a path with a language prefix
+
+  const getUser = () => {
+    return store.state['auth']['user']
+  }
+
+  const checkAccess = () => {
+    if (auth.isAccess(to)) {
+      // Redirecting to a path with a language prefix
+      path ? next(path) : next()
+    } else {
+      const user = getUser()
+      store.commit('SHOW_ERROR', i18n.t('error.not_enough_rights'))
+      path = user ? `/${i18n.locale}/user/login` : `/${i18n.locale}/`
+      next(path)
+    }
+  }
+
+  // util.waitTimeout(getUser, checkAccess, 1000)
+
+  // if(!getUser()) await util.pause(2000)
+
+  // if(from.path === to.path) return
+  if (from.path === '/') {
     path ? next(path) : next()
   } else {
-    const user = store.state['auth']['user']
-    store.commit('SHOW_ERROR', i18n.t('error.not_enough_rights'))
-    path = user ? `/${i18n.locale}/user/login` : `/${i18n.locale}/`
-    next(path)
+    checkAccess()
   }
 })
 
