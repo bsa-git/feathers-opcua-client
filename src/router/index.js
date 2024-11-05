@@ -53,12 +53,13 @@ router.beforeEach(async (to, from, next) => {
 
   // Create auth
   const auth = new AuthClient(store)
-  // Check access to path
-
+  
+  // Get user
   const getUser = () => {
     return store.state['auth']['user']
   }
 
+  // Check access to path
   const checkAccess = () => {
     if (auth.isAccess(to)) {
       // Redirecting to a path with a language prefix
@@ -71,11 +72,8 @@ router.beforeEach(async (to, from, next) => {
     }
   }
 
-  // util.waitTimeout(getUser, checkAccess, 1000)
 
-  // if(!getUser()) await util.pause(2000)
-
-  // if(from.path === to.path) return
+  // If (from.path === '/') => this is reload browser
   if (from.path === '/') {
     path ? next(path) : next()
   } else {
