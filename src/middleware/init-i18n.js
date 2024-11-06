@@ -10,6 +10,12 @@ export default function(to, i18n, store) {
   const lang = to.params.lang || locale || defaultLocale
   if (isDebug && store)
     debug('init-i18n.locales:', store.state.config.locales, ` lang: ${lang}`)
+  
+  // Such a path does not exist in the application
+  if(to.matched.length === 0) {
+    return path
+  }
+  
   if (store.state.config.locales.indexOf(lang) < 0) {
     throw new Error('Such a locale does not exist in the application')
   }

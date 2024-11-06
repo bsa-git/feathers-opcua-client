@@ -133,15 +133,16 @@ export default {
       { lazy: true }
     )
 
-    // watch(
-    //   () => (user.value ? user.value.roleAlias : 'isGuest'),
-    //   roleAlias => {
-    //     if (true && roleAlias)
-    //       debug(`watch.user.roleAlias: "${roleAlias}" - Changed!`)
-    //     if (user.value && roleAlias) checkAccessToRoutePath()
-    //   },
-    //   { lazy: true }
-    // )
+    watch(
+      () => (user.value ? user.value.roleAlias : 'isGuest'),
+      roleAlias => {
+        if (true && roleAlias)
+          debug(`watch.user.roleAlias: "${roleAlias}" - Changed!`)
+        // if (user.value && roleAlias) checkAccess()
+        checkAccess()
+      },
+      { lazy: true }
+    )
 
     //----------------------------------------------------
     // Lifecycle Hooks
@@ -182,20 +183,13 @@ export default {
     const refresh = () => {
       location.reload()
     }
-    const checkAccessToRoutePath = () => {
+    const checkAccess = () => {
       const authClient = new AuthClient($store)
       // Check auth access for route.path
       if (!authClient.isAccess($route)) {
-        if (isDebug && $route.path)
-          debug(
-            `checkAccessToRoutePath: This path "${$route.path}" is not available. Not enough rights.`
-          )
-        showError({ text: $i18n.t('error.not_enough_rights'), timeout: 10000 })
+        showError({ text: $i18n.t('error.sorry_not_enough_rights'), timeout: 10000 })
         $router.push($i18n.path('/user/login'))
       }
-      // else {
-      //   refresh()
-      // }
     }
 
     return {

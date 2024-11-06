@@ -109,6 +109,7 @@ const defineRulesFor = user => {
   const definePathRulesFor_User = () => {
     can('enable', '/')
     can('enable', '/dashboard')
+    can('enable', '/user/login')
     can('enable', '/user/profile')
     can('enable', '/user/verify')
     can('enable', '/user/forgot')

@@ -45,10 +45,10 @@ class AuthClient {
     const canAbility = this.ability.can('enable', path)
     if (true && toRoute)
       debug(
-        'isAccess.path:',
-        `path="${path}"`,
-        `canAbility=${canAbility}`,
-        `myNameRole: "${this.myRole.name}"`
+        'isAccess:',
+        `path="${path}",`,
+        `canAbility="${canAbility}",`,
+        `roleName: "${this.myRole.name}"`
       )
     return canAbility
   }
