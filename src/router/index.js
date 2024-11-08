@@ -66,8 +66,11 @@ router.beforeEach(async (to, from, next) => {
       path ? next(path) : next()
     } else {
       const user = getUser()
-      // store.commit('SHOW_ERROR', i18n.t('error.sorry_not_enough_rights')) 
-      store.commit('SHOW_ERROR', { text: i18n.t('error.sorry_not_enough_rights'), timeout: 10000 })
+      // store.commit('SHOW_ERROR', i18n.t('error.sorry_not_enough_rights'))
+      store.commit('SHOW_ERROR', {
+        text: i18n.t('error.sorry_not_enough_rights'),
+        timeout: 10000
+      })
       path = user ? `/${i18n.locale}/user/login` : `/${i18n.locale}/`
       next(path)
     }
@@ -76,7 +79,7 @@ router.beforeEach(async (to, from, next) => {
   // If (from.path === '/') => There is reload browser
   if (from.path === '/') {
     path ? next(path) : next()
-  // Such a path does not exist in the application
+    // Such a path does not exist in the application
   } else if (to.matched.length === 0) {
     store.commit('SHOW_ERROR', i18n.t('error.sorry_page_not_found'))
     next(from.path)

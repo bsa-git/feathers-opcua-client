@@ -10,7 +10,7 @@
               <v-icon class="mr-3">mdi-login</v-icon>
               <span class="headline">{{ $t('user_menu.login') }}</span>
               <v-spacer></v-spacer>
-              <router-link :to="config.homePath" class="close-icon">
+              <router-link :to="homePath" class="close-icon">
                 <v-icon>mdi-close</v-icon>
               </router-link>
             </v-card-title>
@@ -122,6 +122,7 @@ export default {
 
     // Computed getters
     const config = computed(() => $store.getters.getConfig)
+    const homePath = computed(() => (user.value ? config.value.homePath : '/'))
     const theme = computed(() => $store.getters.getTheme)
     const primaryColor = computed(() => $store.getters.getPrimaryBaseColor)
 
@@ -183,7 +184,7 @@ export default {
           }
           setTimeout(() => {
             loadingSubmit.value = false
-            $router.push($i18n.path(config.value.homePath))
+            $router.push($i18n.path(homePath.value))
           }, 1000)
         }
       }
@@ -231,8 +232,7 @@ export default {
         showSuccess(`${$i18n.t('login.successLogout')}!`)
         setTimeout(async () => {
           loadingLogout.value = false
-          const homePath = config.value.homePath
-          $router.push($i18n.path(homePath))
+          $router.push($i18n.path(homePath.value))
         }, 1000)
       } else {
         onClear()
@@ -257,6 +257,7 @@ export default {
       user,
       // Computed getters
       config,
+      homePath,
       theme,
       primaryColor,
       // Methods

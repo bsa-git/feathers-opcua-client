@@ -86,6 +86,8 @@ export default {
     // Set app
     // context.app = feathersClient
 
+    let lastRoleAlias = ''
+
     //-------------------------------------------------------
     // Reactive values
     const isStandAlone = ref(false)
@@ -116,9 +118,10 @@ export default {
     const authenticate = payload => $store.dispatch('authenticate', payload)
     const logout = () => $store.dispatch('logout')
 
+    // We are waiting for the user active change event
     watch(
       () => (user.value ? user.value.active : false),
-      userActive => {
+      async userActive => {
         if (isDebug && user.value)
           debug(`watch.user.active: ${userActive} - Changed!`)
         if (user.value && userActive === false) {
@@ -126,20 +129,29 @@ export default {
             text: $i18n.t('management.userToInactiveMode'),
             timeout: 10000
           })
-          logout()
-          $router.push($i18n.path(config.value.homePath))
+          await logout()
+          $router.push($i18n.path('/'))
         }
       },
       { lazy: true }
     )
 
+    // We are waiting for the user role change event
     watch(
       () => (user.value ? user.value.roleAlias : 'isGuest'),
-      roleAlias => {
-        if (true && roleAlias)
-          debug(`watch.user.roleAlias: "${roleAlias}" - Changed!`)
-        // if (user.value && roleAlias) checkAccess()
-        checkAccess()
+      async roleAlias => {
+        if(!lastRoleAlias) lastRoleAlias = roleAlias
+        if(isDebug && roleAlias) debug(`watch.user.roleAlias: "${roleAlias}" - Changed! lastRoleAlias: ${lastRoleAlias}`)
+        if (user.value && (lastRoleAlias && (lastRoleAlias !== roleAlias))) {
+          showWarning({
+            text: $i18n.t('management.userToChangeRole'),
+            timeout: 10000
+          })
+          await logout()
+          lastRoleAlias = ''
+          if(true && roleAlias) debug(`watch.user.roleAliasChanged: "${roleAlias}" - Changed!`)
+          $router.push($i18n.path('/'))
+        }
       },
       { lazy: true }
     )
@@ -187,7 +199,10 @@ export default {
       const authClient = new AuthClient($store)
       // Check auth access for route.path
       if (!authClient.isAccess($route)) {
-        showError({ text: $i18n.t('error.sorry_not_enough_rights'), timeout: 10000 })
+        showError({
+          text: $i18n.t('error.sorry_not_enough_rights'),
+          timeout: 10000
+        })
         $router.push($i18n.path('/user/login'))
       }
     }
