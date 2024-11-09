@@ -140,16 +140,20 @@ export default {
     watch(
       () => (user.value ? user.value.roleAlias : 'isGuest'),
       async roleAlias => {
-        if(!lastRoleAlias) lastRoleAlias = roleAlias
-        if(isDebug && roleAlias) debug(`watch.user.roleAlias: "${roleAlias}" - Changed! lastRoleAlias: ${lastRoleAlias}`)
-        if (user.value && (lastRoleAlias && (lastRoleAlias !== roleAlias))) {
+        if (!lastRoleAlias) lastRoleAlias = roleAlias
+        if (isDebug && roleAlias)
+          debug(
+            `watch.user.roleAlias: "${roleAlias}" - Changed! lastRoleAlias: ${lastRoleAlias}`
+          )
+        if (user.value && lastRoleAlias && lastRoleAlias !== roleAlias) {
           showWarning({
             text: $i18n.t('management.userToChangeRole'),
             timeout: 10000
           })
           await logout()
           lastRoleAlias = ''
-          if(true && roleAlias) debug(`watch.user.roleAliasChanged: "${roleAlias}" - Changed!`)
+          if (true && roleAlias)
+            debug(`watch.user.roleAliasChanged: "${roleAlias}" - Changed!`)
           $router.push($i18n.path('/'))
         }
       },
