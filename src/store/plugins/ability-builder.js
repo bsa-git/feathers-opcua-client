@@ -131,6 +131,7 @@ const defineRulesFor = user => {
 
   // Define menu public rules for user
   const defineMenuRulesFor_User = () => {
+    can('show', '/dashboard')
     can('show', '/log')
     can('show', '/chat')
     can('show', '/rtdata')

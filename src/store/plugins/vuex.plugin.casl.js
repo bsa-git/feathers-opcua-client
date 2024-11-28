@@ -35,7 +35,7 @@ const caslPlugin = store => {
       const isOpcuaValues = action.type === 'opcua-values/addOrUpdate'
 
       if (isDebug && action) debug('caslPlugin.action:', action)
-      if (true && isOpcuaValues)
+      if (isDebug && isOpcuaValues)
         debug('caslPlugin.action.isOpcuaValues:', action)
 
       // Authenticate user
