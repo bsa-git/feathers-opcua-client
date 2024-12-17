@@ -10,7 +10,7 @@
               <v-icon class="mr-3">mdi-account-plus</v-icon>
               <span class="headline">{{ $t('user_menu.signup') }}</span>
               <v-spacer></v-spacer>
-              <router-link :to="$i18n.path(config.homePath)" class="close-icon">
+              <router-link :to="$i18n.path(homePath)" class="close-icon">
                 <v-icon>mdi-close</v-icon>
               </router-link>
             </v-card-title>
@@ -162,6 +162,7 @@ export default {
 
     // Computed getters
     const config = computed(() => $store.getters.getConfig)
+    const homePath = computed(() => (user.value ? config.value.homePath : '/'))
     const theme = computed(() => $store.getters.getTheme)
     const primaryColor = computed(() => $store.getters.getPrimaryBaseColor)
 
@@ -214,7 +215,7 @@ export default {
             if (isDebug) debug('loginResponse:', loginResponse)
             setTimeout(() => {
               showSuccess(`${$i18n.t('signup.successSignUpAndLogin')}!`)
-              $router.push($i18n.path(config.value.homePath))
+              $router.push($i18n.path(homePath))
             }, 1000)
           }
         }
@@ -263,7 +264,7 @@ export default {
         showSuccess(`${$i18n.t('login.successLogout')}!`)
         setTimeout(() => {
           logout()
-          $router.push($i18n.path(config.value.homePath))
+          $router.push($i18n.path(homePath))
         }, 1000)
       } else {
         onClear()
@@ -292,6 +293,7 @@ export default {
       // Computed state
       user,
       // Computed getters
+      homePath,
       config,
       theme,
       primaryColor,

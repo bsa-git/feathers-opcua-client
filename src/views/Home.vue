@@ -25,7 +25,8 @@
               class="ma-3"
               to="/user/login"
             >
-              {{ $t('login.title') }}
+              {{ user?  $t('login.logout') : $t('login.title') }}
+              <v-icon  size="22" right>  {{ user? 'mdi-login' : 'mdi-logout' }} </v-icon>
             </v-btn>
             <v-btn
               width="50%"
@@ -33,7 +34,10 @@
               x-large
               class="ma-3"
               to="/user/signup"
-              >{{ $t('signup.title') }}</v-btn
+              >
+              {{ user?  $t('profile.title') : $t('signup.title') }}
+              <v-icon size="22" right>  {{ user? 'mdi-account-circle' : 'mdi-account-plus' }} </v-icon>
+              </v-btn
             >
             <div></div>
           </v-sheet>
@@ -45,7 +49,7 @@
 
 <script>
 /* eslint-disable no-unused-vars */
-import { ref } from '@vue/composition-api'
+import { ref, computed } from '@vue/composition-api'
 import PageHeader from '@/components/layout/PageHeader.vue'
 
 const debug = require('debug')('app:Home')
@@ -70,14 +74,21 @@ export default {
     }
   },
   setup(props, context) {
-    const { $i18n } = context.root
+    const { $i18n, $store } = context.root
 
     //-------------------------------------------------------
     // Reactive values
     const imgName = ref('feathers-logo-wide.png')
 
+    // Computed state
+    const user = computed(() => $store.state['auth']['user'])
+
+    // Actions
+    const logout = () => $store.dispatch('logout')
+
     return {
-      imgName
+      imgName,
+      user
     }
   }
 }
