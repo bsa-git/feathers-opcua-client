@@ -54,7 +54,7 @@
                 >
                   {{ $t('login.title') }}
                 </v-btn>
-                <v-btn :loading="loadingLogout" @click="btnClick">
+                <v-btn :loading="loadingLogout" @click="onLogout">
                   {{ !!user ? $t('login.logout') : $t('login.clear') }}
                 </v-btn>
               </v-card-actions>
@@ -225,7 +225,7 @@ export default {
         }
       }
     }
-    const btnClick = async () => {
+    const onLogout = async () => {
       if (user.value) {
         loadingLogout.value = true
         await logout()
@@ -262,7 +262,7 @@ export default {
       primaryColor,
       // Methods
       onSubmit,
-      btnClick
+      onLogout
     }
   }
 }

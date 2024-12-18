@@ -19,14 +19,26 @@
             width="80%"
           >
             <v-btn
+              v-if="user"
+              width="50%"
+              color="primary"
+              x-large
+              class="ma-3"
+              @click="onLogout"
+            >
+              {{ $t('login.logout') }}
+              <v-icon size="22" right> {{ 'mdi-logout' }} </v-icon>
+            </v-btn>
+            <v-btn
+              v-else
               width="50%"
               color="primary"
               x-large
               class="ma-3"
               to="/user/login"
             >
-              {{ user?  $t('login.logout') : $t('login.title') }}
-              <v-icon  size="22" right>  {{ user? 'mdi-login' : 'mdi-logout' }} </v-icon>
+              {{ $t('login.title') }}
+              <v-icon size="22" right> {{ 'mdi-login' }} </v-icon>
             </v-btn>
             <v-btn
               width="50%"
@@ -34,11 +46,12 @@
               x-large
               class="ma-3"
               to="/user/signup"
-              >
-              {{ user?  $t('profile.title') : $t('signup.title') }}
-              <v-icon size="22" right>  {{ user? 'mdi-account-circle' : 'mdi-account-plus' }} </v-icon>
-              </v-btn
             >
+              {{ user ? $t('profile.title') : $t('signup.title') }}
+              <v-icon size="22" right>
+                {{ user ? 'mdi-account-circle' : 'mdi-account-plus' }}
+              </v-icon>
+            </v-btn>
             <div></div>
           </v-sheet>
         </v-sheet>
@@ -74,7 +87,7 @@ export default {
     }
   },
   setup(props, context) {
-    const { $i18n, $store } = context.root
+    const { $i18n, $store, $router, $route } = context.root
 
     //-------------------------------------------------------
     // Reactive values
@@ -82,13 +95,37 @@ export default {
 
     // Computed state
     const user = computed(() => $store.state['auth']['user'])
+    const config = computed(() => $store.getters.getConfig)
+    const homePath = computed(() => (user.value ? config.value.homePath : '/guest-dashboard'))
+    
+    // Mutations
+    const showSuccess = value => $store.commit('SHOW_SUCCESS', value)
 
     // Actions
     const logout = () => $store.dispatch('logout')
 
+    //----------------------------------------------------------
+    // Methods
+    const onLogout = async () => {
+      if (user.value) {
+        await logout()
+        showSuccess(`${$i18n.t('login.successLogout')}!`)
+        setTimeout(async () => {
+          const path = $i18n.path(homePath.value)
+          if (path !== $route.fullPath) {
+            $router.push(path)
+          }
+        }, 1000)
+      }
+    }
+
     return {
+      //React values
       imgName,
-      user
+      //Computed state
+      user,
+      //Methods
+      onLogout
     }
   }
 }
