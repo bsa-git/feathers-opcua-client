@@ -13,6 +13,9 @@
       @onNavLeft="modelNavLeft"
     />
 
+    <!-- Right Drawer -->
+    <RightDrawer ref="rightDrawer"></RightDrawer>
+
     <!-- App Main -->
     <v-main>
       <router-view @onStandAlone="modelStandAlone" />
@@ -43,9 +46,11 @@ import { ref, reactive, computed, onMounted, watch } from '@vue/composition-api'
 import appMenu from '@/api/app/app-menu.json'
 import ServiceClient from '@/plugins/service-helpers/service-client.class'
 import AuthClient from '@/plugins/auth/auth-client.class'
+import syncStore from '@/plugins/lib/sync-store'
 const pkg = require('@/../package')
 
 import LeftDrawer from '@/components/layout/LeftDrawer'
+import RightDrawer from '@/components/layout/RightDrawer'
 import Toolbar from '@/components/layout/Toolbar.vue'
 import Footer from '@/components/layout/Footer.vue'
 import SnackBar from '@/components/layout/SnackBar.vue'
@@ -58,6 +63,7 @@ export default {
   //------------
   components: {
     LeftDrawer,
+    RightDrawer,
     Toolbar,
     Footer,
     SnackBar
@@ -164,6 +170,7 @@ export default {
     // Lifecycle Hooks
     onMounted(async () => {
       try {
+        syncStore.initVuetify(context.root)
         const loginResponse = await authenticate()
         if (isDebug && loginResponse)
           debug('authenticate.loginResponse:', loginResponse)

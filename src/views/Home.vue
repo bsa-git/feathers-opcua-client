@@ -45,7 +45,7 @@
               color="secondary"
               x-large
               class="ma-3"
-              to="/user/signup"
+              :to="user? '/user/profile' : '/user/signup'"
             >
               {{ user ? $t('profile.title') : $t('signup.title') }}
               <v-icon size="22" right>
@@ -96,8 +96,10 @@ export default {
     // Computed state
     const user = computed(() => $store.state['auth']['user'])
     const config = computed(() => $store.getters.getConfig)
-    const homePath = computed(() => (user.value ? config.value.homePath : '/guest-dashboard'))
-    
+    const homePath = computed(() =>
+      user.value ? config.value.homePath : '/guest-dashboard'
+    )
+
     // Mutations
     const showSuccess = value => $store.commit('SHOW_SUCCESS', value)
 
