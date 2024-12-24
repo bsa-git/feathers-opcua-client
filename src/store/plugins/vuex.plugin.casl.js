@@ -71,7 +71,7 @@ const caslPlugin = store => {
           debug('caslPlugin.isLogout.clientRules:', clientRules)
         store.commit('casl/setRules', clientRules)
       }
-      if (true && (isAuthenticate || isLogout)) {
+      if (isDebug && (isAuthenticate || isLogout)) {
         ability = store.state.casl.ability
         Vue.use(abilitiesPlugin, ability)
 

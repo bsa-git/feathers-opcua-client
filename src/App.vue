@@ -158,7 +158,7 @@ export default {
           })
           await logout()
           lastRoleAlias = ''
-          if (true && roleAlias)
+          if (isDebug && roleAlias)
             debug(`watch.user.roleAliasChanged: "${roleAlias}" - Changed!`)
           $router.push($i18n.path('/'))
         }
@@ -203,20 +203,20 @@ export default {
       return user.value ? config.value.homePath : '/'
     }
 
-    const refresh = () => {
-      location.reload()
-    }
-    const checkAccess = () => {
-      const authClient = new AuthClient($store)
-      // Check auth access for route.path
-      if (!authClient.isAccess($route)) {
-        showError({
-          text: $i18n.t('error.sorry_not_enough_rights'),
-          timeout: 10000
-        })
-        $router.push($i18n.path('/user/login'))
-      }
-    }
+    // const refresh = () => {
+    //   location.reload()
+    // }
+    // const checkAccess = () => {
+    //   const authClient = new AuthClient($store)
+    //   // Check auth access for route.path
+    //   if (!authClient.isAccess($route)) {
+    //     showError({
+    //       text: $i18n.t('error.sorry_not_enough_rights'),
+    //       timeout: 10000
+    //     })
+    //     $router.push($i18n.path('/user/login'))
+    //   }
+    // }
 
     return {
       // React values

@@ -18,7 +18,7 @@ import Dashboard from '@/views/Dashboard.vue'
 import GuestDashboard from '@/views/GuestDashboard.vue'
 
 const debug = require('debug')('app:router.index')
-const isDebug = true
+const isDebug = false
 
 Vue.use(VueRouter)
 

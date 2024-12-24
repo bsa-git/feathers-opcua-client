@@ -45,7 +45,7 @@
               color="secondary"
               x-large
               class="ma-3"
-              :to="user? '/user/profile' : '/user/signup'"
+              :to="user ? '/user/profile' : '/user/signup'"
             >
               {{ user ? $t('profile.title') : $t('signup.title') }}
               <v-icon size="22" right>

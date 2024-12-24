@@ -43,7 +43,7 @@ class AuthClient {
     const lang = toRoute.params.lang ? toRoute.params.lang : ''
     path = lang ? '/' + loReplace(toRoute.path, `/${lang}/`, '') : toRoute.path
     const canAbility = this.ability.can('enable', path)
-    if (true && toRoute)
+    if (isDebug && toRoute)
       debug(
         'isAccess:',
         `path="${path}",`,
