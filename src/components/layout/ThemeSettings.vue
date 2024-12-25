@@ -117,35 +117,16 @@ export default {
     // Methods
     const themeColorHandler = val => {
       if (isDebug && val) debug('themeColorHandler.val:', val)
-      // if (changedColor.value) {
-        setThemePrimary(val)
-        $vuetify.theme.themes.dark.primary = primaryColor.value
-        $vuetify.theme.themes.light.primary = primaryColor.value
-      // } else {
-      //   changedColor.value = true
-      //   if (theme.value.primary !== val) {
-      //     themeColor.value = theme.value.primary
-      //   }
-      // }
+      setThemePrimary(val)
+      $vuetify.theme.themes.dark.primary = primaryColor.value
+      $vuetify.theme.themes.light.primary = primaryColor.value
     }
 
     const sideBarOptionHandler = val => {
       if (isDebug && val) debug('sideBarOptionHandler.val:', val)
       const isDark = val === 'dark'
-      const isLight = val === 'light'
-
-      // if ((isDark || isLight) && changedDark.value) {
-        $vuetify.theme.dark = isDark
-        setThemeDark(isDark)
-      // }
-      // First setup cycle of the theme.dark
-      // The initial value is taken from store.
-      // if (!changedDark.value) {
-      //   changedDark.value = true
-      //   if (theme.value.dark !== isDark) {
-      //     sideBarOption.value = theme.value.dark ? 'dark' : 'light'
-      //   }
-      // }
+      $vuetify.theme.dark = isDark
+      setThemeDark(isDark)
     }
 
     const updateThemeColor = () => {

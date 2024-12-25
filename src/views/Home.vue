@@ -91,7 +91,7 @@ export default {
 
     //-------------------------------------------------------
     // Reactive values
-    const imgName = ref('feathers-logo-wide.png')
+    const imgName = ref('feathers-logo_.png')
 
     // Computed state
     const user = computed(() => $store.state['auth']['user'])
