@@ -16,10 +16,6 @@ const getters = {
     return state.snackbar
   },
 
-  getTheme: state => {
-    return state.theme
-  },
-
   getNotices: state => {
     return state.notices
   },
@@ -43,7 +39,11 @@ const getters = {
     return result
   },
 
-  getPrimaryColor: state => {
+  getTheme: state => {
+    return state.theme
+  },
+
+  getPrimaryColor: (state) => {
     const theme = state.theme
     // Get primary color
     const optColor = themeColorOptions.find(

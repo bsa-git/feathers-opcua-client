@@ -1,10 +1,9 @@
 import cookies from 'browser-cookies'
 import util from './util'
 const loPick = require('lodash/pick')
-const debug = require('debug')('app:plugins.sync-store')
 
-const isDebug = false
-const isLog = false
+const debug = require('debug')('app:plugins.sync-store')
+const isDebug = true
 
 /**
  * setThemePrimary
@@ -140,11 +139,11 @@ const setChatSelectedItem = ct => {
 const initVuetify = function(ctVue, isUpdateColor = false) {
   // Get store theme
   const theme = ctVue.$store.state.theme
-  if (isDebug) debug('initVuetify.theme:', theme)
+  if (isDebug && theme) debug('initVuetify.theme:', theme)
   // Get color
   const color = ctVue.$store.getters['getPrimaryColor']
-  if (isDebug) debug('initVuetify.primaryColor:', color)
-  if (isLog) debug('initVuetify.ctVue.$vuetify', ctVue.$vuetify)
+  if (isDebug && color) debug('initVuetify.primaryColor:', color)
+  // if (isLog) debug('initVuetify.ctVue.$vuetify', ctVue.$vuetify)
   // Set theme dark
   ctVue.$vuetify.theme.dark = theme.dark
   // Set theme primary
@@ -152,11 +151,12 @@ const initVuetify = function(ctVue, isUpdateColor = false) {
   ctVue.$vuetify.theme.themes.light.primary = color
   // Update color
   if (isUpdateColor) {
-    const themeSettings = ctVue.$refs.rightDrawer.$refs.themeSettings
-    let themeColor = themeSettings.themeColor
-    if (themeColor !== 'indigo') {
-      themeSettings.updateThemeColor()
-    }
+    // if (isDebug && isUpdateColor) debug('initVuetify.ctVue.$refs:', ctVue.$refs)
+    // const themeSettings = ctVue.$refs.rightDrawer.$refs.themeSettings
+    // let themeColor = themeSettings.themeColor
+    // if (themeColor !== 'indigo') {
+    //   themeSettings.updateThemeColor()
+    // }
   }
 }
 

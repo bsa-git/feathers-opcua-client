@@ -1,9 +1,9 @@
 <template>
   <div>
     <!-- Img  -->
-    <template v-if="imgName">
+    <template v-if="getImgName()">
       <v-img
-        :src="require(`@/assets/img/logo/${imgNameForThemeColor}`)"
+        :src="require(`@/assets/img/logo/${getImgName()}`)"
         class="mu-3 mb-10"
         contain
         height="50"
@@ -26,14 +26,9 @@
 
 <script>
 /* eslint-disable no-unused-vars */
-import { ref, computed, watch } from '@vue/composition-api'
-import { debug } from 'feathers-hooks-common'
+import { computed } from '@vue/composition-api'
 
 export default {
-  components: {
-    // PageTitle,
-    // PageImg
-  },
 
   props: {
     pageTitle: {
@@ -53,21 +48,8 @@ export default {
   setup(props, context) {
     const { $vuetify } = context.root
 
-    // Reactive values
-    const _imgName = getImgName()
-    const imgNameForThemeColor = ref(`${_imgName}`)
-
     // Computed values
     const themeName = computed(() => ($vuetify.theme.dark ? 'dark' : 'light'))
-
-    //-----------------------------------------------------
-    watch(
-      () => themeName.value,
-      val => {
-        // imgNameForThemeColor.value = getImgName()
-      },
-      { lazy: true }
-    )
 
     //----------------------------------------------------------
     // Methods
@@ -78,18 +60,13 @@ export default {
       } else {
         return props.imgName
       }
-      // if (themeName.value === 'dark') {
-      //   let items = props.imgName.split('.')
-      //   imgNameForThemeColor.value = `${items[0]}2.${items[1]}`
-      //   debug('imgNameForThemeColor:', imgNameForThemeColor.value)
-      // } else {
-      //   imgNameForThemeColor.value = props.imgName
-      // }
     }
 
     return {
+      // Reactive
       themeName,
-      imgNameForThemeColor
+      // Methods
+      getImgName
     }
   }
 }

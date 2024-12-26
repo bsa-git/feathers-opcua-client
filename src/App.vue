@@ -85,7 +85,7 @@ export default {
   },
 
   setup(props, context) {
-    const { $store, $router, $route, $i18n } = context.root
+    const { $store, $router, $route, $i18n, $refs } = context.root
 
     if (isDebug && context.root) debug('Toolbar.context.route:', $route)
 
@@ -170,7 +170,7 @@ export default {
     // Lifecycle Hooks
     onMounted(async () => {
       try {
-        syncStore.initVuetify(context.root)
+        // syncStore.initVuetify(context.root)
         const loginResponse = await authenticate()
         if (isDebug && loginResponse)
           debug('authenticate.loginResponse:', loginResponse)
@@ -202,21 +202,6 @@ export default {
     const getHomePath = () => {
       return user.value ? config.value.homePath : '/'
     }
-
-    // const refresh = () => {
-    //   location.reload()
-    // }
-    // const checkAccess = () => {
-    //   const authClient = new AuthClient($store)
-    //   // Check auth access for route.path
-    //   if (!authClient.isAccess($route)) {
-    //     showError({
-    //       text: $i18n.t('error.sorry_not_enough_rights'),
-    //       timeout: 10000
-    //     })
-    //     $router.push($i18n.path('/user/login'))
-    //   }
-    // }
 
     return {
       // React values
