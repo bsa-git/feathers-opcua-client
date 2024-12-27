@@ -170,7 +170,7 @@ export default {
     // Lifecycle Hooks
     onMounted(async () => {
       try {
-        // syncStore.initVuetify(context.root)
+        syncStore.initVuetify(context.root)
         const loginResponse = await authenticate()
         if (isDebug && loginResponse)
           debug('authenticate.loginResponse:', loginResponse)

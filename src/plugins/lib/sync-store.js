@@ -1,9 +1,11 @@
+/* eslint-disable no-unused-vars */
 import cookies from 'browser-cookies'
 import util from './util'
 const loPick = require('lodash/pick')
 
 const debug = require('debug')('app:plugins.sync-store')
-const isDebug = true
+const isDebug = false
+//-----------------------------------------------------
 
 /**
  * setThemePrimary

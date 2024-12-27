@@ -29,7 +29,6 @@
 import { computed } from '@vue/composition-api'
 
 export default {
-
   props: {
     pageTitle: {
       type: String,

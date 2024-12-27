@@ -1,16 +1,59 @@
 /* eslint-disable no-unused-vars */
+import cookies from 'browser-cookies'
 import util from '@/plugins/lib/util'
+
+const debug = require('debug')('app:store.state')
+const isDebug = true
 
 /**
  * Get locales
  * @param envLocales
  * @return {Array}
  */
-const locales = envLocales => {
-  return util
+const getLocales = envLocales => {
+  const _locales = util
     .stripSpecific(envLocales, ';')
     .split(';')
     .map(item => item.trim())
+  if (isDebug && _locales.length) debug('getLocales.locales:', _locales)
+  return _locales
+}
+
+/**
+ * Get locale
+* @method getLocale
+* @returns {String}
+*/
+const getLocale = () => {
+  let locale
+  //-------------------------
+  locale = process.env.LOCALE.trim()
+  if (process.client && cookies.get('locale')) {
+    locale = cookies.get('locale')
+  }
+  return locale
+}
+
+/**
+ * Get theme
+* @method getTheme
+* @returns {Object}
+*/
+const getTheme = () => {
+  const theme = {
+    primary: 'indigo',
+    dark: false,
+    name: 'light'
+  }
+  //-------------------------
+  if (process.client && cookies.get('theme_primary')) {
+    theme.primary = cookies.get('theme_primary')
+  }
+  if (process.client && cookies.get('theme_dark')) {
+    theme.dark = (cookies.get('theme_dark') === '1') ? true : false
+    theme.name = theme.dark ? 'dark' : 'light'
+  }
+  return theme
 }
 
 /**
@@ -33,9 +76,9 @@ const authServices = envServices => {
           items[1] === '*'
             ? all
             : util
-                .stripSpecific(items[1], ',')
-                .split(',')
-                .map(item => item.trim())
+              .stripSpecific(items[1], ',')
+              .split(',')
+              .map(item => item.trim())
       }
     })
 }
@@ -103,8 +146,8 @@ const externalAccounts = envAccounts => {
 const state = () => ({
   config: {
     //--- LOCALES ---//
-    locales: locales(process.env.LOCALES),
-    locale: (process.env.LOCALE || 'en').trim(),
+    locales: getLocales(process.env.LOCALES),
+    locale: getLocale(),//(process.env.LOCALE || 'en').trim(),
     fallbackLocale: (process.env.FALLBACK_LOCALE || 'en').trim(),
     //--- AUTH ---//
     isAuthManager:
@@ -168,11 +211,12 @@ const state = () => ({
     timeout: 6000
   },
   //--- THEME ---//
-  theme: {
-    primary: 'indigo',
-    dark: false,
-    name: 'light'
-  },
+  // theme: {
+  //   primary: 'indigo',
+  //   dark: false,
+  //   name: 'light'
+  // },
+  theme: getTheme(),
   //--- NOTIFICATIONS ---//
   notices: {
     checkAt: ''

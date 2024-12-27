@@ -43,7 +43,7 @@ const getters = {
     return state.theme
   },
 
-  getPrimaryColor: (state) => {
+  getPrimaryColor: state => {
     const theme = state.theme
     // Get primary color
     const optColor = themeColorOptions.find(
