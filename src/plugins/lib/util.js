@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import cookies from 'browser-cookies'
 import goTo from 'vuetify/es5/services/goto'
 
@@ -121,6 +122,14 @@ const isTrue = function(value) {
     default:
       return false
   }
+}
+
+/**
+ * @method isClient
+ * @returns {Boolean}
+ */
+const isClient = function() {
+  return window !== 'undefined'
 }
 
 /**
@@ -433,6 +442,7 @@ export default {
   stripSpecific,
   getCapitalizeStr,
   isTrue,
+  isClient,
   getNumber,
   getRegex,
   getAccessToken,

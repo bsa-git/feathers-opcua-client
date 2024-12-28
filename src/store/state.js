@@ -28,7 +28,7 @@ const getLocale = () => {
   let locale
   //-------------------------
   locale = process.env.LOCALE.trim()
-  if (process.client && cookies.get('locale')) {
+  if (util.isClient() && cookies.get('locale')) {
     locale = cookies.get('locale')
   }
   if (isDebug && locale) debug('getLocale.locale:', locale)
@@ -47,10 +47,10 @@ const getTheme = () => {
     name: 'light'
   }
   //-------------------------
-  if (process.client && cookies.get('theme_primary')) {
+  if (util.isClient() && cookies.get('theme_primary')) {
     theme.primary = cookies.get('theme_primary')
   }
-  if (process.client && cookies.get('theme_dark')) {
+  if (util.isClient() && cookies.get('theme_dark')) {
     theme.dark = cookies.get('theme_dark') === '1' ? true : false
     theme.name = theme.dark ? 'dark' : 'light'
   }

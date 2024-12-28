@@ -20,7 +20,7 @@ const setThemePrimary = ct => {
   const cookiesThemePrimary = process.server
     ? serverCookieThemePrimary
     : cookies.get('theme_primary')
-  if (process.client && !cookiesThemePrimary) {
+  if (util.isClient() && !cookiesThemePrimary) {
     cookies.set('theme_primary', storeThemePrimary)
   } else if (cookiesThemePrimary !== storeThemePrimary) {
     ct.store.commit('SET_THEME_PRIMARY', cookiesThemePrimary)
@@ -40,7 +40,7 @@ const setThemeDark = ct => {
   const cookiesThemeDark = process.server
     ? serverCookieThemeDark
     : cookies.get('theme_dark')
-  if (process.client && cookiesThemeDark === null) {
+  if (util.isClient() && cookiesThemeDark === null) {
     cookies.set('theme_dark', storeThemeDark)
   } else if (cookiesThemeDark !== storeThemeDark) {
     ct.store.commit('SET_THEME_DARK', util.isTrue(cookiesThemeDark))
@@ -58,7 +58,7 @@ const setLocale = ct => {
       ? util.readCookie(ct.req.headers.cookie, 'locale')
       : storeLocale
   const cookiesLocale = process.server ? serverCookie : cookies.get('locale')
-  if (process.client && !cookiesLocale) {
+  if (util.isClient() && !cookiesLocale) {
     cookies.set('locale', storeLocale)
   } else if (cookiesLocale !== storeLocale) {
     ct.store.commit('SET_LANG', cookiesLocale)
@@ -78,7 +78,7 @@ const setNoticesCheckAt = ct => {
   const cookiesNoticesCheckAt = process.server
     ? serverCookieNoticesCheckAt
     : cookies.get('notices_checkAt')
-  if (process.client && !cookiesNoticesCheckAt) {
+  if (util.isClient() && !cookiesNoticesCheckAt) {
     cookies.set('notices_checkAt', storeNoticesCheckAt)
   } else if (cookiesNoticesCheckAt !== storeNoticesCheckAt) {
     ct.store.commit('SET_NOTICES_CHECKAT', cookiesNoticesCheckAt)
@@ -98,7 +98,7 @@ const setChatCheckAt = ct => {
   const cookiesChatCheckAt = process.server
     ? serverCookieChatCheckAt
     : cookies.get('chat_checkAt')
-  if (process.client && !cookiesChatCheckAt) {
+  if (util.isClient() && !cookiesChatCheckAt) {
     cookies.set('chat_checkAt', storeChatCheckAt)
   } else if (cookiesChatCheckAt !== storeChatCheckAt) {
     ct.store.commit('SET_CHAT_CHECKAT', cookiesChatCheckAt)
@@ -123,7 +123,7 @@ const setChatSelectedItem = ct => {
   const cookiesChatSelectedItem = process.server
     ? serverCookieChatSelectedItem
     : cookies.get('chat_selectedItem')
-  if (process.client && !cookiesChatSelectedItem) {
+  if (util.isClient() && !cookiesChatSelectedItem) {
     cookies.set('chat_selectedItem', storeChatSelectedItem)
   } else if (cookiesChatSelectedItem !== storeChatSelectedItem) {
     ct.store.commit(

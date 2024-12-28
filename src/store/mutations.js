@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import cookies from 'browser-cookies'
 import typeOf from '@/plugins/lib/type-of'
 
@@ -16,7 +17,7 @@ const motations = {
     if (isDebug && locales.length) debug('SET_LANG.locales', locales)
     if (Array.isArray(locales) && locales.indexOf(locale) >= 0) {
       state.config.locale = locale
-      if (process.client && cookies.get('locale') !== locale) {
+      if (typeOf.isClient() && cookies.get('locale') !== locale) {
         cookies.set('locale', locale)
         if (isDebug && locale)
           debug('SET_LANG.cookies.locale', cookies.get('locale'))
@@ -32,7 +33,7 @@ const motations = {
    */
   SET_THEME_PRIMARY(state, color) {
     state.theme.primary = color
-    if (process.client && cookies.get('theme_primary') !== color) {
+    if (typeOf.isClient() && cookies.get('theme_primary') !== color) {
       cookies.set('theme_primary', color)
       if (isDebug && color)
         debug(
@@ -51,7 +52,7 @@ const motations = {
     state.theme.dark = isDark
     state.theme.name = isDark ? 'dark' : 'light'
     const _isDark = isDark ? '1' : '0'
-    if (process.client && cookies.get('theme_dark') !== _isDark) {
+    if (typeOf.isClient() && cookies.get('theme_dark') !== _isDark) {
       cookies.set('theme_dark', _isDark)
       cookies.set('theme_name', state.theme.name)
       if (isDebug && state.theme.name)
@@ -72,7 +73,7 @@ const motations = {
       ? JSON.stringify(checkAt)
       : checkAt
     if (
-      process.client &&
+      typeOf.isClient() &&
       cookies.get('notices_checkAt') !== state.notices.checkAt
     ) {
       cookies.set('notices_checkAt', state.notices.checkAt)
@@ -89,7 +90,7 @@ const motations = {
     state.chat.checkAt = Array.isArray(checkAt)
       ? JSON.stringify(checkAt)
       : checkAt
-    if (process.client && cookies.get('chat_checkAt') !== state.chat.checkAt) {
+    if (typeOf.isClient() && cookies.get('chat_checkAt') !== state.chat.checkAt) {
       cookies.set('chat_checkAt', state.chat.checkAt)
     }
   },
@@ -102,7 +103,7 @@ const motations = {
   SET_CHAT_SELECTED_ITEM(state, selectedItem) {
     state.chat = Object.assign(state.chat, selectedItem)
     if (
-      process.client &&
+      typeOf.isClient() &&
       cookies.get('chat_selectedItem') !== JSON.stringify(selectedItem)
     ) {
       cookies.set('chat_selectedItem', JSON.stringify(selectedItem))

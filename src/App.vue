@@ -84,7 +84,7 @@ export default {
   },
 
   setup(props, context) {
-    const { $store, $router, $route, $i18n, $refs } = context.root
+    const { $store, $router, $route, $i18n, $vuetify } = context.root
 
     if (isDebug && context.root) debug('Toolbar.context.route:', $route)
 
@@ -100,6 +100,8 @@ export default {
     const user = computed(() => $store.state['auth']['user'])
     const config = computed(() => $store.getters.getConfig)
     const snackBar = computed(() => $store.getters.getSnackBar)
+    const theme = computed(() => $store.getters.getTheme)
+    const primaryColor = computed(() => $store.getters.getPrimaryBaseColor)
 
     const getNewChatMessages = computed(() => {
       let count = 0
@@ -166,7 +168,10 @@ export default {
     // Lifecycle Hooks
     onMounted(async () => {
       try {
-        syncStore.initVuetify(context.root)
+        // syncStore.initVuetify(context.root)
+        $vuetify.theme.themes.dark.primary = primaryColor.value
+        $vuetify.theme.themes.light.primary = primaryColor.value
+        $vuetify.theme.dark = theme.value.dark
         const loginResponse = await authenticate()
         if (isDebug && loginResponse)
           debug('authenticate.loginResponse:', loginResponse)

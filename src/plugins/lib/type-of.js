@@ -40,6 +40,10 @@ function isSymbol(val) {
   return typeof val === 'symbol'
 }
 
+function isClient() {
+  return window !== 'undefined'
+}
+
 export default {
   isArray,
   isBoolean,
@@ -50,5 +54,6 @@ export default {
   isObject,
   isString,
   isNumber,
-  isSymbol
+  isSymbol,
+  isClient
 }
