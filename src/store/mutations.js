@@ -1,8 +1,8 @@
 import cookies from 'browser-cookies'
 import typeOf from '@/plugins/lib/type-of'
-const debug = require('debug')('app:store.mutations')
 
-const isDebug = false
+const debug = require('debug')('app:store.mutations')
+const isDebug = true
 
 const motations = {
   //--- LOCALE ---//
@@ -13,11 +13,13 @@ const motations = {
    */
   SET_LANG(state, locale) {
     const locales = state.config.locales
-    if (isDebug) debug('SET_LANG.state.config.locales', locales)
+    if (isDebug && locales.length) debug('SET_LANG.locales', locales)
     if (Array.isArray(locales) && locales.indexOf(locale) >= 0) {
       state.config.locale = locale
       if (process.client && cookies.get('locale') !== locale) {
         cookies.set('locale', locale)
+        if (isDebug && locale)
+          debug('SET_LANG.cookies.locale', cookies.get('locale'))
       }
     }
   },
@@ -32,6 +34,11 @@ const motations = {
     state.theme.primary = color
     if (process.client && cookies.get('theme_primary') !== color) {
       cookies.set('theme_primary', color)
+      if (isDebug && color)
+        debug(
+          'SET_THEME_PRIMARY.cookies.theme_primary',
+          cookies.get('theme_primary')
+        )
     }
   },
 
@@ -47,6 +54,10 @@ const motations = {
     if (process.client && cookies.get('theme_dark') !== _isDark) {
       cookies.set('theme_dark', _isDark)
       cookies.set('theme_name', state.theme.name)
+      if (isDebug && state.theme.name)
+        debug('SET_THEME_DARK.cookies.theme_dark', cookies.get('theme_dark'))
+      if (isDebug && state.theme.name)
+        debug('SET_THEME_DARK.cookies.theme_name', cookies.get('theme_name'))
     }
   },
 

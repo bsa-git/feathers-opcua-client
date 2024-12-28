@@ -45,7 +45,6 @@
 import { ref, reactive, computed, onMounted, watch } from '@vue/composition-api'
 import appMenu from '@/api/app/app-menu.json'
 import ServiceClient from '@/plugins/service-helpers/service-client.class'
-import AuthClient from '@/plugins/auth/auth-client.class'
 import syncStore from '@/plugins/lib/sync-store'
 const pkg = require('@/../package')
 
@@ -88,9 +87,6 @@ export default {
     const { $store, $router, $route, $i18n, $refs } = context.root
 
     if (isDebug && context.root) debug('Toolbar.context.route:', $route)
-
-    // Set app
-    // context.app = feathersClient
 
     let lastRoleAlias = ''
 

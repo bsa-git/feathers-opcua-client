@@ -21,9 +21,9 @@ const getLocales = envLocales => {
 
 /**
  * Get locale
-* @method getLocale
-* @returns {String}
-*/
+ * @method getLocale
+ * @returns {String}
+ */
 const getLocale = () => {
   let locale
   //-------------------------
@@ -31,14 +31,15 @@ const getLocale = () => {
   if (process.client && cookies.get('locale')) {
     locale = cookies.get('locale')
   }
+  if (isDebug && locale) debug('getLocale.locale:', locale)
   return locale
 }
 
 /**
  * Get theme
-* @method getTheme
-* @returns {Object}
-*/
+ * @method getTheme
+ * @returns {Object}
+ */
 const getTheme = () => {
   const theme = {
     primary: 'indigo',
@@ -50,9 +51,10 @@ const getTheme = () => {
     theme.primary = cookies.get('theme_primary')
   }
   if (process.client && cookies.get('theme_dark')) {
-    theme.dark = (cookies.get('theme_dark') === '1') ? true : false
+    theme.dark = cookies.get('theme_dark') === '1' ? true : false
     theme.name = theme.dark ? 'dark' : 'light'
   }
+  if (isDebug && theme) debug('getTheme.theme:', theme)
   return theme
 }
 
@@ -76,9 +78,9 @@ const authServices = envServices => {
           items[1] === '*'
             ? all
             : util
-              .stripSpecific(items[1], ',')
-              .split(',')
-              .map(item => item.trim())
+                .stripSpecific(items[1], ',')
+                .split(',')
+                .map(item => item.trim())
       }
     })
 }
@@ -147,7 +149,7 @@ const state = () => ({
   config: {
     //--- LOCALES ---//
     locales: getLocales(process.env.LOCALES),
-    locale: getLocale(),//(process.env.LOCALE || 'en').trim(),
+    locale: getLocale(), //(process.env.LOCALE || 'en').trim(),
     fallbackLocale: (process.env.FALLBACK_LOCALE || 'en').trim(),
     //--- AUTH ---//
     isAuthManager:
