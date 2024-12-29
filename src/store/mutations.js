@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import cookies from 'browser-cookies'
 import typeOf from '@/plugins/lib/type-of'
+import util from '@/plugins/lib/util'
 
 const debug = require('debug')('app:store.mutations')
 const isDebug = true
@@ -18,7 +19,8 @@ const motations = {
     if (Array.isArray(locales) && locales.indexOf(locale) >= 0) {
       state.config.locale = locale
       if (typeOf.isClient() && cookies.get('locale') !== locale) {
-        cookies.set('locale', locale)
+        // cookies.set('locale', locale)
+        util.setCookieWithAttributes('locale', locale)
         if (isDebug && locale)
           debug('SET_LANG.cookies.locale', cookies.get('locale'))
       }
@@ -90,7 +92,10 @@ const motations = {
     state.chat.checkAt = Array.isArray(checkAt)
       ? JSON.stringify(checkAt)
       : checkAt
-    if (typeOf.isClient() && cookies.get('chat_checkAt') !== state.chat.checkAt) {
+    if (
+      typeOf.isClient() &&
+      cookies.get('chat_checkAt') !== state.chat.checkAt
+    ) {
       cookies.set('chat_checkAt', state.chat.checkAt)
     }
   },

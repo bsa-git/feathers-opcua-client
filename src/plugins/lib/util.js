@@ -12,8 +12,8 @@ const isDebug = true
  * @param sec
  * @return {Promise}
  */
-const delayTime = function(sec = 1) {
-  return new Promise(function(resolve) {
+const delayTime = function (sec = 1) {
+  return new Promise(function (resolve) {
     setTimeout(() => {
       if (isDebug) debug(`delayTime: ${sec * 1000} MSec`)
       resolve('done!')
@@ -34,7 +34,7 @@ const pause = ms => new Promise(resolve => setTimeout(resolve, ms))
  * @param cb
  * @param delay
  */
-const waitTimeout = function(fn, cb = null, delay = 0) {
+const waitTimeout = function (fn, cb = null, delay = 0) {
   let _delay = delay ? delay : 1000
   let timerId = setTimeout(function request() {
     let result = fn()
@@ -53,7 +53,7 @@ const waitTimeout = function(fn, cb = null, delay = 0) {
  * @param to {string | number | HTMLElement | VueComponent}
  * @param params {Object}
  */
-const goToScroll = function(to, params = {}) {
+const goToScroll = function (to, params = {}) {
   let _params = {
     duration: 500,
     offset: 0,
@@ -67,7 +67,7 @@ const goToScroll = function(to, params = {}) {
  * @param value String
  * @return {string|*|void}
  */
-const stripSlashes = function(value) {
+const stripSlashes = function (value) {
   const _value = value ? value.replace(/^(\/*)|(\/*)$/g, '') : value
   return _value
 }
@@ -78,7 +78,7 @@ const stripSlashes = function(value) {
  * @param symbol String
  * @return {string|*|void}
  */
-const stripSpecific = function(value = '', symbol = '') {
+const stripSpecific = function (value = '', symbol = '') {
   const regEx = new RegExp('^[' + symbol + ']+|[' + symbol + ']+$', 'g')
   const trimValue = symbol ? value.replace(regEx, '') : value.trim()
   return trimValue
@@ -89,7 +89,7 @@ const stripSpecific = function(value = '', symbol = '') {
  * @param value
  * @param prefix
  */
-const getCapitalizeStr = function(value, prefix = '') {
+const getCapitalizeStr = function (value, prefix = '') {
   const loCapitalize = require('lodash/capitalize')
   const loWords = require('lodash/words')
   let _value = loCapitalize(value)
@@ -106,7 +106,7 @@ const getCapitalizeStr = function(value, prefix = '') {
  * @param value String|Any
  * @return boolean
  */
-const isTrue = function(value) {
+const isTrue = function (value) {
   if (typeof value === 'string') {
     value = value.trim().toLowerCase()
   }
@@ -128,7 +128,7 @@ const isTrue = function(value) {
  * @method isClient
  * @returns {Boolean}
  */
-const isClient = function() {
+const isClient = function () {
   return window !== 'undefined'
 }
 
@@ -137,7 +137,7 @@ const isClient = function() {
  * @param value
  * @return {number}
  */
-const getNumber = function(value) {
+const getNumber = function (value) {
   return Number.isInteger(value) ? value : Number.parseInt(value)
 }
 
@@ -146,7 +146,7 @@ const getNumber = function(value) {
  * @param type
  * @return {String}
  */
-const getRegex = function(type) {
+const getRegex = function (type) {
   if (typeof type === 'string') {
     type = type.trim().toLowerCase()
   }
@@ -211,7 +211,7 @@ const getRegex = function(type) {
  * getAccessToken
  * @returns {String|null}
  */
-const getAccessToken = function() {
+const getAccessToken = function () {
   if (process.client) {
     return cookies.get('feathers-jwt')
   } else {
@@ -223,7 +223,7 @@ const getAccessToken = function() {
  * setAccessToken
  * @param token
  */
-const setAccessToken = function(token) {
+const setAccessToken = function (token) {
   if (process.client) {
     cookies.set('feathers-jwt', token)
   }
@@ -233,14 +233,14 @@ const setAccessToken = function(token) {
  * isAccessToken
  * @returns {boolean}
  */
-const isAccessToken = function() {
+const isAccessToken = function () {
   return !!getAccessToken()
 }
 
 /**
  * removeAccessToken
  */
-const removeAccessToken = function() {
+const removeAccessToken = function () {
   if (process.client) {
     cookies.erase('feathers-jwt')
   }
@@ -253,7 +253,7 @@ const removeAccessToken = function() {
  * @param token
  * @return {Promise.<void>}
  */
-const verifyJWT = async function(token) {
+const verifyJWT = async function (token) {
   const decode = require('jwt-decode')
   //-----------------------------------
   const payloadIsValid = function payloadIsValid(payload) {
@@ -304,6 +304,49 @@ function readCookie(cookies, name) {
     }
   }
   return null
+}
+
+/**
+ * Set cookie with attributes
+ * Use the method of setting cookie attributes directly via document.cookie
+ * @param name {String}
+ * @param value {String}
+ * @param options {Object}
+ * e.g. options->{
+ * - expires: The expiration date of the cookie (the Date object).
+ * - path: The path that the cookie belongs to.
+ * - domain: The domain that the cookie belongs to.
+ * - sameSite: The value of the SameSite attribute ('Strict', 'Lux', 'None'). By default, 'Lax'.
+ * - secure is a Boolean value that determines whether to specify the Secure attribute (for SameSite=None).
+ * }
+ */
+function setCookieWithAttributes(name, value, options = {}) {
+  let cookieString = `${name}=${value}`;
+  //----------------------------------------------------------
+  if (options.expires) {
+    cookieString += `; expires=${options.expires.toUTCString()}`;
+  } else {
+    const now = new Date();
+    const expires = new Date(now.getTime() + (30 * 24 * 60 * 60 * 1000)); // The cookie expires after 30 days
+    cookieString += `; expires=${expires.toUTCString()}`;
+  }
+
+  if (options.path) {
+    cookieString += `; path=${options.path || '/'}`;
+  }
+
+  if (options.domain) {
+    cookieString += `; domain=${options.domain}`;
+  }
+
+  cookieString += `; SameSite=${options.sameSite || 'Lax'}`;
+
+  if (options.secure) {
+    cookieString += "; Secure"
+  }
+
+
+  document.cookie = cookieString;
 }
 
 /**
@@ -365,7 +408,7 @@ function sortByNumber(items, isAscending = true) {
  * @param obj
  * @returns {string}
  */
-const qlParams = function(obj) {
+const qlParams = function (obj) {
   if (typeof obj !== 'object' || obj === null) {
     throw new Error('Expected object. (qlParams)')
   }
@@ -382,7 +425,7 @@ const qlParams = function(obj) {
  * @param trailer
  * @returns {string}
  */
-const stringify = function(
+const stringify = function (
   obj,
   spacer = ' ',
   separator = ', ',
@@ -405,7 +448,7 @@ const stringify = function(
  * @param context
  * @return {Object}
  */
-const getHookContext = function(context) {
+const getHookContext = function (context) {
   let target = {}
   let { service, path, method, type, params, id, data, result, error } = context
 
@@ -429,7 +472,7 @@ const getHookContext = function(context) {
  * @param {Object?} obj - Object to clone
  * @returns {Object} Cloned object
  */
-const cloneObject = function(obj) {
+const cloneObject = function (obj) {
   return loCloneDeep(obj)
 }
 
@@ -451,6 +494,7 @@ export default {
   removeAccessToken,
   verifyJWT,
   readCookie,
+  setCookieWithAttributes,
   sortByStringField,
   sortByNumberField,
   sortByString,

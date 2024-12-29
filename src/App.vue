@@ -101,7 +101,7 @@ export default {
     const config = computed(() => $store.getters.getConfig)
     const snackBar = computed(() => $store.getters.getSnackBar)
     const theme = computed(() => $store.getters.getTheme)
-    const primaryColor = computed(() => $store.getters.getPrimaryBaseColor)
+    const primaryColor = computed(() => $store.getters.getPrimaryColor)
 
     const getNewChatMessages = computed(() => {
       let count = 0
