@@ -64,6 +64,7 @@
 <script>
 /* eslint-disable no-unused-vars */
 import { ref, computed, watch } from '@vue/composition-api'
+import util from '@/plugins/lib/util'
 
 const debug = require('debug')('app:ThemeSettings')
 const isDebug = false
@@ -109,37 +110,26 @@ export default {
       () => sideBarOption.value,
       val => {
         sideBarOptionHandler(val)
-        themeColorHandler(themeColor.value)
       },
       { lazy: true }
     )
 
     // Methods
     const themeColorHandler = val => {
-      if (isDebug && val) debug('themeColorHandler.val:', val)
+      if (true && val) debug('themeColorHandler.val:', val)
       setThemePrimary(val)
-      $vuetify.theme.themes.dark.primary = primaryColor.value
-      $vuetify.theme.themes.light.primary = primaryColor.value
     }
 
     const sideBarOptionHandler = val => {
       if (isDebug && val) debug('sideBarOptionHandler.val:', val)
-      const isDark = val === 'dark'
-      $vuetify.theme.dark = isDark
+      const isDark = (val === 'dark')
       setThemeDark(isDark)
-    }
-
-    const updateThemeColor = () => {
-      themeColorHandler(defaultColor.value)
-      themeColorHandler(themeColor.value)
     }
 
     return {
       // React values
       themeColor,
       sideBarOption,
-      // Methods
-      updateThemeColor
     }
   }
 }

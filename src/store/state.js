@@ -3,7 +3,7 @@ import cookies from 'browser-cookies'
 import util from '@/plugins/lib/util'
 
 const debug = require('debug')('app:store.state')
-const isDebug = true
+const isDebug = false
 
 /**
  * Get locales

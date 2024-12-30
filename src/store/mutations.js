@@ -19,7 +19,6 @@ const motations = {
     if (Array.isArray(locales) && locales.indexOf(locale) >= 0) {
       state.config.locale = locale
       if (typeOf.isClient() && cookies.get('locale') !== locale) {
-        // cookies.set('locale', locale)
         util.setCookieWithAttributes('locale', locale)
         if (isDebug && locale)
           debug('SET_LANG.cookies.locale', cookies.get('locale'))
@@ -36,7 +35,7 @@ const motations = {
   SET_THEME_PRIMARY(state, color) {
     state.theme.primary = color
     if (typeOf.isClient() && cookies.get('theme_primary') !== color) {
-      cookies.set('theme_primary', color)
+      util.setCookieWithAttributes('theme_primary', color)
       if (isDebug && color)
         debug(
           'SET_THEME_PRIMARY.cookies.theme_primary',
@@ -55,8 +54,8 @@ const motations = {
     state.theme.name = isDark ? 'dark' : 'light'
     const _isDark = isDark ? '1' : '0'
     if (typeOf.isClient() && cookies.get('theme_dark') !== _isDark) {
-      cookies.set('theme_dark', _isDark)
-      cookies.set('theme_name', state.theme.name)
+      util.setCookieWithAttributes('theme_dark', _isDark)
+      util.setCookieWithAttributes('theme_name', state.theme.name)
       if (isDebug && state.theme.name)
         debug('SET_THEME_DARK.cookies.theme_dark', cookies.get('theme_dark'))
       if (isDebug && state.theme.name)
@@ -78,7 +77,7 @@ const motations = {
       typeOf.isClient() &&
       cookies.get('notices_checkAt') !== state.notices.checkAt
     ) {
-      cookies.set('notices_checkAt', state.notices.checkAt)
+      util.setCookieWithAttributes('notices_checkAt', state.notices.checkAt)
     }
   },
 
@@ -96,7 +95,7 @@ const motations = {
       typeOf.isClient() &&
       cookies.get('chat_checkAt') !== state.chat.checkAt
     ) {
-      cookies.set('chat_checkAt', state.chat.checkAt)
+      util.setCookieWithAttributes('chat_checkAt', state.chat.checkAt)
     }
   },
 
@@ -111,7 +110,7 @@ const motations = {
       typeOf.isClient() &&
       cookies.get('chat_selectedItem') !== JSON.stringify(selectedItem)
     ) {
-      cookies.set('chat_selectedItem', JSON.stringify(selectedItem))
+      util.setCookieWithAttributes('chat_selectedItem', JSON.stringify(selectedItem))
     }
   },
 

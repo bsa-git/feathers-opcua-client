@@ -1,6 +1,6 @@
 import useragent from 'express-useragent'
 import LocationHelper from './location-helper.class'
-// import util from './util';
+import util from './util';
 import axios from 'axios'
 
 const isDebug = false
@@ -140,7 +140,7 @@ class HttpBox extends LocationHelper {
   }
 
   static getUserAgent() {
-    if (process.client) {
+    if (util.isClient()) {
       return useragent.parse(navigator.userAgent)
     } else {
       return null

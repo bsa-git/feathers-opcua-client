@@ -4,14 +4,8 @@
     <Toolbar v-if="!isStandAlone" @onNavLeft="navLeft = !navLeft" />
 
     <!-- App Left Drawer -->
-    <LeftDrawer
-      v-if="!isStandAlone"
-      :drawer="navLeft"
-      :home-path="getHomePath()"
-      :menu-items="menuItems"
-      :badge-chat="getNewChatMessages"
-      @onNavLeft="modelNavLeft"
-    />
+    <LeftDrawer v-if="!isStandAlone" :drawer="navLeft" :home-path="getHomePath()" :menu-items="menuItems"
+      :badge-chat="getNewChatMessages" @onNavLeft="modelNavLeft" />
 
     <!-- Right Drawer -->
     <RightDrawer ref="rightDrawer"></RightDrawer>
@@ -22,21 +16,12 @@
     </v-main>
 
     <!-- Snackbar -->
-    <SnackBar
-      :show="snackBar.show"
-      :text="snackBar.text"
-      :color="snackBar.color"
-      :timeout="snackBar.timeout"
-      @onShow="modelSnackBar"
-    />
+    <SnackBar :show="snackBar.show" :text="snackBar.text" :color="snackBar.color" :timeout="snackBar.timeout"
+      @onShow="modelSnackBar" />
 
     <!-- App Footer -->
-    <Footer
-      v-if="!isStandAlone"
-      :copyright="$t('app_footer.copyright')"
-      :developer="config.logoTitle"
-      :site="config.website"
-    />
+    <Footer v-if="!isStandAlone" :copyright="$t('app_footer.copyright')" :developer="config.logoTitle"
+      :site="config.website" />
   </v-app>
 </template>
 
@@ -47,6 +32,7 @@ import appMenu from '@/api/app/app-menu.json'
 import ServiceClient from '@/plugins/service-helpers/service-client.class'
 import syncStore from '@/plugins/lib/sync-store'
 const pkg = require('@/../package')
+import util from '@/plugins/lib/util'
 
 import LeftDrawer from '@/components/layout/LeftDrawer'
 import RightDrawer from '@/components/layout/RightDrawer'
@@ -86,7 +72,7 @@ export default {
   setup(props, context) {
     const { $store, $router, $route, $i18n, $vuetify } = context.root
 
-    if (isDebug && context.root) debug('Toolbar.context.route:', $route)
+    if (true && context.root) debug('Toolbar.context.route:', $vuetify)
 
     let lastRoleAlias = ''
 
@@ -101,7 +87,7 @@ export default {
     const config = computed(() => $store.getters.getConfig)
     const snackBar = computed(() => $store.getters.getSnackBar)
     const theme = computed(() => $store.getters.getTheme)
-    const primaryColor = computed(() => $store.getters.getPrimaryColor)
+    const primaryColor = computed(() => $store.getters.getPrimaryBaseColor)
 
     const getNewChatMessages = computed(() => {
       let count = 0
@@ -121,6 +107,26 @@ export default {
     // Actions
     const authenticate = payload => $store.dispatch('authenticate', payload)
     const logout = () => $store.dispatch('logout')
+
+    //---------------------------------------------------------------
+
+    // We are waiting for the theme primary color change event
+    watch(
+      () => theme.value.primary,
+      val => {
+        initVuetify(val)
+      },
+      { lazy: true }
+    )
+
+    // We are waiting for the theme primary color change event
+    watch(
+      () => theme.value.name,
+      val => {
+        initVuetify(val)
+      },
+      { lazy: true }
+    )
 
     // We are waiting for the user active change event
     watch(
@@ -168,10 +174,6 @@ export default {
     // Lifecycle Hooks
     onMounted(async () => {
       try {
-        // syncStore.initVuetify(context.root)
-        $vuetify.theme.themes.dark.primary = primaryColor.value
-        $vuetify.theme.themes.light.primary = primaryColor.value
-        $vuetify.theme.dark = theme.value.dark
         const loginResponse = await authenticate()
         if (isDebug && loginResponse)
           debug('authenticate.loginResponse:', loginResponse)
@@ -188,6 +190,17 @@ export default {
 
     //-----------------------------------------------------
     // Methods
+
+    const initVuetify = (val) => {
+      // Get color
+      if (isDebug && val) debug('initVuetify.val:', val)
+      // Set theme dark
+      $vuetify.theme.dark = theme.value.dark
+      // Set theme primary
+      $vuetify.theme.themes.dark.primary = primaryColor.value
+      $vuetify.theme.themes.light.primary = primaryColor.value
+    }
+
     const modelSnackBar = newValue => {
       setSnackBar({ show: newValue })
     }
@@ -203,6 +216,14 @@ export default {
     const getHomePath = () => {
       return user.value ? config.value.homePath : '/'
     }
+
+    util.pause(100).then(
+      () => {
+        initVuetify()
+      }
+    )
+
+
 
     return {
       // React values

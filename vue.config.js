@@ -1,3 +1,4 @@
+const path = require('path')
 const Dotenv = require('dotenv-webpack')
 let locale = process.env.VUE_APP_I18N_LOCALE
 locale = locale ? locale : 'en'
@@ -12,7 +13,14 @@ module.exports = {
         path: './.env', // Path to .env file (this is the default)
         systemvars: true // It makes it possible to work in production mode on Heroku hosting
       })
-    ]
+    ],
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, 'src') // @ -> /src
+        // '@components': path.resolve(__dirname, 'src/components'), // @components -> /src/components
+        // You can add other aliases here.
+      }
+    }
   },
 
   pluginOptions: {
